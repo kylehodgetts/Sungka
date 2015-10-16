@@ -2,96 +2,126 @@ package com.kylehodgetts.sunka.model;
 
 import junit.framework.TestCase;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
 /**
- * Created by CBaker on 16/10/2015.
+ * Test Class for the Board Class
  */
-public class BoardTest extends TestCase {
+public class BoardTest {
 
-    private Board board;
+    private Board board;    // field to hold a board object
 
+    /**
+     * Set's up a new board object before each test is run ensuring it is at its default
+     * state before the test.
+     * @throws Exception
+     */
     @Before
     public void setUp() throws Exception
     {
-        super.setUp();
         board = new Board();
     }
 
+    /**
+     * Test the setTray method where each tray is set to its column number and checked it has been
+     * changed by getting the result at the tray cell location matches the current column number
+     * @throws Exception
+     */
     @Test
-    public void testSetPot() throws Exception
+    public void testSetTray() throws Exception
     {
         for(int i=0; i < 2; ++i)
         {
             for(int j=0; j < 7; ++j)
             {
-                board.setPot(i, j, j);
-                assertEquals("setPot("+i+","+j+","+j+") not working", board.getPot(i, j), j);
+                board.setTray(i, j, j);
+                Assert.assertEquals("setTray(" + i + "," + j + "," + j + ") not working", board.getTray(i, j), j);
             }
         }
     }
 
+    /**
+     * Test the get tray method retrieves the default number seven which each tray should be set up to hold.
+     * @throws Exception
+     */
     @Test
-    public void testGetPot() throws Exception
+    public void testGetTray() throws Exception
     {
         for(int i=0; i < 2; ++i)
         {
             for(int j=0; j < 7; ++j)
             {
-                assertEquals("Pot ["+i+","+j+"] != 7 initial stones", board.getPot(i, j), 7);
+                Assert.assertEquals("Tray [" + i + "," + j + "] != 7 initial stones", board.getTray(i, j), 7);
             }
         }
     }
 
+    /**
+     * Tests that each tray increments by 1 and contains 8
+     * @throws Exception
+     */
     @Test
-    public void testIncrementPot() throws Exception
+    public void testIncrementTray() throws Exception
     {
         for(int i=0; i < 2; ++i)
         {
             for(int j=0; j < 7; ++j)
             {
-                board.incrementPot(i, j);
-                assertEquals("increment on ["+i+","+j+"] failed", board.getPot(i, j), 8);
+                board.incrementTray(i, j);
+                Assert.assertEquals("increment on [" + i + "," + j + "] failed", board.getTray(i, j), 8);
             }
         }
     }
 
+    /**
+     * Tests that each tray decrements by 1 and is holding 6
+     * @throws Exception
+     */
     @Test
-    public void testDecrementPot() throws Exception
+    public void testDecrementTray() throws Exception
     {
         for(int i=0; i < 2; ++i)
         {
             for(int j=0; j < 7; ++j)
             {
-                board.decrementPot(i, j);
-                assertEquals("increment on ["+i+","+j+"] failed", board.getPot(i, j), 6);
+                board.decrementTray(i, j);
+                Assert.assertEquals("increment on [" + i + "," + j + "] failed", board.getTray(i, j), 6);
             }
         }
     }
 
+    /**
+     * Tests that each tray is emptied and then contains 0 shells
+     * @throws Exception
+     */
     @Test
-    public void testEmptyPot() throws Exception
+    public void testEmptyTray() throws Exception
     {
         for(int i=0; i < 2; ++i)
         {
             for(int j=0; j < 7; ++j)
             {
-                board.emptyPot(i, j);
-                assertEquals("emptyPot on ["+i+","+j+"] failed", board.getPot(i, j), 0);
+                board.emptyTray(i, j);
+                Assert.assertEquals("emptyTray on [" + i + "," + j + "] failed", board.getTray(i, j), 0);
             }
         }
     }
 
+    /**
+     * Tests that after the tray is emptied the isEmpty method returns true
+     * @throws Exception
+     */
     @Test
-    public void testIsEmptyPot() throws Exception
+    public void testIsEmptyTray() throws Exception
     {
         for(int i=0; i < 2; ++i)
         {
             for(int j=0; j < 7; ++j)
             {
-                board.emptyPot(i, j);
-                assertTrue("IsemptyPot on ["+i+","+j+"] failed", board.isEmptyPot(i, j));
+                board.emptyTray(i, j);
+                Assert.assertTrue("IsemptyTray on [" + i + "," + j + "] failed", board.isEmptyTray(i, j));
             }
         }
     }
