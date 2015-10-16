@@ -5,7 +5,7 @@
 * Jonathan
 * Charlie
 * Adam
-
+* Phileas
 ## Development
 - Meet during lab times to work on features
 
