@@ -1,4 +1,4 @@
-package com.kylehodgetts.sunka;
+package com.kylehodgetts.sunka.model;
 
 /**
  * Created by CBaker on 16/10/2015.
@@ -10,20 +10,25 @@ public class Board {
 
     public Board()
     {
-        board = new int[2][9];
+        board = new int[2][7];
         for(int i=0; i < board.length; ++i)
         {
-            for(int j=0; j < 9; ++j)
+            for(int j=0; j < 7; ++j)
             {
-                if(j==0 || j==8) board[i][j] = 0;
-                else board[i][j] = 7;
+                board[i][j] = 7;
             }
         }
+    }
+
+    public void updatePot(int x, int y)
+    {
+
     }
 
     public void doMove(int fromX, int fromY)
     {
         int counters = board[fromX][fromY];
+
 
     }
 
@@ -33,7 +38,7 @@ public class Board {
 
         for(int i=0; i < board.length; ++i)
         {
-            for(int j=0; j < 9; ++j)
+            for(int j=0; j < 7; ++j)
             {
                 s += "["+board[i][j]+"]";
             }
