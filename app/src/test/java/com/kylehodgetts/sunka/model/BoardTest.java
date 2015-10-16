@@ -3,7 +3,6 @@ package com.kylehodgetts.sunka.model;
 import junit.framework.TestCase;
 
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
@@ -80,6 +79,19 @@ public class BoardTest extends TestCase {
             {
                 board.emptyPot(i, j);
                 assertEquals("emptyPot on ["+i+","+j+"] failed", board.getPot(i, j), 0);
+            }
+        }
+    }
+
+    @Test
+    public void testIsEmptyPot() throws Exception
+    {
+        for(int i=0; i < 2; ++i)
+        {
+            for(int j=0; j < 7; ++j)
+            {
+                board.emptyPot(i, j);
+                assertTrue("IsemptyPot on ["+i+","+j+"] failed", board.isEmptyPot(i, j));
             }
         }
     }
