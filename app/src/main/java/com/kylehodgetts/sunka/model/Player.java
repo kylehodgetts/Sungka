@@ -16,6 +16,13 @@ public class Player {
     }
 
     /**
+     * @return number of stones in the player's pot
+     */
+    public int getStonesInPot(){
+        return stonesInPot;
+    }
+
+    /**
      * Adds <code>x</code> amount of stones to pot
      * @param x number to collected stones
      */
