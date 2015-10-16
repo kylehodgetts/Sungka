@@ -20,16 +20,31 @@ public class Board {
         }
     }
 
-    public void updatePot(int x, int y)
+    public void setPot(int x, int y, int newValue)
     {
-
+        board[x][y] = newValue;
     }
 
-    public void doMove(int fromX, int fromY)
+    public int getPot(int x, int y)
     {
-        int counters = board[fromX][fromY];
+        return board[x][y];
+    }
 
+    public void incrementPot(int x, int y)
+    {
+        ++board[x][y];
+    }
 
+    public void decrementPot(int x, int y)
+    {
+        --board[x][y];
+    }
+
+    public int emptyPot(int x, int y)
+    {
+        int counters = board[x][y];
+        board[x][y] = 0;
+        return counters;
     }
 
     public String toString()
