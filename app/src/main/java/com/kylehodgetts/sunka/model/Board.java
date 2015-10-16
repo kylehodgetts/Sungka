@@ -47,6 +47,11 @@ public class Board {
         return counters;
     }
 
+    public boolean isEmptyPot(int x, int y)
+    {
+        return board[x][y] == 0;
+    }
+
     public String toString()
     {
         String s = "";
