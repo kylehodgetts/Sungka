@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">Sunka</string>
+
+    <string name="main_menu_one_player">1 Player</string>
+    <string name="main_menu_two_player">2 Player</string>
+    <string name="main_menu_online">Online</string>
+    <string name="main_menu_about_us">About us</string>
+    <string name="main_menu_exit">Exit</string>
 </resources>
