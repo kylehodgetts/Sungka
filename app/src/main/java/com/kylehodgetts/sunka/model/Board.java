@@ -27,69 +27,69 @@ public class Board {
 
     /**
      * Sets the sepcified tray at row position x and column position y to the new value given as a new value parameter.
-     * @param x row position between 0 and 1
-     * @param y column position between 0 and 6
+     * @param row row position between 0 and 1
+     * @param column column position between 0 and 6
      * @param newValue new value parameter the tray contents number should be changed to
      */
-    public void setTray(int x, int y, int newValue)
+    public void setTray(int row, int column, int newValue)
     {
-        board[x][y] = newValue;
+        board[row][column] = newValue;
     }
 
     /**
      * Get's the total number of shells in a specified tray at row position x and column position y
-     * @param x row position between 0 and 1
-     * @param y column position between 0 and 6
+     * @param row row position between 0 and 1
+     * @param column column position between 0 and 6
      * @return current total number of shells stored in the specified tray
      */
-    public int getTray(int x, int y)
+    public int getTray(int row, int column)
     {
-        return board[x][y];
+        return board[row][column];
     }
 
     /**
      * Increments the specified tray's contents by 1 shell.
-     * @param x row position between 0 and 1
-     * @param y column position between 0 and 6
+     * @param row row position between 0 and 1
+     * @param column column position between 0 and 6
      */
-    public void incrementTray(int x, int y)
+    public void incrementTray(int row, int column)
     {
-        ++board[x][y];
+        ++board[row][column];
     }
 
     /**
      * Decrements the specified tray's contents by 1 shell, if the tray's contents are not empty
-     * @param x row position between 0 and 1
-     * @param y column position between 0 and 6
+     * @param row row position between 0 and 1
+     * @param column column position between 0 and 6
      */
-    public void decrementTray(int x, int y)
+    public void decrementTray(int row, int column)
     {
-        if(board[x][y] > 0) --board[x][y];
+        if(board[row][column] > 0) --board[row][column];
     }
 
     /**
      * Empties the contents of the specified tray setting its total shell content value to 0 and
      * returns the contents that it had.
-     * @param x row position between 0 and 1
-     * @param y column position between 0 and 6
+     * @param row row position between 0 and 1
+     * @param column column position between 0 and 6
      * @return the total number of shells that was in the tray
      */
-    public int emptyTray(int x, int y)
+    public int emptyTray(int row, int column)
     {
-        int counters = board[x][y];
-        board[x][y] = 0;
+        int counters = board[row][column];
+        board[row][column] = 0;
         return counters;
     }
 
     /**
      * Checks to see if the specified tray is empty
-     * @param x row position between 0 and 1
-     * @param y column position between 0 and 6
+     * @param row row position between 0 and 1
+     * @param column column position between 0 and 6
      * @return true is the tray is empty, false otherwise
      */
-    public boolean isEmptyTray(int x, int y)
+    public boolean isEmptyTray(int row, int column)
     {
-        return board[x][y] == 0;
+        return board[row][column] == 0;
     }
 
     /**
