@@ -19,8 +19,7 @@ public class BoardTest {
      * @throws Exception
      */
     @Before
-    public void setUp() throws Exception
-    {
+    public void setUp() throws Exception {
         board = new Board();
     }
 
@@ -30,8 +29,7 @@ public class BoardTest {
      * @throws Exception
      */
     @Test
-    public void testSetTray() throws Exception
-    {
+    public void testSetTray() throws Exception {
         for(int i=0; i < 2; ++i)
         {
             for(int j=0; j < 7; ++j)
@@ -47,8 +45,7 @@ public class BoardTest {
      * @throws Exception
      */
     @Test
-    public void testGetTray() throws Exception
-    {
+    public void testGetTray() throws Exception {
         for(int i=0; i < 2; ++i)
         {
             for(int j=0; j < 7; ++j)
@@ -63,8 +60,7 @@ public class BoardTest {
      * @throws Exception
      */
     @Test
-    public void testIncrementTray() throws Exception
-    {
+    public void testIncrementTray() throws Exception {
         for(int i=0; i < 2; ++i)
         {
             for(int j=0; j < 7; ++j)
@@ -80,8 +76,7 @@ public class BoardTest {
      * @throws Exception
      */
     @Test
-    public void testDecrementTray() throws Exception
-    {
+    public void testDecrementTray() throws Exception {
         for(int i=0; i < 2; ++i)
         {
             for(int j=0; j < 7; ++j)
@@ -97,8 +92,7 @@ public class BoardTest {
      * @throws Exception
      */
     @Test
-    public void testEmptyTray() throws Exception
-    {
+    public void testEmptyTray() throws Exception {
         for(int i=0; i < 2; ++i)
         {
             for(int j=0; j < 7; ++j)
@@ -114,8 +108,7 @@ public class BoardTest {
      * @throws Exception
      */
     @Test
-    public void testIsEmptyTray() throws Exception
-    {
+    public void testIsEmptyTray() throws Exception {
         for(int i=0; i < 2; ++i)
         {
             for(int j=0; j < 7; ++j)

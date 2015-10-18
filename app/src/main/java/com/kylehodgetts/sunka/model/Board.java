@@ -1,6 +1,8 @@
 package com.kylehodgetts.sunka.model;
 
 /**
+ * @author Charlie Baker
+ * @version 1.0
  * Class created to represent the data model of the game board.
  */
 public class Board {
@@ -13,8 +15,7 @@ public class Board {
     /**
      * Default constructor to create a new board initialising every Tray to 7 shells.
      */
-    public Board()
-    {
+    public Board() {
         board = new int[2][7];
         for(int i=0; i < board.length; ++i)
         {
@@ -31,8 +32,7 @@ public class Board {
      * @param column column position between 0 and 6
      * @param newValue new value parameter the tray contents number should be changed to
      */
-    public void setTray(int row, int column, int newValue)
-    {
+    public void setTray(int row, int column, int newValue) {
         board[row][column] = newValue;
     }
 
@@ -42,8 +42,7 @@ public class Board {
      * @param column column position between 0 and 6
      * @return current total number of shells stored in the specified tray
      */
-    public int getTray(int row, int column)
-    {
+    public int getTray(int row, int column) {
         return board[row][column];
     }
 
@@ -52,8 +51,7 @@ public class Board {
      * @param row row position between 0 and 1
      * @param column column position between 0 and 6
      */
-    public void incrementTray(int row, int column)
-    {
+    public void incrementTray(int row, int column) {
         ++board[row][column];
     }
 
@@ -62,8 +60,7 @@ public class Board {
      * @param row row position between 0 and 1
      * @param column column position between 0 and 6
      */
-    public void decrementTray(int row, int column)
-    {
+    public void decrementTray(int row, int column) {
         if(board[row][column] > 0) --board[row][column];
     }
 
@@ -74,8 +71,7 @@ public class Board {
      * @param column column position between 0 and 6
      * @return the total number of shells that was in the tray
      */
-    public int emptyTray(int row, int column)
-    {
+    public int emptyTray(int row, int column) {
         int counters = board[row][column];
         board[row][column] = 0;
         return counters;
@@ -87,8 +83,7 @@ public class Board {
      * @param column column position between 0 and 6
      * @return true is the tray is empty, false otherwise
      */
-    public boolean isEmptyTray(int row, int column)
-    {
+    public boolean isEmptyTray(int row, int column) {
         return board[row][column] == 0;
     }
 
@@ -97,8 +92,7 @@ public class Board {
      * @return a String interpretation of the board
      */
     @Override
-    public String toString()
-    {
+    public String toString() {
         String s = "";
 
         for(int i=0; i < board.length; ++i)
@@ -111,5 +105,4 @@ public class Board {
         }
         return s;
     }
-
 }
