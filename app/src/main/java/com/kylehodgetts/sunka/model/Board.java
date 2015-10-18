@@ -96,6 +96,7 @@ public class Board {
      * Gives a string interpretation of the current state of the board
      * @return a String interpretation of the board
      */
+    @Override
     public String toString()
     {
         String s = "";
@@ -109,13 +110,6 @@ public class Board {
             s+= "\n";
         }
         return s;
-    }
-
-
-    public static void main(String[] args)
-    {
-        Board board = new Board();
-        System.out.println(board);
     }
 
 }
