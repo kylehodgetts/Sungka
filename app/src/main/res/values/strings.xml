@@ -7,9 +7,9 @@
     <string name="main_menu_about_us">About us</string>
     <string name="main_menu_exit">Exit</string>
 
-    <string name="game_over_again">Play again</string>>
-    <string name="game_over">GAME OVER</string>>
-    <string name="game_over_main_menu">Main menu</string>>
-    <string name="game_over_your_score">Your score</string>>
-    <string name="game_over_opponent_score">Opponent's score</string>>
+    <string name="game_over_again">Play again</string>
+    <string name="game_over">GAME OVER</string>
+    <string name="game_over_main_menu">Main menu</string>
+    <string name="game_over_your_score">Your score</string>
+    <string name="game_over_opponent_score">Opponent\'s score</string>
 </resources>
