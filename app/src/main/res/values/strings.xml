@@ -11,5 +11,5 @@
     <string name="game_over">GAME OVER</string>>
     <string name="game_over_main_menu">Main menu</string>>
     <string name="game_over_your_score">Your score</string>>
-    <string name="game_over_opponent_score">Opponent's score</string>>
+    <string name="game_over_opponent_score">Opponent\'s score</string>>
 </resources>
