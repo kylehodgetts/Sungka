@@ -6,6 +6,7 @@
     <string name="main_menu_online">Online</string>
     <string name="main_menu_about_us">About us</string>
     <string name="main_menu_exit">Exit</string>
+
     <string name="game_over_again">Play again</string>
     <string name="game_over">GAME OVER</string>
     <string name="game_over_main_menu">Main menu</string>

@@ -98,6 +98,10 @@ public class EventBus<T extends BusState> {
         }
     }
 
+    /**
+     * Dispatches an event to the handler
+     * @param event event to be dispatched
+     */
     private void handleOne(Event event){
         for (EventHandler<T> handler : handlers) {
             Tuple2<T,Boolean> result = handler.handleEvent(event,state,this);

@@ -15,7 +15,7 @@ import static org.junit.Assert.assertEquals;
  */
 public class BusTest{
 
-    private EventBus<TestState> bus;    // field to hold a board object
+    private EventBus<TestState> bus;
     private EventHandler<TestState> handler;
 
     private int renderTry;
