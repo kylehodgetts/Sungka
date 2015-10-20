@@ -3,7 +3,7 @@ package com.kylehodgetts.sunka.util;
 /**
  * @author Adam Chlupacek
  * @version 1.0
- *          <-INPUT DESC->
+ * A simple tuple of two elements
  */
 public class Tuple2<X,Y> {
     private X x;

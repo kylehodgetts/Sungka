@@ -11,7 +11,7 @@ import static org.junit.Assert.assertEquals;
 
 
 /**
- * Test Class for the Board Class
+ * Test Class for the the event bus
  */
 public class BusTest{
 
@@ -52,7 +52,7 @@ public class BusTest{
      * @throws Exception
      */
     @Test
-    public void testEventFeed() throws Exception {
+    public void eventFeed() throws Exception {
         bus.registerHandler(handler);
         bus.feedEvent(new Event() {});
         bus.feedEvent(new Event() {});
@@ -70,8 +70,7 @@ public class BusTest{
 
         bus.feedEvent(new Event() {});
         bus.feedEvent(new Event() {});
-        bus.feedEvent(new Event() {
-        });
+        bus.feedEvent(new Event() {});
 
         bus.removeHandler(handler.getId());
 
@@ -115,8 +114,7 @@ public class BusTest{
 
         bus.removeHandler(handler.getId());
 
-        bus.feedEvent(new Event() {
-        });
+        bus.feedEvent(new Event() {});
         assertEquals(7,eventsReceived);
     }
 

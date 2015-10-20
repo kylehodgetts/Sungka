@@ -3,6 +3,6 @@ package com.kylehodgetts.sunka.controller.bus;
 /**
  * @author Adam Chlupacek
  * @version 1.0
- *          <-INPUT DESC->
+ * An event that is to be send to to the bus
  */
-interface Event{}
+public interface Event{}

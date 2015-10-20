@@ -3,7 +3,7 @@ package com.kylehodgetts.sunka.controller.bus;
 /**
  * @author Adam Chlupacek
  * @version 1.0
- *          <-INPUT DESC->
+ * Simple bus state with a counter
  */
 public class TestState implements BusState {
 
