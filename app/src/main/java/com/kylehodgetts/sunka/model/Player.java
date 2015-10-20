@@ -7,12 +7,45 @@ package com.kylehodgetts.sunka.model;
  */
 public class Player {
     private int stonesInPot;
+    private int wonGames;
+    private int side;
+
 
     /**
      * Creates a new player setting stones in pot to 0
      */
     public Player(){
         stonesInPot = 0;
+    }
+
+    /**
+     * @return the side the user is on
+     */
+    public int getSide() {
+        return side;
+    }
+
+    /**
+     *
+     * @param side set the side the user
+     */
+    public void setSide(int side) {
+        this.side = side;
+    }
+
+    /**
+     *
+     * @return the number of games the player has won
+     */
+    public int getWonGames() {
+        return wonGames;
+    }
+
+    /**
+     * Increment the number of games the user has won by one.
+     */
+    public void addWonGames() {
+        wonGames++;
     }
 
     /**
