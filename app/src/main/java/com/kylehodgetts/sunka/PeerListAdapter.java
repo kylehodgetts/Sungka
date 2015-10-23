@@ -16,9 +16,9 @@ import java.util.ArrayList;
  * @version 1.0
  * Adapter for PeerList Listview
  */
-public class PeerListAdapter extends ArrayAdapter<WifiP2pDevice> {
+public class PeerListAdapter extends ArrayAdapter<String> {
 
-    public PeerListAdapter(Context context, ArrayList<WifiP2pDevice> values){
+    public PeerListAdapter(Context context, ArrayList<String> values){
         super(context, R.layout.peer_row, values);
     }
 
@@ -30,7 +30,7 @@ public class PeerListAdapter extends ArrayAdapter<WifiP2pDevice> {
 
         View row = inflater.inflate(R.layout.peer_row, parent, false);
         TextView deviceName = (TextView) row.findViewById(R.id.deviceName);
-        deviceName.setText(getItem(position).deviceName);
+        deviceName.setText(getItem(position));
         return row;
     }
 }
