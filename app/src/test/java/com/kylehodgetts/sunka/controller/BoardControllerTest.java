@@ -33,12 +33,12 @@ public class BoardControllerTest extends TestCase {
         state = new GameState(new Board(),new Player(),new Player(), true);
         bus = new EventBus<>(state,null);
         bus.registerHandler(manager);
-
     }
 
     @Test
     public void testMoveOne() throws Exception {
         bus.feedEvent(new PlayerMove(3, 0));
+        Thread.sleep(10000);
         System.out.println(state.getBoard());
         assertEquals(8, state.getBoard().getTray(0, 6));
         assertEquals(8, state.getBoard().getTray(0, 5));
@@ -56,6 +56,7 @@ public class BoardControllerTest extends TestCase {
         assertEquals(7, state.getBoard().getTray(0, 1));
         assertEquals(7, state.getBoard().getTray(0, 2));
         assertEquals(0, state.getBoard().getTray(0, 3));
-
     }
+
+
 }

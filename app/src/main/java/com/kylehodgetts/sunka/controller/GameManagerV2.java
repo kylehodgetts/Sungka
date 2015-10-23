@@ -32,13 +32,7 @@ public class GameManagerV2 extends EventHandler<GameState> {
      */
     public GameManagerV2() {
         super("GameManager");
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                timer = new Timer("GameManager");
-            }
-        });
-
+        timer = new Timer("GameManager");
     }
 
     @Override
@@ -114,8 +108,6 @@ public class GameManagerV2 extends EventHandler<GameState> {
                 }
             }else {
                 state.getBoard().incrementTray(y, x);
-                System.out.println("Board");
-                System.out.println(state.getBoard());
                 amt--;
                 if (x == 6 && state.currentPlayerRow() == y && amt > 0) {
                     state.getCurrentPlayer().addToPot(1);
