@@ -8,12 +8,13 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
-import com.kylehodgetts.sunka.R;
-
 import java.util.ArrayList;
 
 /**
- * Created by kylehodgetts on 23/10/2015.
+ * @author Kyle Hodgetts
+ * @author Jonathan Burton
+ * @version 1.0
+ * Adapter for PeerList Listview
  */
 public class PeerListAdapter extends ArrayAdapter<WifiP2pDevice> {
 
