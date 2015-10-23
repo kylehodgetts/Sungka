@@ -23,7 +23,9 @@ public class ConnectActivity extends Activity {
     private ArrayList<String> devices;
 
     private SocketReceiver socketReciever;
-    private MulticastSocket multicastSocket;
+    private SocketSender socketSender;
+    private MulticastSocket receivingSocket;
+    private MulticastSocket sendingSocket;
     private InetAddress group;
 
     @Override
@@ -37,6 +39,8 @@ public class ConnectActivity extends Activity {
         peerList.setAdapter(peerListAdapter);
         socketReciever = new SocketReceiver();
         socketReciever.execute();
+        socketSender = new SocketSender();
+        socketSender.execute();
     }
 
     // Create a find peers task
@@ -45,9 +49,9 @@ public class ConnectActivity extends Activity {
         @Override
         protected void onPreExecute() {
             try {
-                multicastSocket = new MulticastSocket(2222);
+                receivingSocket = new MulticastSocket(2222);
                 group = InetAddress.getByName("225.4.5.6");
-                multicastSocket.joinGroup(group);
+                receivingSocket.joinGroup(group);
 
             } catch (IOException e) {
                 e.printStackTrace();
@@ -61,11 +65,11 @@ public class ConnectActivity extends Activity {
                 while(!isCancelled()) {
                      byte[] buf = new byte[256];
                     packet = new DatagramPacket(buf, buf.length);
-                    multicastSocket.receive(packet);
+                    receivingSocket.receive(packet);
                     publishProgress(packet.getData().toString());
                 }
-                multicastSocket.leaveGroup(group);
-                multicastSocket.close();
+                receivingSocket.leaveGroup(group);
+                receivingSocket.close();
             }
             catch (IOException e) {
                 e.printStackTrace();
@@ -81,4 +85,40 @@ public class ConnectActivity extends Activity {
             return;
         }
     }
+
+    class SocketSender extends AsyncTask<Void, Void, Void> {
+
+        @Override
+        protected void onPreExecute() {
+            try {
+                sendingSocket = new MulticastSocket();
+                group = InetAddress.getByName("225.4.5.6");
+                receivingSocket.joinGroup(group);
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            try{
+                DatagramPacket datagramPacket;
+                while(!isCancelled()) {
+                    byte[] bytes = "Hello".getBytes();
+                    datagramPacket = new DatagramPacket(bytes, bytes.length);
+                    datagramPacket.setPort(2222);
+                    sendingSocket.send(datagramPacket);
+                    Thread.sleep(5000);
+                }
+            }
+            catch(IOException e){
+                e.printStackTrace();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+    }
+
 }
