@@ -88,6 +88,18 @@ public class Board {
     }
 
     /**
+     * Checks to see whether the specified row is empty
+     * @param row the row position between 0 and 1
+     * @return
+     */
+    public boolean isEmptyRow(int row) {
+        for (int i : board[row]) {
+            if(i != 0) return false;
+        }
+        return true;
+    }
+
+    /**
      * Gives a string interpretation of the current state of the board
      * @return a String interpretation of the board
      */
@@ -95,7 +107,7 @@ public class Board {
     public String toString() {
         String s = "";
 
-        for(int i=0; i < board.length; ++i)
+        for(int i=1; i >= 0; i--)
         {
             for(int j=0; j < 7; ++j)
             {
