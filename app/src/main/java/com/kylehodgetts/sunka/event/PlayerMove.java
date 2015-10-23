@@ -9,10 +9,14 @@ import com.kylehodgetts.sunka.controller.bus.Event;
  */
 public class PlayerMove implements Event {
     private int x,y;
+    private int player;
 
-    public PlayerMove(int x, int y) {
+
+    public PlayerMove(int x, int y, int player) {
         this.x = x;
         this.y = y;
+        this.player = player;
+
     }
 
     public int getX() {
@@ -21,5 +25,9 @@ public class PlayerMove implements Event {
 
     public int getY() {
         return y;
+    }
+
+    public int getPlayer() {
+        return player;
     }
 }

@@ -11,12 +11,14 @@ public class TickDistribution implements Event {
     private int x,y;
     private int left;
     private boolean first;
+    private int player;
 
-    public TickDistribution(int x, int y, int left, boolean first) {
+    public TickDistribution(int x, int y, int left, boolean first, int player) {
         this.x = x;
         this.y = y;
         this.left = left;
         this.first = first;
+        this.player = player;
     }
 
     public int getX() {
@@ -33,5 +35,9 @@ public class TickDistribution implements Event {
 
     public boolean isFirst() {
         return first;
+    }
+
+    public int getPlayer() {
+        return player;
     }
 }

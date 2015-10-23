@@ -12,14 +12,16 @@ public class GameState implements BusState {
     private Board board;
     private Player player1;
     private Player player2;
-    private boolean playerOneTurn;
+    private int playerOneTurn;
+    private int initialising;
 
 
-    public GameState(Board board, Player player1, Player player2, boolean playerOneTurn) {
+    public GameState(Board board, Player player1, Player player2, int initialising) {
         this.board = board;
         this.player1 = player1;
         this.player2 = player2;
-        this.playerOneTurn = playerOneTurn;
+        this.playerOneTurn = -1;
+        this.initialising = initialising;
     }
 
     public Board getBoard() {
@@ -34,7 +36,7 @@ public class GameState implements BusState {
         return player2;
     }
 
-    public boolean isPlayerOneTurn() {
+    public int getPlayerOneTurn() {
         return playerOneTurn;
     }
 
@@ -50,15 +52,26 @@ public class GameState implements BusState {
         this.player2 = player2;
     }
 
-    public void setPlayerOneTurn(boolean playerOneTurn) {
+    public void setPlayerOneTurn(int playerOneTurn) {
         this.playerOneTurn = playerOneTurn;
     }
 
     public int currentPlayerRow(){
-        return playerOneTurn? 0 : 1;
+        return playerOneTurn;
     }
 
     public Player getCurrentPlayer(){
-        return playerOneTurn?player1:player2;
+        return playerOneTurn == 0? player1:player2;
+    }
+
+    public boolean isInitialising() { return initialising != 1; }
+
+    public GameState nextInitPhase() {
+         ++initialising;
+        return this;
+    }
+
+    public Player getPlayerFor(int player) {
+        return player==0?player1:player2;
     }
 }

@@ -40,6 +40,7 @@ public class GameManagerV2 extends EventHandler<GameState> {
 
         if (event instanceof PlayerMove) return new Tuple2<>(new BusContext(state,bus).event((PlayerMove) event),true);
         if (event instanceof TickDistribution) return new Tuple2<>(new BusContext(state,bus).event((TickDistribution) event),true);
+        if (event instanceof NextTurn && state.isInitialising()) return new Tuple2<>(state.nextInitPhase(), true);
 
 
         return new Tuple2<>(state,false);
@@ -67,12 +68,14 @@ public class GameManagerV2 extends EventHandler<GameState> {
          * @param selected the location of selected tray
          * @return
          */
-        public GameState event(PlayerMove selected){
+        public GameState event(PlayerMove selected){ //TODO: Needs to check every player can play only once during their turn
             int column = selected.getX();
             int row = selected.getY();
 
-            schedule(new TickDistribution(column == 6 ? 0 : column + 1, column == 6 ? (row + 1) % 2 : row, state.getBoard().emptyTray(row,column), true), 300);
-
+            schedule(new TickDistribution(column == 6 ? 0 : column + 1, column == 6 ? (row + 1) % 2 : row, state.getBoard().emptyTray(row,column), true, selected.getPlayer()), 300);
+            if(state.getPlayerOneTurn() == -1) {
+                state.setPlayerOneTurn(selected.getPlayer());
+            }
             state.getBoard().emptyTray(row,column);
             return state;
         }
@@ -83,7 +86,7 @@ public class GameManagerV2 extends EventHandler<GameState> {
          * @return
          */
         public GameState event(TickDistribution tick){
-            return move(tick.getX(),tick.getY(),tick.getLeft(), tick.isFirst());
+            return move(tick.getX(),tick.getY(),tick.getLeft(), tick.isFirst(), tick.getPlayer());
         }
 
         /**
@@ -94,11 +97,11 @@ public class GameManagerV2 extends EventHandler<GameState> {
          * @param first     whether this move is the first one
          * @return
          */
-        private GameState move(int x, int y, int amt, boolean first){
+        private GameState move(int x, int y, int amt, boolean first, int player){
             boolean repeatTurn = false;
 
             if (first && x == 0){ //TODO disgusting hack for fixing of the moving straight into the store
-                state.getCurrentPlayer().addToPot(1);
+                state.getPlayerFor(player).addToPot(1);
                 amt--;
                 repeatTurn = true;
                 if (amt>0){
@@ -109,17 +112,17 @@ public class GameManagerV2 extends EventHandler<GameState> {
             }else {
                 state.getBoard().incrementTray(y, x);
                 amt--;
-                if (x == 6 && state.currentPlayerRow() == y && amt > 0) {
-                    state.getCurrentPlayer().addToPot(1);
+                if (x == 6 && player == y && amt > 0) {
+                    state.getPlayerFor(player).addToPot(1);
                     amt--;
                     repeatTurn = true;
                 }
             }
 
             if(amt == 0){
-                return endTurn(x, y, repeatTurn);
+                return endTurn(x, y, repeatTurn, player);
             } else {
-                schedule(new TickDistribution(x == 6 ? 0 : x + 1, x == 6 ? (y + 1) % 2 : y, amt, false), 300);
+                schedule(new TickDistribution(x == 6 ? 0 : x + 1, x == 6 ? (y + 1) % 2 : y, amt, false, player), 300);
                 return state;
             }
         }
@@ -131,25 +134,27 @@ public class GameManagerV2 extends EventHandler<GameState> {
          * @param repeat    whether the last bead ended in the store
          * @return
          */
-        private GameState endTurn(int x, int y, boolean repeat){
+        private GameState endTurn(int x, int y, boolean repeat, int player){
             Board b = state.getBoard();
             if(!repeat){
-                if (b.getTray(y,x)==1 && y == state.currentPlayerRow()){
+                if (b.getTray(y,x)==1 && y == player){
                     int oppositeTray = b.emptyTray((y+1)%2,6-x);
-                    state.getCurrentPlayer().addToPot(oppositeTray+1);
+                    state.getPlayerFor(player).addToPot(oppositeTray + 1);
                     b.emptyTray(y,x);
                 }
-                state.setPlayerOneTurn(!state.isPlayerOneTurn());
+                if(!state.isInitialising()) {
+                    state.setPlayerOneTurn((state.getPlayerOneTurn()  + 1)%2);
+                }
             }
             if (b.isEmptyRow(0) && b.isEmptyRow(1)){
                 bus.feedEvent(new EndGame());
                 return state;
             }
 
-            if(b.isEmptyRow(state.currentPlayerRow()))
-                state.setPlayerOneTurn(!state.isPlayerOneTurn());
+            if(b.isEmptyRow(state.currentPlayerRow()) && !state.isInitialising())
+                state.setPlayerOneTurn((state.getPlayerOneTurn() + 1)%2);
 
-            schedule(new NextTurn(),300);
+            schedule(new NextTurn(), 300);
             return state;
         }
 
@@ -169,6 +174,7 @@ public class GameManagerV2 extends EventHandler<GameState> {
 
 
         }
+
     }
 
 }
