@@ -6,7 +6,7 @@ import android.os.Bundle;
 /**
  * Created by kylehodgetts on 23/10/2015.
  */
-public class ConnectActivity extends Activity{
+public class ConnectActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
