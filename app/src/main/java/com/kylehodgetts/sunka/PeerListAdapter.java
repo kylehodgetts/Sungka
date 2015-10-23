@@ -1,3 +1,5 @@
+package com.kylehodgetts.sunka;
+
 import android.content.Context;
 import android.net.wifi.p2p.WifiP2pDevice;
 import android.view.LayoutInflater;
