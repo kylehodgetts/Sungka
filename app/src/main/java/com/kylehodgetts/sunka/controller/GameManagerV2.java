@@ -26,6 +26,7 @@ import java.util.TimerTask;
 public class GameManagerV2 extends EventHandler<GameState> {
 
     private Timer timer;
+    private Timer timer2;
 
     /**
      * Default constructor for event handler, assigns its id that should be unique
@@ -33,6 +34,7 @@ public class GameManagerV2 extends EventHandler<GameState> {
     public GameManagerV2() {
         super("GameManager");
         timer = new Timer("GameManager");
+        timer2 = new Timer("GameManagerPlayer2");
     }
 
     @Override
@@ -72,7 +74,7 @@ public class GameManagerV2 extends EventHandler<GameState> {
             int column = selected.getX();
             int row = selected.getY();
 
-            schedule(new TickDistribution(column == 6 ? 0 : column + 1, column == 6 ? (row + 1) % 2 : row, state.getBoard().emptyTray(row,column), true, selected.getPlayer()), 300);
+            schedule(new TickDistribution(column == 6 ? 0 : column + 1, column == 6 ? (row + 1) % 2 : row, state.getBoard().emptyTray(row,column), true, selected.getPlayer()), 300, selected.getPlayer());
             if(state.getPlayerOneTurn() == -1) {
                 state.setPlayerOneTurn(selected.getPlayer());
             }
@@ -122,7 +124,7 @@ public class GameManagerV2 extends EventHandler<GameState> {
             if(amt == 0){
                 return endTurn(x, y, repeatTurn, player);
             } else {
-                schedule(new TickDistribution(x == 6 ? 0 : x + 1, x == 6 ? (y + 1) % 2 : y, amt, false, player), 300);
+                schedule(new TickDistribution(x == 6 ? 0 : x + 1, x == 6 ? (y + 1) % 2 : y, amt, false, player), 300, player);
                 return state;
             }
         }
@@ -154,7 +156,7 @@ public class GameManagerV2 extends EventHandler<GameState> {
             if(b.isEmptyRow(state.currentPlayerRow()) && !state.isInitialising())
                 state.setPlayerOneTurn((state.getPlayerOneTurn() + 1)%2);
 
-            schedule(new NextTurn(), 300);
+            schedule(new NextTurn(), 300, player);
             return state;
         }
 
@@ -164,8 +166,9 @@ public class GameManagerV2 extends EventHandler<GameState> {
          * @param event     the event to be dispatched to the bus
          * @param millis    the amount in millis by which the execution is delayed
          */
-        private void schedule(final Event event, long millis){
-            timer.schedule(new TimerTask() {
+        private void schedule(final Event event, long millis, int player){
+
+            (player == 0? timer : timer2).schedule(new TimerTask() {
                 @Override
                 public void run() {
                     bus.feedEvent(event);
