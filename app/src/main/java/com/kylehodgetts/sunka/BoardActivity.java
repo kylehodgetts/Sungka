@@ -8,7 +8,10 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.kylehodgetts.sunka.controller.GameManagerV2;
+import com.kylehodgetts.sunka.controller.bus.EventBus;
 import com.kylehodgetts.sunka.model.Board;
+import com.kylehodgetts.sunka.model.GameState;
 import com.kylehodgetts.sunka.model.Player;
 
 import java.util.HashMap;
@@ -23,5 +26,6 @@ public class BoardActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_board);
+
      }
 }
