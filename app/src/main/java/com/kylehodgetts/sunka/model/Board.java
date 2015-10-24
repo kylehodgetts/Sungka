@@ -107,14 +107,10 @@ public class Board {
     public String toString() {
         String s = "";
 
-        for(int i=1; i >= 0; i--)
-        {
-            for(int j=0; j < 7; ++j)
-            {
-                s += "["+board[i][j]+"]";
-            }
-            s+= "\n";
-        }
+        for(int j=6; j >= 0; j--) { s += "["+board[0][j]+"]"; }
+        s+= "\n";
+        for(int j=0; j < 7; ++j) { s += "["+board[1][j]+"]"; }
+
         return s;
     }
 }
