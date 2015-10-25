@@ -21,8 +21,14 @@ public class BoardControllerTest extends TestCase {
     private GameManagerV2 manager;
     private GameState state;
     private EventBus<GameState> bus;
-    
 
+
+    /**
+     * Setup method to create a new game state, new players and a new EventBus to handle the events and
+     * changes to the game state.
+     *
+     * @throws Exception
+     */
     @Before
     protected void setUp() throws Exception {
         super.setUp();
@@ -33,43 +39,54 @@ public class BoardControllerTest extends TestCase {
         bus.registerHandler(manager);
     }
 
-    public String printBoard() {
+    /**
+     * Prints to the console a string representation of the current board's state.
+     * Including the shells in each tray and the shells in each player's store.
+     *
+     * @return A String to show the state of the game board's shells and each player's store
+     */
+    public String printBoardState() {
         return "Player 1 Store: "+state.getPlayer1().getStonesInPot() + "\n" +
-                state.getBoard() + "\n" +
+                state.getBoard() +
                 "Player 2 Store: " + state.getPlayer2().getStonesInPot() + "\n";
     }
 
+    /**
+     * Tests each first move of a new game done by the player from each tray on the board carried out by each player
+     * from their own trays only.
+     *
+     * @throws Exception
+     */
     @Test
     public void testMoveOne() throws Exception {
-        bus.feedEvent(new PlayerMove(3, 0, 0));
-        Thread.sleep(10000);
-        System.out.println(printBoard());
-        assertEquals(8, state.getBoard().getTray(0, 6));
-        assertEquals(8, state.getBoard().getTray(0, 5));
-        assertEquals(8, state.getBoard().getTray(0, 4));
-        assertEquals(1, state.getPlayer1().getStonesInPot());
-        assertEquals(8, state.getBoard().getTray(1, 0));
-        assertEquals(8, state.getBoard().getTray(1, 1));
-        assertEquals(8, state.getBoard().getTray(1, 2));
-        assertEquals(7, state.getBoard().getTray(1, 3));
-        assertEquals(7, state.getBoard().getTray(1, 4));
-        assertEquals(7, state.getBoard().getTray(1, 5));
-        assertEquals(7, state.getBoard().getTray(1, 6));
-        assertEquals(0, state.getPlayer2().getStonesInPot());
-        assertEquals(7, state.getBoard().getTray(0, 0));
-        assertEquals(7, state.getBoard().getTray(0, 1));
-        assertEquals(7, state.getBoard().getTray(0, 2));
-        assertEquals(0, state.getBoard().getTray(0, 3));
+
+        for(int i = 0; i < 2; ++i) {
+            for(int j = 0; j < 7; ++j) {
+                bus.feedEvent(new PlayerMove(j, i, i));
+                Thread.sleep(10000);
+                System.out.println(printBoardState());
+
+                int currentRow = i;
+                for(int k = 0; k < 13; ++k) {
+                    if(currentRow == i && (k+j) % 7 == j) { assertEquals(0, state.getBoard().getTray(i, j)); }
+                    else { assertEquals(k < 7 ? 8 : 7, state.getBoard().getTray(currentRow, (k+j) % 7)); }
+                    currentRow = (k+j) % 7 == 6? (currentRow+1) % 2 : currentRow;
+                }
+                assertEquals(i==0 ? 1 : 0, state.getPlayer1().getStonesInPot());
+                assertEquals(i==0 ? 0 : 1, state.getPlayer2().getStonesInPot());
+                setUp();
+            }
+        }
     }
 
     @Test
     public void testMoveTwo() throws Exception {
         bus.feedEvent(new PlayerMove(3, 0, 0));
         Thread.sleep(10000);
-        System.out.println(printBoard());
+        System.out.println(printBoardState());
         bus.feedEvent(new PlayerMove(0, 1, 1));
         Thread.sleep(10000);
-        System.out.println(printBoard());
+        System.out.println(printBoardState());
         assertEquals(9, state.getBoard().getTray(1, 1));
         assertEquals(9, state.getBoard().getTray(1, 2));
         assertEquals(8, state.getBoard().getTray(1, 3));
