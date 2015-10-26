@@ -31,7 +31,13 @@ public class MainActivity extends AppCompatActivity {
      */
     public void gameOption(View view) {
         Button selectedButton = (Button) view;
-
+        if (selectedButton.equals(mmbone)) {
+            BoardActivity.setGameMode(1);
+        } else if (selectedButton.equals(mmbtwo)) {
+            BoardActivity.setGameMode(2);
+        } else if (selectedButton.equals(mmbonline)) {
+            BoardActivity.setGameMode(3);
+        }
         Intent intent = new Intent(MainActivity.this, BoardActivity.class);
         MainActivity.this.startActivity(intent);
     }
