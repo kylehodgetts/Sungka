@@ -64,7 +64,7 @@ public class GameState implements BusState {
         return playerOneTurn == 0? player1:player2;
     }
 
-    public boolean isInitialising() { return initialising != 1; }
+    public boolean isInitialising() { return initialising < 1; }
 
     public GameState nextInitPhase() {
          ++initialising;

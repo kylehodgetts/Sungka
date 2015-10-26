@@ -79,32 +79,93 @@ public class BoardControllerTest extends TestCase {
         }
     }
 
+    /**
+     * Test two consecutive moves that can be done on the board from a new game.
+     *
+     * @throws Exception
+     */
     @Test
     public void testMoveTwo() throws Exception {
-        bus.feedEvent(new PlayerMove(3, 0, 0));
-        Thread.sleep(10000);
-        System.out.println(printBoardState());
-        bus.feedEvent(new PlayerMove(0, 1, 1));
-        Thread.sleep(10000);
-        System.out.println(printBoardState());
-        assertEquals(9, state.getBoard().getTray(1, 1));
-        assertEquals(9, state.getBoard().getTray(1, 2));
-        assertEquals(8, state.getBoard().getTray(1, 3));
-        assertEquals(8, state.getBoard().getTray(1, 4));
-        assertEquals(8, state.getBoard().getTray(1, 5));
-        assertEquals(8, state.getBoard().getTray(1, 6));
-        assertEquals(1, state.getPlayer2().getStonesInPot());
-        assertEquals(8, state.getBoard().getTray(0, 0));
-        assertEquals(7, state.getBoard().getTray(0, 1));
-        assertEquals(7, state.getBoard().getTray(0, 2));
-        assertEquals(0, state.getBoard().getTray(0, 3));
-        assertEquals(8, state.getBoard().getTray(0, 4));
-        assertEquals(8, state.getBoard().getTray(0, 5));
-        assertEquals(8, state.getBoard().getTray(0, 6));
+
+        for(int i = 0; i < 2; ++i) {
+            for(int j = 0; j < 7; ++j) {
+                bus.feedEvent(new PlayerMove(j, i, i));
+                Thread.sleep(10000);
+                bus.feedEvent(new PlayerMove(j, (i+1)%2, (i+1)%2));
+                Thread.sleep(10000);
+                System.out.println(printBoardState());
+
+                int currentRow = i;
+                for(int k = 0; k < 13; ++k) {
+                    if((k+j) % 7 == j) { assertEquals(0, state.getBoard().getTray((i+1)%2, j)); }
+                    else { assertEquals(8, state.getBoard().getTray(currentRow, (k+j) % 7)); }
+                    currentRow = (k+j) % 7 == 6? (currentRow+1) % 2 : currentRow;
+                }
+                assertEquals(1, state.getPlayer1().getStonesInPot());
+                assertEquals(1, state.getPlayer2().getStonesInPot());
+                setUp();
+            }
+        }
     }
 
+    /**
+     * Tests that the first turn should be won by the first player therefore resulting in the
+     * second turn should be given to the first player.
+     *
+     * @throws Exception
+     */
     @Test
     public void testFirstTurn() throws Exception {
+
+        int i = 0;
+        for(int j = 0; j < 7; ++j) {
+            bus.feedEvent(new PlayerMove(j, i, i));
+            bus.feedEvent(new PlayerMove(j, (i+1)%2, (i+1)%2));
+            Thread.sleep(10000);
+            System.out.println(printBoardState());
+
+            int currentRow = i;
+            for(int k = 0; k < 13; ++k) {
+                if((k+j) % 7 == j) { assertEquals(0, state.getBoard().getTray((i+1)%2, j)); }
+                else { assertEquals(8, state.getBoard().getTray(currentRow, (k+j) % 7)); }
+                currentRow = (k+j) % 7 == 6? (currentRow+1) % 2 : currentRow;
+            }
+            assertEquals(1, state.getPlayer1().getStonesInPot());
+            assertEquals(1, state.getPlayer2().getStonesInPot());
+            assertEquals(0, state.getPlayerOneTurn());
+            setUp();
+        }
+
+    }
+
+    /**
+     * Tests that the first turn should be won by the second player therefore resulting in the
+     * second turn should be given to the second player.
+     *
+     * @throws Exception
+     */
+    @Test
+    public void testFirstTurnSecondPlayer() throws Exception {
+
+        int i = 1;
+        for(int j = 0; j < 7; ++j) {
+            bus.feedEvent(new PlayerMove(j, 1, 1));
+            bus.feedEvent(new PlayerMove(j, 0, 0));
+            Thread.sleep(10000);
+            System.out.println(printBoardState());
+
+            int currentRow = i;
+            for(int k = 0; k < 13; ++k) {
+                if((k+j) % 7 == j) { assertEquals(0, state.getBoard().getTray((i+1)%2, j)); }
+                else { assertEquals(8, state.getBoard().getTray(currentRow, (k+j) % 7)); }
+                currentRow = (k+j) % 7 == 6? (currentRow+1) % 2 : currentRow;
+            }
+            assertEquals(1, state.getPlayer1().getStonesInPot());
+            assertEquals(1, state.getPlayer2().getStonesInPot());
+            assertEquals(1, state.getPlayerOneTurn());
+            setUp();
+        }
+
 
     }
 
