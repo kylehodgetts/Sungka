@@ -2,7 +2,11 @@ package com.kylehodgetts.sunka.controller;
 
 import android.app.Activity;
 import android.os.Handler;
+import android.support.annotation.UiThread;
+import android.widget.Button;
 
+import com.kylehodgetts.sunka.BoardActivity;
+import com.kylehodgetts.sunka.R;
 import com.kylehodgetts.sunka.controller.bus.Event;
 import com.kylehodgetts.sunka.controller.bus.EventBus;
 import com.kylehodgetts.sunka.controller.bus.EventHandler;
@@ -49,8 +53,27 @@ public class GameManager extends EventHandler<GameState> {
     }
 
     @Override
-    public void render(GameState state, Activity activity) {
-            //todo hook with gui
+    public void render(final GameState state, final Activity activity) {
+        activity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Button playerOneStore = (Button) activity.findViewById(R.id.buttonas);
+                playerOneStore.setText(Integer.toString(state.getPlayer1().getStonesInPot()));
+
+                Button playerTwoStore = (Button) activity.findViewById(R.id.buttonbs);
+                playerTwoStore.setText(Integer.toString(state.getPlayer2().getStonesInPot()));
+
+                Board currentBoard = state.getBoard();
+                for(int row=0; row < 2; ++row) {
+                    for(int column=0; column < 7; ++column) {
+                        Button button = (Button) activity.findViewById(Integer.parseInt(row+""+column));
+                        button.setText(Integer.toString(currentBoard.getTray(row, column)));
+                    }
+                }
+            }
+        });
+
+
     }
 
     /**
@@ -102,7 +125,7 @@ public class GameManager extends EventHandler<GameState> {
         private GameState move(int x, int y, int amt, boolean first, int player){
             boolean repeatTurn = false;
 
-            if (first && x == 0){ //TODO disgusting hack for fixing of the moving straight into the store
+            if (first && x == player){ //TODO disgusting hack for fixing of the moving straight into the store
                 state.getPlayerFor(player).addToPot(1);
                 amt--;
                 repeatTurn = true;
@@ -114,7 +137,7 @@ public class GameManager extends EventHandler<GameState> {
             }else {
                 state.getBoard().incrementTray(y, x);
                 amt--;
-                if (x == 6 && player == y && amt > 0) {
+                if ((x == 6 || x == 0) && player == y && amt > 0) {
                     state.getPlayerFor(player).addToPot(1);
                     amt--;
                     repeatTurn = true;
@@ -153,7 +176,7 @@ public class GameManager extends EventHandler<GameState> {
                 return state;
             }
 
-            if(b.isEmptyRow(state.currentPlayerRow()) && !state.isInitialising())
+            if(!state.isInitialising() && b.isEmptyRow(state.currentPlayerRow()))
                 state.setPlayerOneTurn((state.getPlayerOneTurn() + 1)%2);
 
             schedule(new NextTurn(), 300, player);
@@ -174,8 +197,6 @@ public class GameManager extends EventHandler<GameState> {
                     bus.feedEvent(event);
                 }
             }, millis);
-
-
         }
 
     }
