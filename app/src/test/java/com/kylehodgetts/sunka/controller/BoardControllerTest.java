@@ -18,7 +18,7 @@ import org.junit.Test;
  */
 public class BoardControllerTest extends TestCase {
 
-    private GameManagerV2 manager;
+    private GameManager manager;
     private GameState state;
     private EventBus<GameState> bus;
 
@@ -33,7 +33,7 @@ public class BoardControllerTest extends TestCase {
     protected void setUp() throws Exception {
         super.setUp();
 
-        manager = new GameManagerV2();
+        manager = new GameManager();
         state = new GameState(new Board(),new Player(),new Player(), -1);
         bus = new EventBus<>(state,null);
         bus.registerHandler(manager);

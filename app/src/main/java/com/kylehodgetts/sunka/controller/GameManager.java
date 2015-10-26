@@ -23,7 +23,7 @@ import java.util.TimerTask;
  *
  * The controller for the main game logic
  */
-public class GameManagerV2 extends EventHandler<GameState> {
+public class GameManager extends EventHandler<GameState> {
 
     private Timer timer;
     private Timer timer2;
@@ -31,7 +31,7 @@ public class GameManagerV2 extends EventHandler<GameState> {
     /**
      * Default constructor for event handler, assigns its id that should be unique
      */
-    public GameManagerV2() {
+    public GameManager() {
         super("GameManager");
         timer = new Timer("GameManager");
         timer2 = new Timer("GameManagerPlayer2");
