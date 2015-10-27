@@ -9,7 +9,7 @@
 - [X] The app must identify when the game is finished and identify the winner in that situation.
 - [X] The source code should come with a full complement of automated tests of all the testable features that have been implemented.
 - [X] The app should allow the players to execute their first turn simultaneously and recognise when each player has exhausted their moves.
-- [ ] The app should visualise the redistribution of shells in a way that players can observe.
+- [X] The app should visualise the redistribution of shells in a way that players can observe.
 - [ ] The app should include suitable graphics to visualise the board and shells to mimic the actual game.
 - [ ] The app should collect statistics on games played, such as the number of games won/lost of each player, the time taken to make a move, high scores, player rankings, etc.
 - [ ] The app may include some animations and sounds, provide these enhance usability and user experience.
