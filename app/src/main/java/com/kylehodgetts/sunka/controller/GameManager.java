@@ -58,6 +58,12 @@ public class GameManager extends EventHandler<GameState> {
         return new Tuple2<>(state,false);
     }
 
+    /**
+     * Renders any changes made to the model and the game state on to the GUI on the UI Thread.
+     *
+     * @param state     The current state of the event bus
+     * @param activity  The active activity
+     */
     @Override
     public void render(final GameState state, final Activity activity) {
         activity.runOnUiThread(new Runnable() {
@@ -110,7 +116,7 @@ public class GameManager extends EventHandler<GameState> {
          * @param selected the location of selected tray
          * @return
          */
-        public GameState event(PlayerMove selected){ //TODO: Needs to check every player can play only once during their turn
+        public GameState event(PlayerMove selected){
             int column = selected.getX();
             int row = selected.getY();
 

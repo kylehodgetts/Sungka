@@ -15,6 +15,8 @@ import org.junit.Test;
 
 
 /**
+ * Test class in order to test the game logic written in the GameManager class.
+ *
  * @author Charlie Baker
  * @version 1.0
  */
