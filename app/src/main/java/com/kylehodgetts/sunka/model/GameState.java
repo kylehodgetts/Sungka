@@ -13,15 +13,17 @@ public class GameState implements BusState {
     private Player player1;
     private Player player2;
     private int playerOneTurn;
-    private int initialising;
+    private int initialising; // VALUE -2(noone has pressed anything yet); -1(player1 has pressed); 0(player2 has pressed); 1(All user init action done, waiting for processing); 2(No more init)
+    private boolean doingMove;
 
 
-    public GameState(Board board, Player player1, Player player2, int initialising) {
+    public GameState(Board board, Player player1, Player player2) {
         this.board = board;
         this.player1 = player1;
         this.player2 = player2;
         this.playerOneTurn = -1;
-        this.initialising = initialising;
+        this.initialising = -2;
+        this.doingMove = false;
     }
 
     public Board getBoard() {
@@ -64,14 +66,37 @@ public class GameState implements BusState {
         return playerOneTurn == 0? player1:player2;
     }
 
-    public boolean isInitialising() { return initialising < 1; }
+    public boolean isInitialising() {
+        return initialising < 2; }
 
-    public GameState nextInitPhase() {
-         ++initialising;
-        return this;
+    public void nextInitPhase(int player) {
+        if(initialising == -2){
+            initialising += 1 + player;
+        }else if((initialising == -1 && player == 1) || (initialising==0 && player==0)){
+            initialising = 1;
+        }
+    }
+
+    public void finishInit() {
+        if(initialising == 1)
+            ++initialising;
+    }
+
+    public boolean playerInitialising(int player) {
+        if (initialising > 1) return false;
+        else
+            return initialising < -1 || player == 0 && initialising != -1 || player == 1 && initialising != 0;
     }
 
     public Player getPlayerFor(int player) {
         return player==0?player1:player2;
+    }
+
+    public boolean isDoingMove() {
+        return doingMove;
+    }
+
+    public void setDoingMove(boolean doingMove) {
+        this.doingMove = doingMove;
     }
 }

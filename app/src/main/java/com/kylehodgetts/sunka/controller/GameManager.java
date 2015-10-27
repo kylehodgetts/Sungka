@@ -7,10 +7,12 @@ import android.widget.Button;
 
 import com.kylehodgetts.sunka.BoardActivity;
 import com.kylehodgetts.sunka.R;
+import com.kylehodgetts.sunka.TrayOnClick;
 import com.kylehodgetts.sunka.controller.bus.Event;
 import com.kylehodgetts.sunka.controller.bus.EventBus;
 import com.kylehodgetts.sunka.controller.bus.EventHandler;
 import com.kylehodgetts.sunka.event.EndGame;
+import com.kylehodgetts.sunka.event.NewGame;
 import com.kylehodgetts.sunka.event.NextTurn;
 import com.kylehodgetts.sunka.event.PlayerMove;
 import com.kylehodgetts.sunka.event.TickDistribution;
@@ -31,14 +33,16 @@ public class GameManager extends EventHandler<GameState> {
 
     private Timer timer;
     private Timer timer2;
+    private EventBus<GameState> bus;
 
     /**
      * Default constructor for event handler, assigns its id that should be unique
      */
-    public GameManager() {
+    public GameManager(EventBus<GameState> bus) {
         super("GameManager");
         timer = new Timer("GameManager");
         timer2 = new Timer("GameManagerPlayer2");
+        this.bus = bus;
     }
 
     @Override
@@ -46,7 +50,12 @@ public class GameManager extends EventHandler<GameState> {
 
         if (event instanceof PlayerMove) return new Tuple2<>(new BusContext(state,bus).event((PlayerMove) event),true);
         if (event instanceof TickDistribution) return new Tuple2<>(new BusContext(state,bus).event((TickDistribution) event),true);
-        if (event instanceof NextTurn && state.isInitialising()) return new Tuple2<>(state.nextInitPhase(), true);
+        if (event instanceof NextTurn) {
+            if(state.isInitialising())
+                state.finishInit();
+            state.setDoingMove(false);
+            return new Tuple2<>(state, true);}
+        if (event instanceof NewGame) return new Tuple2<>(state, true); //TODO Should set the board to initial state
 
 
         return new Tuple2<>(state,false);
@@ -57,10 +66,10 @@ public class GameManager extends EventHandler<GameState> {
         activity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                Button playerOneStore = (Button) activity.findViewById(R.id.buttonas);
+                Button playerOneStore = (Button) activity.findViewById(R.id.buttonbs);
                 playerOneStore.setText(Integer.toString(state.getPlayer1().getStonesInPot()));
 
-                Button playerTwoStore = (Button) activity.findViewById(R.id.buttonbs);
+                Button playerTwoStore = (Button) activity.findViewById(R.id.buttonas);
                 playerTwoStore.setText(Integer.toString(state.getPlayer2().getStonesInPot()));
 
                 Board currentBoard = state.getBoard();
@@ -68,6 +77,17 @@ public class GameManager extends EventHandler<GameState> {
                     for(int column=0; column < 7; ++column) {
                         Button button = (Button) activity.findViewById(Integer.parseInt(row+""+column));
                         button.setText(Integer.toString(currentBoard.getTray(row, column)));
+                        if (
+                            !state.getBoard().isEmptyTray(row,column)
+                            && (
+                                (state.getPlayerOneTurn() == row && !state.isDoingMove() && !state.isInitialising())
+                                || state.playerInitialising(row)
+                            )
+                        ){
+                            button.setOnClickListener(new TrayOnClick(column,row,row,bus));
+                        }else {
+                            button.setOnClickListener(null);
+                        }
                     }
                 }
             }
@@ -97,13 +117,14 @@ public class GameManager extends EventHandler<GameState> {
             int column = selected.getX();
             int row = selected.getY();
 
-            if((column == 6 && row == 1) || (column == 0 && row == 0)) { schedule(new TickDistribution(column, (row + 1) % 2, state.getBoard().emptyTray(row, column), true, selected.getPlayer()), 300, selected.getPlayer()); }
-            else { schedule(new TickDistribution(row == 0 ? column -1 : column + 1, row, state.getBoard().emptyTray(row, column), true, selected.getPlayer()), 300, selected.getPlayer()); }
-            //schedule(new TickDistribution(column == 6 ? 0 : column + 1, column == 6 ? (row + 1) % 2 : row, state.getBoard().emptyTray(row,column), true, selected.getPlayer()), 300, selected.getPlayer());
+            schedule(new TickDistribution(column == 6 ? 0 : column + 1, column == 6 ? (row + 1) % 2 : row, state.getBoard().emptyTray(row,column), true, selected.getPlayer()), 300, selected.getPlayer());
             if(state.getPlayerOneTurn() == -1) {
                 state.setPlayerOneTurn(selected.getPlayer());
             }
+            if (state.isInitialising())
+                state.nextInitPhase(selected.getPlayer());
             state.getBoard().emptyTray(row,column);
+            state.setDoingMove(true);
             return state;
         }
 
@@ -149,8 +170,7 @@ public class GameManager extends EventHandler<GameState> {
             if(amt == 0){
                 return endTurn(x, y, repeatTurn, player);
             } else {
-                if((x == 6 && y == 1) || (x == 0 && y == 0)) { schedule(new TickDistribution(x, (y + 1) % 2, amt, false, player), 300, player); }
-                else { schedule(new TickDistribution(y == 0 ? x -1 : x + 1, y, amt, false, player), 300, player); }
+                schedule(new TickDistribution(x == 6 ? 0 : x + 1, x == 6 ? (y + 1) % 2 : y, amt, false, player), 300, player);
                 return state;
             }
         }
@@ -182,7 +202,7 @@ public class GameManager extends EventHandler<GameState> {
             if(!state.isInitialising() && b.isEmptyRow(state.currentPlayerRow()))
                 state.setPlayerOneTurn((state.getPlayerOneTurn() + 1)%2);
 
-            schedule(new NextTurn(), 300, player);
+            schedule(new NextTurn(player), 300, player);
             return state;
         }
 
@@ -193,11 +213,10 @@ public class GameManager extends EventHandler<GameState> {
          * @param millis    the amount in millis by which the execution is delayed
          */
         private void schedule(final Event event, long millis, int player){
-
             (player == 0? timer : timer2).schedule(new TimerTask() {
                 @Override
                 public void run() {
-                    bus.feedEvent(event);
+                bus.feedEvent(event);
                 }
             }, millis);
         }

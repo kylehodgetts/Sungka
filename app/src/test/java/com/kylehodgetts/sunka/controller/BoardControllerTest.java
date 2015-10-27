@@ -1,5 +1,7 @@
 package com.kylehodgetts.sunka.controller;
 
+import android.app.Activity;
+
 import com.kylehodgetts.sunka.controller.bus.EventBus;
 import com.kylehodgetts.sunka.event.PlayerMove;
 import com.kylehodgetts.sunka.model.Board;
@@ -18,9 +20,17 @@ import org.junit.Test;
  */
 public class BoardControllerTest extends TestCase {
 
-    private GameManager manager;
     private GameState state;
     private EventBus<GameState> bus;
+
+    private class ManagerTest extends GameManager{
+        public ManagerTest(EventBus<GameState> bus) {
+            super(bus);
+        }
+
+        @Override
+        public void render(GameState state, Activity activity) {}
+    }
 
 
     /**
@@ -33,9 +43,9 @@ public class BoardControllerTest extends TestCase {
     protected void setUp() throws Exception {
         super.setUp();
 
-        manager = new GameManager();
-        state = new GameState(new Board(),new Player(),new Player(), -1);
+        state = new GameState(new Board(),new Player(),new Player());
         bus = new EventBus<>(state,null);
+        GameManager manager = new ManagerTest(bus);
         bus.registerHandler(manager);
     }
 

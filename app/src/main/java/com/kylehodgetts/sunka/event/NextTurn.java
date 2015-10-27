@@ -8,4 +8,14 @@ import com.kylehodgetts.sunka.controller.bus.Event;
  * Event that notifies that the next turn has began
  */
 public class NextTurn implements Event {
+
+    private int player;
+
+    public NextTurn(int player) {
+        this.player = player;
+    }
+
+    public int getPlayer() {
+        return player;
+    }
 }
