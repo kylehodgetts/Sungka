@@ -1,11 +1,8 @@
 package com.kylehodgetts.sunka.controller;
 
 import android.app.Activity;
-import android.os.Handler;
-import android.support.annotation.UiThread;
 import android.widget.Button;
 
-import com.kylehodgetts.sunka.BoardActivity;
 import com.kylehodgetts.sunka.R;
 import com.kylehodgetts.sunka.TrayOnClick;
 import com.kylehodgetts.sunka.controller.bus.Event;
@@ -51,7 +48,7 @@ public class GameManager extends EventHandler<GameState> {
         if (event instanceof PlayerMove) return new Tuple2<>(new BusContext(state,bus).event((PlayerMove) event),true);
         if (event instanceof TickDistribution) return new Tuple2<>(new BusContext(state,bus).event((TickDistribution) event),true);
         if (event instanceof NextTurn) {
-            if(state.isInitialising())
+            if(((NextTurn) event).finishInit())
                 state.finishInit();
             state.setDoingMove(false);
             return new Tuple2<>(state, true);}
@@ -121,6 +118,7 @@ public class GameManager extends EventHandler<GameState> {
             if(state.getPlayerOneTurn() == -1) {
                 state.setPlayerOneTurn(selected.getPlayer());
             }
+            System.out.println("PLayer turn"+ state.getPlayerOneTurn());
             if (state.isInitialising())
                 state.nextInitPhase(selected.getPlayer());
             state.getBoard().emptyTray(row,column);
@@ -148,7 +146,7 @@ public class GameManager extends EventHandler<GameState> {
         private GameState move(int x, int y, int amt, boolean first, int player){
             boolean repeatTurn = false;
 
-            if (first && x == player){ //TODO disgusting hack for fixing of the moving straight into the store
+            if (first && x == 0){ //TODO disgusting hack for fixing of the moving straight into the store
                 state.getPlayerFor(player).addToPot(1);
                 amt--;
                 repeatTurn = true;
@@ -160,7 +158,7 @@ public class GameManager extends EventHandler<GameState> {
             }else {
                 state.getBoard().incrementTray(y, x);
                 amt--;
-                if ((x == 6 || x == 0) && player == y && amt > 0) {
+                if (x == 6  && player == y && amt > 0) {
                     state.getPlayerFor(player).addToPot(1);
                     amt--;
                     repeatTurn = true;
@@ -202,7 +200,7 @@ public class GameManager extends EventHandler<GameState> {
             if(!state.isInitialising() && b.isEmptyRow(state.currentPlayerRow()))
                 state.setPlayerOneTurn((state.getPlayerOneTurn() + 1)%2);
 
-            schedule(new NextTurn(player), 300, player);
+            schedule(new NextTurn(state.isInitialising() && state.getPlayerOneTurn() !=player), 300, player);
             return state;
         }
 

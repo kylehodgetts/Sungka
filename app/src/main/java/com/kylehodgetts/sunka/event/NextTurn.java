@@ -9,13 +9,13 @@ import com.kylehodgetts.sunka.controller.bus.Event;
  */
 public class NextTurn implements Event {
 
-    private int player;
+    private boolean finishInit;
 
-    public NextTurn(int player) {
-        this.player = player;
+    public NextTurn(boolean finishInit) {
+        this.finishInit = finishInit;
     }
 
-    public int getPlayer() {
-        return player;
+    public boolean finishInit() {
+        return finishInit;
     }
 }
