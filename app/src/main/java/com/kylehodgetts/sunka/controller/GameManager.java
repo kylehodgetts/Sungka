@@ -97,7 +97,9 @@ public class GameManager extends EventHandler<GameState> {
             int column = selected.getX();
             int row = selected.getY();
 
-            schedule(new TickDistribution(column == 6 ? 0 : column + 1, column == 6 ? (row + 1) % 2 : row, state.getBoard().emptyTray(row,column), true, selected.getPlayer()), 300, selected.getPlayer());
+            if((column == 6 && row == 1) || (column == 0 && row == 0)) { schedule(new TickDistribution(column, (row + 1) % 2, state.getBoard().emptyTray(row, column), true, selected.getPlayer()), 300, selected.getPlayer()); }
+            else { schedule(new TickDistribution(row == 0 ? column -1 : column + 1, row, state.getBoard().emptyTray(row, column), true, selected.getPlayer()), 300, selected.getPlayer()); }
+            //schedule(new TickDistribution(column == 6 ? 0 : column + 1, column == 6 ? (row + 1) % 2 : row, state.getBoard().emptyTray(row,column), true, selected.getPlayer()), 300, selected.getPlayer());
             if(state.getPlayerOneTurn() == -1) {
                 state.setPlayerOneTurn(selected.getPlayer());
             }
@@ -147,7 +149,8 @@ public class GameManager extends EventHandler<GameState> {
             if(amt == 0){
                 return endTurn(x, y, repeatTurn, player);
             } else {
-                schedule(new TickDistribution(x == 6 ? 0 : x + 1, x == 6 ? (y + 1) % 2 : y, amt, false, player), 300, player);
+                if((x == 6 && y == 1) || (x == 0 && y == 0)) { schedule(new TickDistribution(x, (y + 1) % 2, amt, false, player), 300, player); }
+                else { schedule(new TickDistribution(y == 0 ? x -1 : x + 1, y, amt, false, player), 300, player); }
                 return state;
             }
         }
