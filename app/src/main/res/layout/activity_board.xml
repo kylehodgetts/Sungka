@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    tools:context="com.kylehodgetts.sunka.BoardActivity">
+
+
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true">
+
+        <Button
+            android:layout_width="86dp"
+            android:layout_height="match_parent"
+            android:id="@+id/buttonas"
+            android:width="30dp"
+            android:height="40dp"
+            android:textColor="#FFFFFF"
+            android:background="@drawable/buttonascore"
+            android:shadowColor="#A8A8A8"
+            android:shadowDx="0"
+            android:shadowDy="0"
+            android:shadowRadius="5"
+            android:layout_gravity="center|fill_vertical" />
+
+    <GridLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/gridLayout">
+
+    </GridLayout>
+
+
+        <Button
+            android:layout_width="86dp"
+            android:layout_height="match_parent"
+            android:id="@+id/buttonbs"
+            android:width="30dp"
+            android:height="40dp"
+            android:textColor="#FFFFFF"
+            android:background="@drawable/buttonbscore"
+            android:shadowColor="#A8A8A8"
+            android:shadowDx="0"
+            android:shadowDy="0"
+            android:shadowRadius="5"
+            android:layout_gravity="center|fill_vertical"
+            />
+
+
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/simpleBoardPrototype"
+        android:id="@+id/textView"
+        android:layout_alignTop="@+id/tvPlayerB"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/playerB"
+        android:id="@+id/tvPlayerB"
+        android:layout_above="@id/linearLayout"
+        android:layout_alignLeft="@id/linearLayout"
+        android:layout_alignStart="@id/linearLayout"
+        android:layout_marginBottom="26dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/playerA"
+        android:id="@+id/tvPlayerA"
+        android:layout_below="@id/linearLayout"
+        android:layout_alignRight="@id/linearLayout"
+        android:layout_alignEnd="@id/linearLayout"
+        android:layout_marginTop="28dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/debugging"
+        android:id="@+id/tvDebugging"
+        android:layout_above="@+id/textView"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
+</RelativeLayout>

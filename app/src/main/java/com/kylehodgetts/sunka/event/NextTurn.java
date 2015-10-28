@@ -1,0 +1,21 @@
+package com.kylehodgetts.sunka.event;
+
+import com.kylehodgetts.sunka.controller.bus.Event;
+
+/**
+ * @author Adam Chlupacek
+ * @version 1.0
+ * Event that notifies that the next turn has began
+ */
+public class NextTurn implements Event {
+
+    private boolean finishInit;
+
+    public NextTurn(boolean finishInit) {
+        this.finishInit = finishInit;
+    }
+
+    public boolean finishInit() {
+        return finishInit;
+    }
+}
