@@ -81,7 +81,7 @@ public class WiFiDirectActivity extends Activity implements ChannelListener {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 //Initiate connections
-                Toast.makeText(WiFiDirectActivity.this, (String) parent.getItemAtPosition(position), Toast.LENGTH_SHORT).show();
+                Toast.makeText(WiFiDirectActivity.this, parent.getItemAtPosition(position).toString(), Toast.LENGTH_LONG).show();
             }
         });
 
