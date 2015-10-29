@@ -41,11 +41,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * An activity that uses WiFi Direct APIs to discover and connect with available
- * devices. WiFi Direct APIs are asynchronous and rely on callback mechanism
- * using interfaces to notify the application of operation success or failure.
- * The application should also register a BroadcastReceiver for notification of
- * WiFi state related events.
+ * @author Kyle Hodgetts
+ * @version 1.0
+ * @see {@link "developer.android.com/training/connect-devices-wirelessly/wifi-direct.html"}
  */
 public class WiFiDirectActivity extends Activity implements ChannelListener {
 
