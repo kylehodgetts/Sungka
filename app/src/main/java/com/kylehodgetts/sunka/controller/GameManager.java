@@ -99,6 +99,7 @@ public class GameManager extends EventHandler<GameState> {
                 TextView tvPlayerA = (TextView) activity.findViewById(R.id.tvPlayerA);
                 TextView tvPlayerB = (TextView) activity.findViewById(R.id.tvPlayerB);
 
+                // TODO: Look at situations when both Players are highlighted after initialisation and both players sometimes are not highlighted?
                 if (state.isInitialising()) {
                     tvPlayerB.setBackgroundColor(Color.parseColor("#2D8BA8"));
                     tvPlayerA.setBackgroundColor(Color.parseColor("#A84136"));

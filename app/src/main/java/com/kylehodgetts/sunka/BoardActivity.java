@@ -1,5 +1,6 @@
 package com.kylehodgetts.sunka;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -23,7 +24,7 @@ import com.kylehodgetts.sunka.model.Player;
  * @version 1.1
  * **/
 
-public class BoardActivity extends AppCompatActivity {
+public class BoardActivity extends Activity {
 
     //TODO: Implement OnPause, OnResume, OnStop methods
 
