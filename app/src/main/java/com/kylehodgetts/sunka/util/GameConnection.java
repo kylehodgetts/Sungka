@@ -103,7 +103,6 @@ public class GameConnection {
                 try {
                     mSocket.close();
                 } catch (IOException e) {
-                    // TODO(alexlucas): Auto-generated catch block
                     e.printStackTrace();
                 }
             }
@@ -167,14 +166,14 @@ public class GameConnection {
         private InetAddress mAddress;
         private int PORT;
 
-        private final String CLIENT_TAG = "ChatClient";
+        private final String CLIENT_TAG = "GameClient";
 
         private Thread mSendThread;
         private Thread mRecThread;
 
         public GameClient(InetAddress address, int port) {
 
-            Log.d(CLIENT_TAG, "Creating chatClient");
+            Log.d(CLIENT_TAG, "Creating gameClient");
             this.mAddress = address;
             this.PORT = port;
 

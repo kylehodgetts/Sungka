@@ -20,8 +20,15 @@ public class MainActivity extends AppCompatActivity {
         /** Menu Buttons **/
         mmbone =   (Button) findViewById(R.id.main_menu_button_one);
         mmbtwo =   (Button) findViewById(R.id.main_menu_button_two);
-        mmbonline= (Button) findViewById(R.id.main_menu_button_online);
-        mmbus=     (Button) findViewById(R.id.main_menu_button_us);
+        mmbonline = (Button) findViewById(R.id.main_menu_button_online);
+        mmbonline.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(MainActivity.this, WiFiDirectActivity.class);
+                startActivity(i);
+            }
+        });
+        mmbus =     (Button) findViewById(R.id.main_menu_button_us);
         mmbexit =  (Button) findViewById(R.id.main_menu_button_exit);
     }
 
