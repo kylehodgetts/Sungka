@@ -21,13 +21,17 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.net.NetworkInfo;
+import android.net.wifi.WpsInfo;
 import android.net.wifi.p2p.WifiP2pConfig;
 import android.net.wifi.p2p.WifiP2pDevice;
 import android.net.wifi.p2p.WifiP2pDeviceList;
+import android.net.wifi.p2p.WifiP2pInfo;
 import android.net.wifi.p2p.WifiP2pManager;
 import android.net.wifi.p2p.WifiP2pManager.ActionListener;
 import android.net.wifi.p2p.WifiP2pManager.Channel;
 import android.net.wifi.p2p.WifiP2pManager.ChannelListener;
+import android.net.wifi.p2p.WifiP2pManager.ConnectionInfoListener;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -37,6 +41,8 @@ import android.widget.Toast;
 
 import com.kylehodgetts.sunka.controller.wifi.PeerListAdapter;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -45,7 +51,7 @@ import java.util.List;
  * @version 1.0
  * @see {@link "developer.android.com/training/connect-devices-wirelessly/wifi-direct.html"}
  */
-public class WiFiDirectActivity extends Activity implements ChannelListener {
+public class WiFiDirectActivity extends Activity implements ChannelListener, ConnectionInfoListener {
 
     public static final String TAG = "wifidirectactivity";
     private ListView peerList;
@@ -78,8 +84,23 @@ public class WiFiDirectActivity extends Activity implements ChannelListener {
         peerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                //Initiate connections
-                Toast.makeText(WiFiDirectActivity.this, parent.getItemAtPosition(position).toString(), Toast.LENGTH_LONG).show();
+                WifiP2pDevice device = (WifiP2pDevice) parent.getItemAtPosition(position);
+                WifiP2pConfig config = new WifiP2pConfig();
+                config.deviceAddress = device.deviceAddress;
+                config.wps.setup = WpsInfo.PBC;
+                manager.connect(channel, config, new ActionListener() {
+                    @Override
+                    public void onSuccess() {
+                        Toast.makeText(WiFiDirectActivity.this, "Connect success!.",
+                                Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onFailure(int reason) {
+                        Toast.makeText(WiFiDirectActivity.this, "Connect failed. Retry.",
+                                       Toast.LENGTH_SHORT).show();
+                    }
+                });
             }
         });
 
@@ -138,6 +159,27 @@ public class WiFiDirectActivity extends Activity implements ChannelListener {
     public void onChannelDisconnected() {}
 
     public void resetData() {}
+
+    @Override
+    public void onConnectionInfoAvailable(WifiP2pInfo info) {
+        // InetAddress from WifiP2pInfo struct.
+        try {
+            InetAddress groupOwnerAddress = InetAddress.getByName(info.groupOwnerAddress.getHostAddress());
+            // After the group negotiation, we can determine the group owner.
+            if (info.groupFormed && info.isGroupOwner) {
+                // Do whatever tasks are specific to the group owner.
+                // One common case is creating a server thread and accepting
+                // incoming connections.
+            } else if (info.groupFormed) {
+                // The other device acts as the client. In this case,
+                // you'll want to create a client thread that connects to the group
+                // owner.
+            }
+        }
+        catch (UnknownHostException e) {
+            e.printStackTrace();
+        }
+    }
 
     public class WiFiDirectBroadcastReceiver extends BroadcastReceiver {
 
@@ -200,6 +242,17 @@ public class WiFiDirectActivity extends Activity implements ChannelListener {
                 Log.d(WiFiDirectActivity.TAG, "P2P peers changed");
             }
             else if (WifiP2pManager.WIFI_P2P_CONNECTION_CHANGED_ACTION.equals(action)) {
+                if (manager == null) {
+                    return;
+                }
+
+                NetworkInfo networkInfo = (NetworkInfo) intent
+                        .getParcelableExtra(WifiP2pManager.EXTRA_NETWORK_INFO);
+
+                if (networkInfo.isConnected()) {
+                    
+                    manager.requestConnectionInfo(channel, activity);
+                }
 
             }
             else if (WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION.equals(action)) {
