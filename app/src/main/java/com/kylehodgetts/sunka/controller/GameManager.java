@@ -1,7 +1,9 @@
 package com.kylehodgetts.sunka.controller;
 
 import android.app.Activity;
+import android.graphics.Color;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.kylehodgetts.sunka.R;
 import com.kylehodgetts.sunka.TrayOnClick;
@@ -76,22 +78,42 @@ public class GameManager extends EventHandler<GameState> {
                 playerTwoStore.setText(Integer.toString(state.getPlayer2().getStonesInPot()));
 
                 Board currentBoard = state.getBoard();
-                for(int row=0; row < 2; ++row) {
-                    for(int column=0; column < 7; ++column) {
-                        Button button = (Button) activity.findViewById(Integer.parseInt(row+""+column));
+                for (int row = 0; row < 2; ++row) {
+                    for (int column = 0; column < 7; ++column) {
+                        Button button = (Button) activity.findViewById(Integer.parseInt(row + "" + column));
                         button.setText(Integer.toString(currentBoard.getTray(row, column)));
                         if (
-                            !state.getBoard().isEmptyTray(row,column)
-                            && (
-                                (state.getPlayerOneTurn() == row && !state.isDoingMove() && !state.isInitialising())
-                                || state.playerInitialising(row)
-                            )
-                        ){
-                            button.setOnClickListener(new TrayOnClick(column,row,row,bus));
-                        }else {
+                                !state.getBoard().isEmptyTray(row, column)
+                                        && (
+                                        (state.getPlayerOneTurn() == row && !state.isDoingMove() && !state.isInitialising())
+                                                || state.playerInitialising(row)
+                                )
+                                ) {
+                            button.setOnClickListener(new TrayOnClick(column, row, row, bus));
+                        } else {
                             button.setOnClickListener(null);
                         }
                     }
+                }
+
+                TextView tvPlayerA = (TextView) activity.findViewById(R.id.tvPlayerA);
+                TextView tvPlayerB = (TextView) activity.findViewById(R.id.tvPlayerB);
+
+                if (state.isInitialising()) {
+                    tvPlayerB.setBackgroundColor(Color.parseColor("#2D8BA8"));
+                    tvPlayerA.setBackgroundColor(Color.parseColor("#A84136"));
+                    tvPlayerB.setTextColor(Color.WHITE);
+                    tvPlayerA.setTextColor(Color.WHITE);
+                } else if (state.getPlayerOneTurn() == 0) {
+                    tvPlayerB.setBackgroundColor(Color.TRANSPARENT);
+                    tvPlayerB.setTextColor(Color.BLACK);
+                    tvPlayerA.setBackgroundColor(Color.parseColor("#A84136"));
+                    tvPlayerA.setTextColor(Color.WHITE);
+                } else {
+                    tvPlayerB.setBackgroundColor(Color.parseColor("#2D8BA8"));
+                    tvPlayerA.setBackgroundColor(Color.TRANSPARENT);
+                    tvPlayerB.setTextColor(Color.WHITE);
+                    tvPlayerA.setTextColor(Color.BLACK);
                 }
             }
         });
