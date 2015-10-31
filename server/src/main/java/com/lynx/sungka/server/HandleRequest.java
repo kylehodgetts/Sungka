@@ -60,7 +60,9 @@ public class HandleRequest implements Runnable {
             for (Header header : response.getHeaders()) {
                 resp+=header.getName()+": "+header.getValue()+"\r\n";
             }
-            output.write(connectArrays(resp.getBytes(),response.getContent()));
+            resp += "\r\n";
+            byte[] res = connectArrays(resp.getBytes(), response.getContent());
+            output.write(res);
             output.close();
             input.close();
         } catch (IOException e) {

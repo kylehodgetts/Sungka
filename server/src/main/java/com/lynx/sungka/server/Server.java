@@ -1,6 +1,7 @@
 package com.lynx.sungka.server;
 
 import com.lynx.sungka.server.http.RequestResponse;
+import com.lynx.sungka.server.http.header.Header;
 import com.lynx.sungka.server.http.route.Bind;
 import com.lynx.sungka.server.http.route.Route;
 import com.lynx.sungka.server.http.route.Segment;
@@ -39,7 +40,10 @@ public class Server implements Runnable {
         route = new Segment("me",new Bind() {
             @Override
             public RequestResponse run(ServerContext context, DBObject body, List<String> args) {
-                return new RequestResponse(new ArrayList<>(),"<a>Hello</a>".getBytes(), RequestResponse.ResponseCode.OK);
+                ArrayList<Header> headers = new ArrayList<>();
+                headers.add(new Header("Server","Simple rest server"));
+                headers.add(new Header("Content-Type","text/html"));
+                return new RequestResponse(headers,"<a>Hello</a>".getBytes(), RequestResponse.ResponseCode.OK);
             }
         });
         try {
