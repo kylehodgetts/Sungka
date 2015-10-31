@@ -3,6 +3,7 @@ package com.lynx.sungka.server;
 import com.lynx.sungka.server.http.RequestResponse;
 import com.lynx.sungka.server.http.route.Bind;
 import com.lynx.sungka.server.http.route.Route;
+import com.lynx.sungka.server.http.route.Segment;
 import com.mongodb.DBObject;
 
 import java.io.BufferedReader;
@@ -35,12 +36,12 @@ public class Server implements Runnable {
         pool = Executors.newScheduledThreadPool(5);
         running = true;
         context = new ServerContext();//TODO open db connections and stuff
-        route = new Bind() {
+        route = new Segment("me",new Bind() {
             @Override
             public RequestResponse run(ServerContext context, DBObject body, List<String> args) {
                 return new RequestResponse(new ArrayList<>(),"<a>Hello</a>".getBytes(), RequestResponse.ResponseCode.OK);
             }
-        };
+        });
         try {
             socket = new ServerSocket(8080);
             System.out.println("Starting server at: "+socket.getInetAddress().getCanonicalHostName());

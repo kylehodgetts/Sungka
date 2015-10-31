@@ -14,10 +14,14 @@ public class Segment implements Route {
     private Route next;
     private String segment;
 
+    public Segment(String segment,Route next) {
+        this.next = next;
+        this.segment = segment;
+    }
 
     @Override
     public Tuple2<RequestResponse, ParseState> matchRequest(ParseState state, ServerContext ctx, int idx) {
-        if(state.getPath().length<idx && state.getPath()[idx].equals(segment)){
+        if(state.getPath().length>idx && state.getPath()[idx].equals(segment)){
             state.addArg(state.getPath()[idx]);
             state.push(new Tuple2<>(++idx,next));
         }

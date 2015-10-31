@@ -70,7 +70,11 @@ public class HandleRequest implements Runnable {
     }
 
     private RequestResponse bindRequest(Request req) {
-        ParseState state = new ParseState(req, req.getRoute().split("/"), input);
+        String absPath = req.getRoute().trim();
+        if (absPath.startsWith("/"))
+            absPath = absPath.substring(1);
+
+        ParseState state = new ParseState(req, absPath.split("/"), input);
         state.push(new Tuple2<>(0,route));
         while (!state.isEmpty()){
             Tuple2<RequestResponse,ParseState> res = parseOne(state);
