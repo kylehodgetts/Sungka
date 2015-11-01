@@ -17,7 +17,7 @@
         android:layout_centerInParent="true">
 
         <Button
-            android:layout_width="86dp"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:id="@+id/buttonas"
             android:width="30dp"
@@ -28,18 +28,17 @@
             android:shadowDx="0"
             android:shadowDy="0"
             android:shadowRadius="5"
-            android:layout_gravity="center|fill_vertical" />
+            />
 
-    <GridLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/gridLayout">
-
-    </GridLayout>
-
+        <GridLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/gridLayout"
+            android:layout_weight="1"
+            />
 
         <Button
-            android:layout_width="86dp"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:id="@+id/buttonbs"
             android:width="30dp"
@@ -50,7 +49,6 @@
             android:shadowDx="0"
             android:shadowDy="0"
             android:shadowRadius="5"
-            android:layout_gravity="center|fill_vertical"
             />
 
 

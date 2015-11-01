@@ -3,6 +3,7 @@ package com.kylehodgetts.sunka.controller;
 import android.app.Activity;
 import android.graphics.Color;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.kylehodgetts.sunka.R;
@@ -80,8 +81,10 @@ public class GameManager extends EventHandler<GameState> {
                 Board currentBoard = state.getBoard();
                 for (int row = 0; row < 2; ++row) {
                     for (int column = 0; column < 7; ++column) {
-                        Button button = (Button) activity.findViewById(Integer.parseInt(row + "" + column));
-                        button.setText(Integer.toString(currentBoard.getTray(row, column)));
+                        LinearLayout linearLayout = (LinearLayout) activity.findViewById(Integer.parseInt(row + "" + column));
+                        TextView textView = (TextView) linearLayout.findViewById(R.id.tv);
+                        textView.setText(Integer.toString(currentBoard.getTray(row, column)));
+                        Button button = (Button) linearLayout.findViewById(R.id.button);
                         if (
                                 !state.getBoard().isEmptyTray(row, column)
                                         && (

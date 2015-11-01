@@ -3,9 +3,12 @@ package com.kylehodgetts.sunka;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.GridLayout;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.kylehodgetts.sunka.controller.GameManager;
@@ -47,9 +50,9 @@ public class BoardActivity extends Activity {
 
         for(int i=0; i < 2; ++i) {
             for(int j=0; j < 7; ++j) {
-                final Button button;
-                if(i==0) { button = (Button) getLayoutInflater().inflate(R.layout.buttonlayoutb, gridlayout, false); }
-                else { button = (Button) getLayoutInflater().inflate(R.layout.buttonlayouta, gridlayout, false); }
+                final LinearLayout button;
+                if(i==0) { button = (LinearLayout) getLayoutInflater().inflate(R.layout.buttonlayoutb, gridlayout, false); }
+                else { button = (LinearLayout) getLayoutInflater().inflate(R.layout.buttonlayouta, gridlayout, false); }
                 button.setId(Integer.parseInt(i + "" + j));
 
                 GridLayout.LayoutParams param = new GridLayout.LayoutParams();
