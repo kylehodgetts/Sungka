@@ -30,7 +30,7 @@ public class GameManager extends EventHandler<GameState> {
 
     private Timer timer;
     private EventBus<GameState> bus;
-    private int delay = 500;
+    private int delay = 300;
 
     /**
      * Default constructor for event handler, assigns its id that should be unique
@@ -140,7 +140,7 @@ public class GameManager extends EventHandler<GameState> {
         int trayIndex = move.getTrayIndex();
         int playerIndex = move.getPlayerIndex();
         int shellsLeft = move.getShellsStillToBePlaced();
-        boolean first = move.isFirst_wtfDoesFirstMeanAdam();
+        boolean first = move.isFirstShellMoved();
         int player = move.getPlayer();
         boolean repeatTurn = false;
 

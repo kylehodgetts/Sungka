@@ -11,14 +11,14 @@ import com.kylehodgetts.sunka.controller.bus.Event;
 public class ShellMovement implements Event {
     private int trayIndex, playerIndex;
     private int shellsStillToBePlaced;
-    private boolean first_wtfDoesFirstMeanAdam;
+    private boolean isFirstShellMoved;
     private int player;
 
-    public ShellMovement(int trayIndex, int playerIndex, int shellsStillToBePlaced, boolean first_wtfDoesFirstMeamAdam, int player) {
+    public ShellMovement(int trayIndex, int playerIndex, int shellsStillToBePlaced, boolean isFirstShellMoved, int player) {
         this.trayIndex = trayIndex;
         this.playerIndex = playerIndex;
         this.shellsStillToBePlaced = shellsStillToBePlaced;
-        this.first_wtfDoesFirstMeanAdam = first_wtfDoesFirstMeamAdam;
+        this.isFirstShellMoved = isFirstShellMoved;
         this.player = player;
     }
 
@@ -34,8 +34,8 @@ public class ShellMovement implements Event {
         return shellsStillToBePlaced;
     }
 
-    public boolean isFirst_wtfDoesFirstMeanAdam() {
-        return first_wtfDoesFirstMeanAdam;
+    public boolean isFirstShellMoved() {
+        return isFirstShellMoved;
     }
 
     public int getPlayer() {
