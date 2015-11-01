@@ -3,7 +3,7 @@ package com.kylehodgetts.sunka.controller;
 import android.app.Activity;
 
 import com.kylehodgetts.sunka.controller.bus.EventBus;
-import com.kylehodgetts.sunka.event.PlayerMove;
+import com.kylehodgetts.sunka.event.PlayerChoseTray;
 import com.kylehodgetts.sunka.model.Board;
 import com.kylehodgetts.sunka.model.GameState;
 import com.kylehodgetts.sunka.model.Player;
@@ -74,7 +74,7 @@ public class BoardControllerTest extends TestCase {
 
         for(int i = 0; i < 2; ++i) {
             for(int j = 0; j < 7; ++j) {
-                bus.feedEvent(new PlayerMove(j, i, i));
+                bus.feedEvent(new PlayerChoseTray(j, i, i));
                 Thread.sleep(10000);
                 System.out.println(printBoardState());
 
@@ -101,9 +101,9 @@ public class BoardControllerTest extends TestCase {
 
         for(int i = 0; i < 2; ++i) {
             for(int j = 0; j < 7; ++j) {
-                bus.feedEvent(new PlayerMove(j, i, i));
+                bus.feedEvent(new PlayerChoseTray(j, i, i));
                 Thread.sleep(10000);
-                bus.feedEvent(new PlayerMove(j, (i+1)%2, (i+1)%2));
+                bus.feedEvent(new PlayerChoseTray(j, (i+1)%2, (i+1)%2));
                 Thread.sleep(10000);
                 System.out.println(printBoardState());
 
@@ -131,8 +131,8 @@ public class BoardControllerTest extends TestCase {
 
         int i = 0;
         for(int j = 0; j < 7; ++j) {
-            bus.feedEvent(new PlayerMove(j, i, i));
-            bus.feedEvent(new PlayerMove(j, (i+1)%2, (i+1)%2));
+            bus.feedEvent(new PlayerChoseTray(j, i, i));
+            bus.feedEvent(new PlayerChoseTray(j, (i+1)%2, (i+1)%2));
             Thread.sleep(10000);
             System.out.println(printBoardState());
 
@@ -144,7 +144,7 @@ public class BoardControllerTest extends TestCase {
             }
             assertEquals(1, state.getPlayer1().getStonesInPot());
             assertEquals(1, state.getPlayer2().getStonesInPot());
-            assertEquals(0, state.getPlayerOneTurn());
+            assertEquals(0, state.getCurrentPlayerIndex());
             setUp();
         }
 
@@ -161,8 +161,8 @@ public class BoardControllerTest extends TestCase {
 
         int i = 1;
         for(int j = 0; j < 7; ++j) {
-            bus.feedEvent(new PlayerMove(j, 1, 1));
-            bus.feedEvent(new PlayerMove(j, 0, 0));
+            bus.feedEvent(new PlayerChoseTray(j, 1, 1));
+            bus.feedEvent(new PlayerChoseTray(j, 0, 0));
             Thread.sleep(10000);
             System.out.println(printBoardState());
 
@@ -174,7 +174,7 @@ public class BoardControllerTest extends TestCase {
             }
             assertEquals(1, state.getPlayer1().getStonesInPot());
             assertEquals(1, state.getPlayer2().getStonesInPot());
-            assertEquals(1, state.getPlayerOneTurn());
+            assertEquals(1, state.getCurrentPlayerIndex());
             setUp();
         }
 
