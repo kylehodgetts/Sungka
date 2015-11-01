@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
-    <Button
+    <ImageButton
         style="?android:attr/buttonStyleSmall"
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -16,6 +16,7 @@
         android:id="@+id/button"
         android:background="@drawable/buttonb"
         android:layout_weight="1"
+        android:scaleType="fitCenter"
         />
 
     <TextView

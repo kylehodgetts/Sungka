@@ -12,7 +12,7 @@
         android:textSize="12sp"
         android:textAlignment="center"/>
 
-    <Button
+    <ImageButton
         style="?android:attr/buttonStyleSmall"
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -23,7 +23,8 @@
         android:shadowRadius="5"
         android:background="@drawable/buttona"
         android:id="@+id/button"
-        android:layout_weight="1" />
+        android:layout_weight="1"
+        android:scaleType="fitCenter"/>
 
 </LinearLayout>
 

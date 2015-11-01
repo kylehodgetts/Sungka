@@ -2,7 +2,9 @@ package com.kylehodgetts.sunka.controller;
 
 import android.app.Activity;
 import android.graphics.Color;
+import android.media.Image;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -84,7 +86,10 @@ public class GameManager extends EventHandler<GameState> {
                         LinearLayout linearLayout = (LinearLayout) activity.findViewById(Integer.parseInt(row + "" + column));
                         TextView textView = (TextView) linearLayout.findViewById(R.id.tv);
                         textView.setText(Integer.toString(currentBoard.getTray(row, column)));
-                        Button button = (Button) linearLayout.findViewById(R.id.button);
+                        ImageButton button = (ImageButton) linearLayout.findViewById(R.id.button);
+                        if(currentBoard.getTray(row, column) > 0) {
+                            button.setImageResource(R.drawable.s1);
+                        }
                         if (
                                 !state.getBoard().isEmptyTray(row, column)
                                         && (
@@ -124,6 +129,8 @@ public class GameManager extends EventHandler<GameState> {
 
 
     }
+
+
 
     /**
      * Convenience class to wrap the current state and bus together
