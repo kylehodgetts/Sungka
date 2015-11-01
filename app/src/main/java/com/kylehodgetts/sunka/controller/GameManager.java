@@ -30,7 +30,7 @@ public class GameManager extends EventHandler<GameState> {
 
     private Timer timer;
     private EventBus<GameState> bus;
-    private int delay = 500;
+    private int delay = 300;
 
     /**
      * Default constructor for event handler, assigns its id that should be unique
