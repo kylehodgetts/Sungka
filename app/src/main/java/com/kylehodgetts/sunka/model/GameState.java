@@ -85,7 +85,7 @@ public class GameState implements BusState {
     public boolean playerInitialising(int player) {
         if (initialising > 1) return false;
         else
-            return initialising < -1 || player == 0 && initialising != -1 || player == 1 && initialising != 0;
+            return initialising < -1 || (player == 0 && initialising == 0) || (player == 1 && initialising == -1);
     }
 
     public Player getPlayerFor(int player) {
