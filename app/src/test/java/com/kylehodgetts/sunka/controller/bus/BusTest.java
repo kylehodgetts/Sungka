@@ -38,7 +38,7 @@ public class BusTest{
             }
 
             @Override
-            public void render(TestState state, Activity activity) {
+            public void updateView(TestState state, Activity activity) {
                 renderTry++;
             }
         };
@@ -105,7 +105,8 @@ public class BusTest{
             }
 
             @Override
-            public void render(TestState state, Activity activity) {}
+            public void updateView(TestState state, Activity activity) {
+            }
         });
 
         bus.feedEvent(new Event() {});
@@ -152,7 +153,7 @@ public class BusTest{
             }
 
             @Override
-            public void render(TestState state, Activity activity) {
+            public void updateView(TestState state, Activity activity) {
                 renderTry++;
             }
         });
