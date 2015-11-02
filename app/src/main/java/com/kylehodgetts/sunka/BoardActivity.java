@@ -22,7 +22,7 @@ import com.kylehodgetts.sunka.model.Player;
 
 public class BoardActivity extends AppCompatActivity {
 
-    //TODO: Implement OnPause, OnResume, OnStop methods
+    //TODO: Implement OnPause, OnResume, OnStop methods. And within all other necessary classes
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
