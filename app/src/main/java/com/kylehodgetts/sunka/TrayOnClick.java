@@ -8,27 +8,22 @@ import com.kylehodgetts.sunka.model.GameState;
 
 /**
  * @author Adam Chlupacek
- * @version 1.0
+ * @version 1.1
  *          A listener for tray clicks
  */
 public class TrayOnClick implements View.OnClickListener {
 
     private int trayIndex, playerIndex;
     private EventBus<GameState> bus;
-    private boolean pressed;
 
     public TrayOnClick(int trayIndex, int playerIndex, EventBus<GameState> bus) {
         this.trayIndex = trayIndex;
         this.playerIndex = playerIndex;
         this.bus = bus;
-        this.pressed = false;
     }
 
     @Override
     public void onClick(View v) {
-        if (!pressed) {
-            bus.feedEvent(new PlayerChoseTray(trayIndex, playerIndex));
-            pressed = true;
-        }
+        bus.feedEvent(new PlayerChoseTray(trayIndex, playerIndex));
     }
 }

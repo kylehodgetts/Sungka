@@ -14,12 +14,9 @@ import com.kylehodgetts.sunka.model.Player;
 
 
 /**
- *
- *
+ * @version 1.3
  * @author: Phileas Hocquard and Charlie Baker
- * @version 1.1
- * **/
-
+ */
 public class BoardActivity extends AppCompatActivity {
 
     //TODO: Implement OnPause, OnResume, OnStop methods
@@ -29,30 +26,35 @@ public class BoardActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_board);
 
-        makeXMLButtons();
-
-        GameState state = new GameState(new Board(),new Player(),new Player());
-        EventBus<GameState> bus = new EventBus<>(state,this);
+        GameState state = new GameState(new Board(), new Player(), new Player());
+        EventBus<GameState> bus = new EventBus<>(state, this);
         bus.registerHandler(new GameManager(bus));
+
+        makeXMLButtons(bus);
 
         bus.feedEvent(new NewGame());
     }
 
-    public void makeXMLButtons(){
-        GridLayout gridlayout = (GridLayout)findViewById(R.id.gridLayout);
+    private void makeXMLButtons(EventBus bus) {
+        GridLayout gridlayout = (GridLayout) findViewById(R.id.gridLayout);
 
-        for(int i=0; i < 2; ++i) {
-            for(int j=0; j < 7; ++j) {
+        for (int player = 0; player < 2; ++player) {
+            for (int tray = 0; tray < 7; ++tray) {
                 final Button button;
-                if(i==0) { button = (Button) getLayoutInflater().inflate(R.layout.buttonlayoutb, gridlayout, false); }
-                else { button = (Button) getLayoutInflater().inflate(R.layout.buttonlayouta, gridlayout, false); }
-                button.setId(Integer.parseInt(i + "" + j));
+                if (player == 0) {
+                    button = (Button) getLayoutInflater().inflate(R.layout.buttonlayoutb, gridlayout, false);
+                } else {
+                    button = (Button) getLayoutInflater().inflate(R.layout.buttonlayouta, gridlayout, false);
+                }
+                button.setId(Integer.parseInt(player + "" + tray));
 
                 GridLayout.LayoutParams param = new GridLayout.LayoutParams();
-                param.columnSpec = GridLayout.spec(i == 1?6-j:j);
-                param.rowSpec = GridLayout.spec((i+1)%2);
+                param.columnSpec = GridLayout.spec(player == 1 ? 6 - tray : tray);
+                param.rowSpec = GridLayout.spec((player + 1) % 2);
                 button.setLayoutParams(param);
                 gridlayout.addView(button);
+
+                button.setOnClickListener(new TrayOnClick(tray, player, bus));
             }
         }
     }

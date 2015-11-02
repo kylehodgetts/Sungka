@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.widget.Button;
 
 import com.kylehodgetts.sunka.R;
-import com.kylehodgetts.sunka.TrayOnClick;
 import com.kylehodgetts.sunka.controller.bus.Event;
 import com.kylehodgetts.sunka.controller.bus.EventBus;
 import com.kylehodgetts.sunka.controller.bus.EventHandler;
@@ -21,16 +20,15 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 /**
- * @author Adam Chlupacek
- * @version 1.0
- *          <p/>
+ * @author Adam Chlupacek. V2 By Jonathan Burton
+ * @version 2.0
  *          The controller for the main game logic
  */
 public class GameManager extends EventHandler<GameState> {
 
     private Timer timer;
     private EventBus<GameState> bus;
-    private int delay = 300;
+    private int delay = 50;
 
     /**
      * Default constructor for event handler, assigns its id that should be unique
@@ -90,17 +88,6 @@ public class GameManager extends EventHandler<GameState> {
                     for (int column = 0; column < 7; ++column) {
                         Button button = (Button) activity.findViewById(Integer.parseInt(row + "" + column));
                         button.setText(Integer.toString(currentBoard.getTray(row, column)));
-                        if (
-                                !state.getBoard().isEmptyTray(row, column)
-                                        && (
-                                        (state.getCurrentPlayerIndex() == row && !state.isDoingMove() && !state.isInitialising())
-                                                || state.playerInitialising(row)
-                                )
-                                ) {
-                            button.setOnClickListener(new TrayOnClick(column, row, bus));
-                        } else {
-                            button.setOnClickListener(null);
-                        }
                     }
                 }
             }
@@ -116,16 +103,18 @@ public class GameManager extends EventHandler<GameState> {
     private GameState playerSelectedTrayEvent(GameState state, PlayerChoseTray trayChosen) {
         int trayIndex = trayChosen.getTrayIndex();
         int playerIndex = trayChosen.getPlayerIndex();
+        int shells = state.getBoard().getTray(playerIndex, trayIndex);
 
-        scheduleEvent(new ShellMovement(trayIndex == 6 ? 0 : trayIndex + 1, trayIndex == 6 ? (playerIndex + 1) % 2 : playerIndex, state.getBoard().emptyTray(playerIndex, trayIndex), true, trayChosen.getPlayerIndex()), delay, trayChosen.getPlayerIndex());
-        if (state.getCurrentPlayerIndex() == -1) {
-            state.setCurrentPlayerIndex(trayChosen.getPlayerIndex());
+        //horrific thing that determines if this move is valid, or just a player pressing random buttons
+        if (shells != 0 && ((state.getCurrentPlayerIndex() == playerIndex && !state.isDoingMove() && !state.isInitialising()) || state.playerInitialising(playerIndex))) {
+
+            state.setDoingMove(true);
+            if (state.getCurrentPlayerIndex() == -1)
+                state.setCurrentPlayerIndex(trayChosen.getPlayerIndex());
+            if (state.isInitialising()) state.nextInitPhase(trayChosen.getPlayerIndex());
+            scheduleEvent(new ShellMovement(trayIndex == 6 ? 0 : trayIndex + 1, trayIndex == 6 ? (playerIndex + 1) % 2 : playerIndex, state.getBoard().emptyTray(playerIndex, trayIndex), true, trayChosen.getPlayerIndex()), delay, trayChosen.getPlayerIndex());
+
         }
-        //System.out.println("Player " + state.getCurrentPlayerIndex()); //why not Log.v()?
-        if (state.isInitialising())
-            state.nextInitPhase(trayChosen.getPlayerIndex());
-        state.getBoard().emptyTray(playerIndex, trayIndex);
-        state.setDoingMove(true);
         return state;
     }
 
