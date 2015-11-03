@@ -74,11 +74,29 @@ public class GameManager extends EventHandler<GameState> {
         activity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                Button playerOneStore = (Button) activity.findViewById(R.id.buttonbs);
-                playerOneStore.setText(Integer.toString(state.getPlayer1().getStonesInPot()));
+                LinearLayout storeOne = (LinearLayout) activity.findViewById(R.id.playerBStore);
+                ImageButton playerOneStoreButton = (ImageButton) storeOne.findViewById(R.id.buttonbs);
+                TextView tvPlayerAStoreCount = (TextView) activity.findViewById(R.id.tvPlayerBStoreCount);
+                tvPlayerAStoreCount.setText(Integer.toString(state.getPlayer2().getStonesInPot()));
+                int playerAStoreShellCount = state.getPlayer1().getStonesInPot();
+                if(playerAStoreShellCount < 9) {
+                    playerOneStoreButton.setImageResource(activity.getResources().getIdentifier("s"+playerAStoreShellCount, "drawable", activity.getPackageName()));
+                }
+                else {
+                    playerOneStoreButton.setImageResource(activity.getResources().getIdentifier("s9", "drawable", activity.getPackageName()));
+                }
 
-                Button playerTwoStore = (Button) activity.findViewById(R.id.buttonas);
-                playerTwoStore.setText(Integer.toString(state.getPlayer2().getStonesInPot()));
+                LinearLayout storeTwo = (LinearLayout) activity.findViewById(R.id.playerAStore);
+                ImageButton playerTwoStoreButton = (ImageButton) storeTwo.findViewById(R.id.buttonas);
+                TextView tvPlayerBStoreCount = (TextView) activity.findViewById(R.id.tvPlayerAStoreCount);
+                tvPlayerBStoreCount.setText(Integer.toString(state.getPlayer1().getStonesInPot()));
+                int playerBStoreShellCount = state.getPlayer2().getStonesInPot();
+                if(playerBStoreShellCount < 9) {
+                    playerTwoStoreButton.setImageResource(activity.getResources().getIdentifier("s"+playerBStoreShellCount, "drawable", activity.getPackageName()));
+                }
+                else {
+                    playerTwoStoreButton.setImageResource(activity.getResources().getIdentifier("s9", "drawable", activity.getPackageName()));
+                }
 
                 Board currentBoard = state.getBoard();
                 for (int row = 0; row < 2; ++row) {
@@ -89,7 +107,7 @@ public class GameManager extends EventHandler<GameState> {
                         ImageButton button = (ImageButton) linearLayout.findViewById(R.id.button);
                         button.setPadding(35,35,35,35); // In order to make the image scale
                         int currentTrayShellCount = currentBoard.getTray(row, column);
-                        if(currentTrayShellCount < 10) {
+                        if(currentTrayShellCount < 9) {
                             button.setImageResource(activity.getResources().getIdentifier("s"+currentTrayShellCount, "drawable", activity.getPackageName()));
                         }
                         else {

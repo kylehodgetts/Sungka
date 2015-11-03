@@ -16,19 +16,32 @@
         android:layout_height="wrap_content"
         android:layout_centerInParent="true">
 
-        <Button
-            android:layout_width="wrap_content"
+
+        <LinearLayout
+            android:id="@+id/playerAStore"
+            android:layout_width="100dp"
             android:layout_height="match_parent"
-            android:id="@+id/buttonas"
-            android:width="30dp"
-            android:height="40dp"
-            android:textColor="#FFFFFF"
-            android:background="@drawable/buttonascore"
-            android:shadowColor="#A8A8A8"
-            android:shadowDx="0"
-            android:shadowDy="0"
-            android:shadowRadius="5"
-            />
+            android:background="@drawable/buttonascore">
+
+            <ImageButton
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/buttonas"
+                android:width="30dp"
+                android:height="40dp"
+                android:textColor="#FFFFFF"
+                android:shadowColor="#A8A8A8"
+                android:shadowDx="0"
+                android:shadowDy="0"
+                android:shadowRadius="5"
+                android:scaleType="centerInside"
+                android:layout_gravity="center"
+                android:background="@null"
+                android:src="@drawable/s0"
+                />
+
+        </LinearLayout>
+
 
         <GridLayout
             android:layout_width="0dp"
@@ -37,30 +50,36 @@
             android:layout_weight="1"
             />
 
-        <Button
-            android:layout_width="wrap_content"
+
+        <LinearLayout
+            android:id="@+id/playerBStore"
+            android:layout_width="100dp"
             android:layout_height="match_parent"
-            android:id="@+id/buttonbs"
-            android:width="30dp"
-            android:height="40dp"
-            android:textColor="#FFFFFF"
-            android:background="@drawable/buttonbscore"
-            android:shadowColor="#A8A8A8"
-            android:shadowDx="0"
-            android:shadowDy="0"
-            android:shadowRadius="5"
-            />
+            android:background="@drawable/buttonbscore">
+
+            <ImageButton
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/buttonbs"
+                android:width="30dp"
+                android:height="40dp"
+                android:textColor="#FFFFFF"
+                android:shadowColor="#A8A8A8"
+                android:shadowDx="0"
+                android:shadowDy="0"
+                android:shadowRadius="5"
+                android:scaleType="centerInside"
+                android:layout_gravity="center"
+                android:background="@null"
+                android:src="@drawable/s0"
+                />
+
+        </LinearLayout>
+
 
 
     </LinearLayout>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/simpleBoardPrototype"
-        android:id="@+id/textView"
-        android:layout_alignTop="@+id/tvPlayerB"
-        android:layout_centerHorizontal="true" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -73,6 +92,18 @@
         android:layout_marginBottom="26dp" />
 
     <TextView
+        android:id="@+id/tvPlayerBStoreCount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@id/tvPlayerB"
+        android:layout_alignRight="@id/linearLayout"
+        android:layout_alignStart="@id/tvPlayerB"
+        android:layout_alignEnd="@id/tvPlayerB"
+        android:layout_below="@id/tvPlayerB"
+        />
+
+
+    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/playerA"
@@ -81,6 +112,15 @@
         android:layout_alignRight="@id/linearLayout"
         android:layout_alignEnd="@id/linearLayout"
         android:layout_marginTop="28dp" />
+
+    <TextView
+        android:id="@+id/tvPlayerAStoreCount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignRight="@id/tvPlayerA"
+        android:layout_alignEnd="@id/tvPlayerA"
+        android:layout_above="@id/tvPlayerA"
+        />
 
 
 </RelativeLayout>
