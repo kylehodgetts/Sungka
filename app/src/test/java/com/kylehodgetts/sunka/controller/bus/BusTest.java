@@ -31,7 +31,7 @@ public class BusTest{
         bus = new EventBus<>(new TestState(),null);
         handler = new EventHandler<TestState>("TestHandler") {
             @Override
-            public Tuple2<TestState, Boolean> handleEvent(Event event, TestState state, EventBus<TestState> bus) {
+            public Tuple2<TestState, Boolean> handleEvent(Event event, TestState state) {
                 TestState newState = state.incrementEventCall();
                 eventsReceived = newState.getEventCalls();
                 return new Tuple2<>(newState,newState.getEventCalls()%2==0);
@@ -98,7 +98,7 @@ public class BusTest{
         bus.registerHandler(handler);
         bus.registerHandler(new EventHandler<TestState>("TestHandler2") {
             @Override
-            public Tuple2<TestState, Boolean> handleEvent(Event event, TestState state, EventBus<TestState> bus) {
+            public Tuple2<TestState, Boolean> handleEvent(Event event, TestState state) {
                 TestState newState = state.incrementEventCall();
                 eventsReceived = newState.getEventCalls();
                 return new Tuple2<>(newState,newState.getEventCalls()%2==0);
@@ -145,7 +145,7 @@ public class BusTest{
     public void testRenderCallNested() throws Exception {
         bus.registerHandler(new EventHandler<TestState>("NestedHandler") {
             @Override
-            public Tuple2<TestState, Boolean> handleEvent(Event event, TestState state, EventBus<TestState> bus) {
+            public Tuple2<TestState, Boolean> handleEvent(Event event, TestState state) {
                 TestState newState = state.incrementEventCall();
                 eventsReceived = newState.getEventCalls();
                 if (eventsReceived < 6)bus.feedEvent(new Event() {});
