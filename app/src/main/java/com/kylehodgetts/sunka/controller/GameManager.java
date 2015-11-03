@@ -2,6 +2,7 @@ package com.kylehodgetts.sunka.controller;
 
 import android.app.Activity;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
@@ -87,8 +88,12 @@ public class GameManager extends EventHandler<GameState> {
                         textView.setText(Integer.toString(currentBoard.getTray(row, column)));
                         ImageButton button = (ImageButton) linearLayout.findViewById(R.id.button);
                         button.setPadding(35,35,35,35); // In order to make the image scale
-                        if(currentBoard.getTray(row, column) > 0) {
-                            button.setImageResource(R.drawable.smallshell);
+                        int currentTrayShellCount = currentBoard.getTray(row, column);
+                        if(currentTrayShellCount < 10) {
+                            button.setImageResource(activity.getResources().getIdentifier("s"+currentTrayShellCount, "drawable", activity.getPackageName()));
+                        }
+                        else {
+                            button.setImageResource(activity.getResources().getIdentifier("s9", "drawable", activity.getPackageName()));
                         }
                         if (
                                 !state.getBoard().isEmptyTray(row, column)

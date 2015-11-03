@@ -13,7 +13,7 @@ public class ShellDrawing {
 
     public ShellDrawing( int numbShell){
         //Converts to bitmap
-        Bitmap bitmap = BitmapFactory.decodeResource(Resources.getSystem(),R.drawable.smallshell);
+        Bitmap bitmap = BitmapFactory.decodeResource(Resources.getSystem(),R.drawable.tinyshell);
         //makes a copy of bitmap and copies it to the canvas
          Canvas canvas = new Canvas(bitmap.copy(Bitmap.Config.ARGB_8888, true));
     }
