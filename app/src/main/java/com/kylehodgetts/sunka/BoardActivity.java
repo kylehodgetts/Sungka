@@ -31,12 +31,26 @@ public class BoardActivity extends AppCompatActivity {
 
         makeXMLButtons();
 
-        GameState state = new GameState(new Board(),new Player(),new Player());
-        EventBus<GameState> bus = new EventBus<>(state,this);
-        bus.registerHandler(new GameManager(bus));
+        //IF the gameMode is in 1player mode aka AI mode
+        //TODO: ADD 1 Second delayed effect after (321 GO! Screen)
+        //place gameMode, and ai initialisation somewhere.
+        int gameMode = 0;
+         GameState state;
+        AI ai = new AI();
 
+        if(gameMode == 0){
+            state = ai.getSide() == 0 ?new GameState(new Board(),ai,new Player())
+                    : new GameState(new Board(),new Player(),ai);
+        }
+        else {
+            state = new GameState(new Board(), new Player(), new Player());
+        }
+        EventBus<GameState> bus = new EventBus<>(state, this);
+        bus.registerHandler(new GameManager(bus));
         bus.feedEvent(new NewGame());
+        if(gameMode == 0)state.aiInitialisationMove(bus,ai.getSide());
     }
+
 
     public void makeXMLButtons(){
         GridLayout gridlayout = (GridLayout)findViewById(R.id.gridLayout);
