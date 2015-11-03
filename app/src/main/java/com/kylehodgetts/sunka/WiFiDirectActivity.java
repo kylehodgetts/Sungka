@@ -39,7 +39,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.kylehodgetts.sunka.controller.wifi.PeerListAdapter;
+import com.kylehodgetts.sunka.util.PeerListAdapter;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -161,7 +161,7 @@ public class WiFiDirectActivity extends Activity implements ChannelListener, Con
         }
     }
 
-    public class WiFiDirectBroadcastReceiver extends BroadcastReceiver {
+    private class WiFiDirectBroadcastReceiver extends BroadcastReceiver {
 
         private WifiP2pManager manager;
         private Channel channel;

@@ -1,4 +1,4 @@
-package com.kylehodgetts.sunka.controller.wifi;
+package com.kylehodgetts.sunka.util;
 
 import android.content.Context;
 import android.net.wifi.p2p.WifiP2pDevice;
