@@ -26,9 +26,9 @@ import java.util.TimerTask;
  */
 public class GameManager extends EventHandler<GameState> {
 
+    private static final int delay = 300;
     private Timer timer;
     private EventBus<GameState> bus;
-    private int delay = 50;
 
     /**
      * Default constructor for event handler, assigns its id that should be unique
