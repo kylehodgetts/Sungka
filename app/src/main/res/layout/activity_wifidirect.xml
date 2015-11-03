@@ -1,13 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <ListView
-        android:id="@+id/peerList"
+    <LinearLayout
+        android:id="@+id/layoutList"
         android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/layoutButton"
+        android:orientation="vertical">
+        <ListView
+            android:id="@+id/peerList"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+        </ListView>
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/layoutButton"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_alignParentBottom="true"
         android:layout_height="wrap_content">
 
-    </ListView>
+        <Button
+            android:id="@+id/btnHostGame"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/host_game"/>
 
-</LinearLayout>
+    </LinearLayout>
+</RelativeLayout>

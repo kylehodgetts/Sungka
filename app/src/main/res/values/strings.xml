@@ -16,4 +16,5 @@
     <string name="playerB">Player B</string>
     <string name="playerA">Player A</string>
     <string name="debugging">Debugging</string>
+    <string name="host_game">Host Game</string>
 </resources>

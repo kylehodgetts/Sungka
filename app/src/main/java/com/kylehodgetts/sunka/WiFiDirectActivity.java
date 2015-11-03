@@ -36,6 +36,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -44,7 +45,6 @@ import com.kylehodgetts.sunka.util.PeerListAdapter;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author Kyle Hodgetts
@@ -55,6 +55,7 @@ public class WiFiDirectActivity extends Activity implements ChannelListener, Con
 
     public static final String TAG = "wifidirectactivity";
     private ListView peerList;
+    private Button btnHostGame;
     private ArrayList<WifiP2pDevice> arrayListPeers;
     private PeerListAdapter peerListAdapter;
 
@@ -77,6 +78,13 @@ public class WiFiDirectActivity extends Activity implements ChannelListener, Con
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_wifidirect);
+        btnHostGame = (Button) findViewById(R.id.btnHostGame);
+        btnHostGame.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
         arrayListPeers = new ArrayList<>();
         peerListAdapter = new PeerListAdapter(this, arrayListPeers);
         peerList = (ListView) findViewById(R.id.peerList);
@@ -91,7 +99,9 @@ public class WiFiDirectActivity extends Activity implements ChannelListener, Con
                 manager.connect(channel, config, new ActionListener() {
                     @Override
                     public void onSuccess() {
-
+                        Log.d(TAG, "Connection success");
+                        Intent i = new Intent(WiFiDirectActivity.this, BoardActivity.class);
+                        startActivity(i);
                     }
 
                     @Override
@@ -128,7 +138,7 @@ public class WiFiDirectActivity extends Activity implements ChannelListener, Con
     @Override
     public void onResume() {
         super.onResume();
-        receiver = new WiFiDirectBroadcastReceiver(manager, channel, this);
+        receiver = new WiFiDirectBroadcastReceiver();
         registerReceiver(receiver, intentFilter);
     }
 
@@ -163,11 +173,6 @@ public class WiFiDirectActivity extends Activity implements ChannelListener, Con
 
     private class WiFiDirectBroadcastReceiver extends BroadcastReceiver {
 
-        private WifiP2pManager manager;
-        private Channel channel;
-        private WiFiDirectActivity activity;
-
-        private List listPeers = new ArrayList();
         private WifiP2pManager.PeerListListener peerListListener = new WifiP2pManager.PeerListListener() {
             @Override
             public void onPeersAvailable(WifiP2pDeviceList peers) {
@@ -181,18 +186,8 @@ public class WiFiDirectActivity extends Activity implements ChannelListener, Con
             }
         };
 
-
-        /**
-         * @param manager WifiP2pManager system service
-         * @param channel Wifi p2p channel
-         * @param activity activity associated with the receiver
-         */
-        public WiFiDirectBroadcastReceiver(WifiP2pManager manager, Channel channel,
-                                           WiFiDirectActivity activity) {
+        public WiFiDirectBroadcastReceiver() {
             super();
-            this.manager = manager;
-            this.channel = channel;
-            this.activity = activity;
         }
 
         /*
@@ -207,10 +202,10 @@ public class WiFiDirectActivity extends Activity implements ChannelListener, Con
 
                 int state = intent.getIntExtra(WifiP2pManager.EXTRA_WIFI_STATE, -1);
                 if (state == WifiP2pManager.WIFI_P2P_STATE_ENABLED) {
-                    activity.setIsWifiP2pEnabled(true);
+                    WiFiDirectActivity.this.setIsWifiP2pEnabled(true);
                 } else {
-                    activity.setIsWifiP2pEnabled(false);
-                    activity.resetData();
+                    WiFiDirectActivity.this.setIsWifiP2pEnabled(false);
+                    WiFiDirectActivity.this.resetData();
 
                 }
                 Log.d(WiFiDirectActivity.TAG, "P2P state changed - " + state);
@@ -231,18 +226,9 @@ public class WiFiDirectActivity extends Activity implements ChannelListener, Con
 
                 if (networkInfo.isConnected()) {
 
-                    manager.requestConnectionInfo(channel, activity);
+                    manager.requestConnectionInfo(channel, WiFiDirectActivity.this);
                 }
-
-            }
-            else if (WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION.equals(action)) {
-//            DeviceListFragment fragment = (DeviceListFragment) activity.getFragmentManager()
-//                    .findFragmentById(R.id.frag_list);
-//            fragment.updateThisDevice((WifiP2pDevice) intent.getParcelableExtra(
-//                    WifiP2pManager.EXTRA_WIFI_P2P_DEVICE));
-
             }
         }
-
     }
 }
