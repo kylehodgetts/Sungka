@@ -2,7 +2,7 @@ package com.kylehodgetts.sunka.model;
 
 /**
  * @author Charlie Baker
- * @version 1.0
+ * @version 1.1
  * Class created to represent the data model of the game board.
  */
 public class Board {
