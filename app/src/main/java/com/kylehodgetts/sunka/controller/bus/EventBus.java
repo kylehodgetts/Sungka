@@ -110,8 +110,7 @@ public class EventBus<T extends BusState> {
      */
     private void performEvent(Event event) {
         for (EventHandler<T> handler : handlers) {
-            Tuple2<T, Boolean> result = handler.handleEvent(event, state, this);
-
+            Tuple2<T, Boolean> result = handler.handleEvent(event, state);
             if (!displayNeedsUpdating) displayNeedsUpdating = result.getY();
             state = result.getX();
         }

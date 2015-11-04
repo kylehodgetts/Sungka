@@ -44,11 +44,10 @@ public class GameManager extends EventHandler<GameState> {
      *
      * @param event The incoming event from the bus to this handler
      * @param state The current state of the bus
-     * @param bus   The bus from which the event came to this handler
      * @return Returns the modified state together with a flag whether a render is required
      */
     @Override
-    public Tuple2<GameState, Boolean> handleEvent(Event event, GameState state, EventBus<GameState> bus) {
+    public Tuple2<GameState, Boolean> handleEvent(Event event, GameState state) {
 
 
         if (event instanceof PlayerChoseTray) {
@@ -217,5 +216,3 @@ public class GameManager extends EventHandler<GameState> {
     }
 
 }
-
-
