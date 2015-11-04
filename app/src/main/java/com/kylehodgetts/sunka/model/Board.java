@@ -7,6 +7,8 @@ package com.kylehodgetts.sunka.model;
  */
 public class Board {
 
+    //TODO rename these player, tray rather than row, column
+
     /*
      * board is represented by 2D integer array
      */

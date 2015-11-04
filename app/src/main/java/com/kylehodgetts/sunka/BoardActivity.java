@@ -22,7 +22,7 @@ import com.kylehodgetts.sunka.model.Player;
 
 public class BoardActivity extends AppCompatActivity {
 
-    //TODO: Implement OnPause, OnResume, OnStop methods
+    //TODO: Implement OnPause, OnResume, OnStop methods. And within all other necessary classes
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,6 +30,8 @@ public class BoardActivity extends AppCompatActivity {
         setContentView(R.layout.activity_board);
 
         makeXMLButtons();
+
+        //TODO add gametype check here, and pass that to the relevant object below
 
         GameState state = new GameState(new Board(),new Player(),new Player());
         EventBus<GameState> bus = new EventBus<>(state,this);
