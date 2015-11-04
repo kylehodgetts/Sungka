@@ -45,7 +45,7 @@ public class BoardActivity extends Activity {
         bus.feedEvent(new NewGame());
     }
 
-    public void makeXMLButtons(){
+    public void makeXMLButtons() {
         GridLayout gridlayout = (GridLayout)findViewById(R.id.gridLayout);
 
         for(int i=0; i < 2; ++i) {
@@ -58,6 +58,10 @@ public class BoardActivity extends Activity {
                 GridLayout.LayoutParams param = new GridLayout.LayoutParams();
                 param.columnSpec = GridLayout.spec(i == 1?6-j:j);
                 param.rowSpec = GridLayout.spec((i+1)%2);
+                param.width=GridLayout.LayoutParams.WRAP_CONTENT;
+                param.height=GridLayout.LayoutParams.WRAP_CONTENT;
+                param.setMargins(10,10,10,10);
+                param.setGravity(Gravity.FILL);
                 button.setLayoutParams(param);
                 gridlayout.addView(button);
             }

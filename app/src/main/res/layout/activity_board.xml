@@ -21,7 +21,10 @@
             android:id="@+id/playerAStore"
             android:layout_width="100dp"
             android:layout_height="match_parent"
-            android:background="@drawable/buttonascore">
+            android:background="@drawable/buttonascore"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="20dp">
+
 
             <ImageButton
                 android:layout_width="match_parent"
@@ -55,7 +58,9 @@
             android:id="@+id/playerBStore"
             android:layout_width="100dp"
             android:layout_height="match_parent"
-            android:background="@drawable/buttonbscore">
+            android:background="@drawable/buttonbscore"
+            android:layout_marginBottom="20dp"
+            android:layout_marginTop="20dp">
 
             <ImageButton
                 android:layout_width="match_parent"
