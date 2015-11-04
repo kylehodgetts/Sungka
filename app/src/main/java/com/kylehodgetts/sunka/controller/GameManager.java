@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.widget.Button;
 
 import com.kylehodgetts.sunka.R;
-import com.kylehodgetts.sunka.TrayOnClick;
 import com.kylehodgetts.sunka.controller.bus.Event;
 import com.kylehodgetts.sunka.controller.bus.EventBus;
 import com.kylehodgetts.sunka.controller.bus.EventHandler;
@@ -101,7 +100,7 @@ public class GameManager extends EventHandler<GameState> {
      * Processes the player move, and starts the moving of the pebbles
      *
      * @param trayChosen the location of selected tray
-     * @return
+     * @return new gameState
      */
     private GameState playerSelectedTrayEvent(GameState state, PlayerChoseTray trayChosen) {
         int trayIndex = trayChosen.getTrayIndex();
@@ -118,10 +117,6 @@ public class GameManager extends EventHandler<GameState> {
             scheduleEvent(new ShellMovement(trayIndex == 6 ? 0 : trayIndex + 1, trayIndex == 6 ? (playerIndex + 1) % 2 : playerIndex, state.getBoard().emptyTray(playerIndex, trayIndex), true, trayChosen.getPlayerIndex()), delay, trayChosen.getPlayerIndex());
 
         }
-        if (state.isInitialising())
-            state.nextInitPhase(trayChosen.getPlayerIndex());
-        state.getBoard().emptyTray(playerIndex, trayIndex);
-        state.setDoingMove(true);
         return state;
     }
 
@@ -130,7 +125,7 @@ public class GameManager extends EventHandler<GameState> {
      * Processes one of the move tick of the players move
      * Moves the beads by one tray/store
      *
-     * @return
+     * @return new GameState
      */
     private GameState placeShellEvent(GameState state, ShellMovement move) {
 
@@ -178,7 +173,7 @@ public class GameManager extends EventHandler<GameState> {
      * @param trayIndex   the column of the last tray we putted beads into
      * @param playerIndex the row of the last tray we putted beads into
      * @param repeat      whether the last bead ended in the store
-     * @return
+     * @return new GameState
      */
     private GameState endTurn(GameState state, int trayIndex, int playerIndex, boolean repeat, int player) {
         Board b = state.getBoard();
