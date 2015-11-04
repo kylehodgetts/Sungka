@@ -8,18 +8,18 @@ import android.widget.GridLayout;
 import com.kylehodgetts.sunka.controller.GameManager;
 import com.kylehodgetts.sunka.controller.bus.EventBus;
 import com.kylehodgetts.sunka.event.NewGame;
+import com.kylehodgetts.sunka.event.TrayOnClickListener;
 import com.kylehodgetts.sunka.model.Board;
 import com.kylehodgetts.sunka.model.GameState;
 import com.kylehodgetts.sunka.model.Player;
 
 
 /**
- *
- *
- * @author: Phileas Hocquard and Charlie Baker
- * @version 1.1
- * **/
-
+ * @author Phileas Hocquard
+ * @author Charlie Baker
+ * @author Jonathan Burton
+ * @version 1.3
+ */
 public class BoardActivity extends AppCompatActivity {
 
     //TODO: Implement OnPause, OnResume, OnStop methods. And within all other necessary classes
@@ -29,32 +29,42 @@ public class BoardActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_board);
 
-        makeXMLButtons();
-
         //TODO add gametype check here, and pass that to the relevant object below
 
-        GameState state = new GameState(new Board(),new Player(),new Player());
-        EventBus<GameState> bus = new EventBus<>(state,this);
+        GameState state = new GameState(new Board(), new Player(), new Player());
+        EventBus<GameState> bus = new EventBus<>(state, this);
         bus.registerHandler(new GameManager(bus));
+
+        makeXMLButtons(bus);
 
         bus.feedEvent(new NewGame());
     }
 
-    public void makeXMLButtons(){
-        GridLayout gridlayout = (GridLayout)findViewById(R.id.gridLayout);
+    private void makeXMLButtons(EventBus bus) {
+        GridLayout gridlayout = (GridLayout) findViewById(R.id.gridLayout);
 
-        for(int i=0; i < 2; ++i) {
-            for(int j=0; j < 7; ++j) {
+        for (int player = 0; player < 2; ++player) {
+            for (int tray = 0; tray < 7; ++tray) {
                 final Button button;
-                if(i==0) { button = (Button) getLayoutInflater().inflate(R.layout.buttonlayoutb, gridlayout, false); }
-                else { button = (Button) getLayoutInflater().inflate(R.layout.buttonlayouta, gridlayout, false); }
-                button.setId(Integer.parseInt(i + "" + j));
+                if (player == 0) {
+                    button = (Button) getLayoutInflater().inflate(R.layout.buttonlayoutb, gridlayout, false);
+                } else {
+                    button = (Button) getLayoutInflater().inflate(R.layout.buttonlayouta, gridlayout, false);
+                }
+                button.setId(Integer.parseInt(player + "" + tray));
 
                 GridLayout.LayoutParams param = new GridLayout.LayoutParams();
-                param.columnSpec = GridLayout.spec(i == 1?6-j:j);
-                param.rowSpec = GridLayout.spec((i+1)%2);
+                if(player == 1) {
+                    param.columnSpec = GridLayout.spec(6 - tray);
+                }
+                else {
+                    param.columnSpec = GridLayout.spec(tray);
+                }
+                param.rowSpec = GridLayout.spec((player + 1) % 2);
                 button.setLayoutParams(param);
                 gridlayout.addView(button);
+
+                button.setOnClickListener(new TrayOnClickListener(tray, player, bus));
             }
         }
     }
