@@ -26,6 +26,8 @@ public class BoardActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_board);
 
+        //TODO add gametype check here, and pass that to the relevant object below
+
         GameState state = new GameState(new Board(), new Player(), new Player());
         EventBus<GameState> bus = new EventBus<>(state, this);
         bus.registerHandler(new GameManager(bus));
