@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.widget.Button;
 
 import com.kylehodgetts.sunka.R;
+import com.kylehodgetts.sunka.TrayOnClick;
 import com.kylehodgetts.sunka.controller.bus.Event;
 import com.kylehodgetts.sunka.controller.bus.EventBus;
 import com.kylehodgetts.sunka.controller.bus.EventHandler;
@@ -66,6 +67,7 @@ public class GameManager extends EventHandler<GameState> {
         } else return new Tuple2<>(state, false);
     }
 
+    //TODO move this into it's own class specifically for graphical events
     /**
      * Renders any changes made to the model and the game state on to the GUI on the UI Thread.
      *
@@ -94,6 +96,7 @@ public class GameManager extends EventHandler<GameState> {
         });
     }
 
+    //TODO rename this to remove the 'event' bit
     /**
      * Processes the player move, and starts the moving of the pebbles
      *
@@ -115,9 +118,14 @@ public class GameManager extends EventHandler<GameState> {
             scheduleEvent(new ShellMovement(trayIndex == 6 ? 0 : trayIndex + 1, trayIndex == 6 ? (playerIndex + 1) % 2 : playerIndex, state.getBoard().emptyTray(playerIndex, trayIndex), true, trayChosen.getPlayerIndex()), delay, trayChosen.getPlayerIndex());
 
         }
+        if (state.isInitialising())
+            state.nextInitPhase(trayChosen.getPlayerIndex());
+        state.getBoard().emptyTray(playerIndex, trayIndex);
+        state.setDoingMove(true);
         return state;
     }
 
+    //TODO rename this to remove the 'event' bit
     /**
      * Processes one of the move tick of the players move
      * Moves the beads by one tray/store
@@ -134,7 +142,8 @@ public class GameManager extends EventHandler<GameState> {
         boolean repeatTurn = false;
 
         //we go past the pot and then have to go back, which is why the animation 'skips' when adding to the pots
-        if (first && trayIndex == 0) { //TODO disgusting hack for fixing of the moving straight into the store
+        if (first && trayIndex == 0) {
+            //TODO fix disgusting hack for fixing of the moving straight into the store. Schedule same event, but with one less shell?
             state.getPlayerFor(player).addToPot(1);
             shellsLeft--;
             repeatTurn = true;
@@ -162,6 +171,7 @@ public class GameManager extends EventHandler<GameState> {
         }
     }
 
+    //TODO rename this so all individual event handler methods have a consistent naming scheme
     /**
      * Processes the end of the turn for current player
      *
@@ -195,6 +205,7 @@ public class GameManager extends EventHandler<GameState> {
     }
 
 
+    //TODO potentially move this into the bus class to get around the stack over flow bug
     /**
      * Schedules an event to the timer for later dispatching
      *
