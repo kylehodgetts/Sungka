@@ -14,7 +14,9 @@ import com.kylehodgetts.sunka.model.Player;
 
 
 /**
- * @author: Phileas Hocquard and Charlie Baker
+ * @author Phileas Hocquard
+ * @author Charlie Baker
+ * @author Jonathan Burton
  * @version 1.3
  */
 public class BoardActivity extends AppCompatActivity {
@@ -51,7 +53,12 @@ public class BoardActivity extends AppCompatActivity {
                 button.setId(Integer.parseInt(player + "" + tray));
 
                 GridLayout.LayoutParams param = new GridLayout.LayoutParams();
-                param.columnSpec = GridLayout.spec(player == 1 ? 6 - tray : tray);
+                if(player == 1) {
+                    param.columnSpec = GridLayout.spec(6 - tray);
+                }
+                else {
+                    param.columnSpec = GridLayout.spec(tray);
+                }
                 param.rowSpec = GridLayout.spec((player + 1) % 2);
                 button.setLayoutParams(param);
                 gridlayout.addView(button);
