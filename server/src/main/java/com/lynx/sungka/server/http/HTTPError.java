@@ -3,7 +3,7 @@ package com.lynx.sungka.server.http;
 /**
  * @author Adam Chlupacek
  * @version 1.0
- *          <-INPUT DESC->
+ * An error that occurred because of faulty http request
  */
 public class HTTPError extends Throwable {
 

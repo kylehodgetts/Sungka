@@ -6,7 +6,7 @@ import com.lynx.sungka.server.http.RequestResponse;
 /**
  * @author Adam Chlupacek
  * @version 1.0
- *          <-INPUT DESC->
+ * The headers of this http request are faulty.
  */
 public class MalformedHeader extends HTTPError {
     public MalformedHeader(RequestResponse response) {

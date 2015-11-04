@@ -6,13 +6,15 @@ import com.lynx.sungka.server.util.Tuple2;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
 /**
  * @author Adam Chlupacek
  * @version 1.0
- *          <-INPUT DESC->
+ * Part of routing on the server.
+ * This denotes an end point for handling a request, must be at the end of each route.
  */
 public abstract class Bind implements Route {
 

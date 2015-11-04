@@ -7,7 +7,8 @@ import com.lynx.sungka.server.util.Tuple2;
 /**
  * @author Adam Chlupacek
  * @version 1.0
- *          <-INPUT DESC->
+ * Part of routing on the server.
+ * This denotes a exact given string that is supposed to be there, then continues on with the path
  */
 public class Segment implements Route {
 
@@ -22,7 +23,6 @@ public class Segment implements Route {
     @Override
     public Tuple2<RequestResponse, ParseState> matchRequest(ParseState state, ServerContext ctx, int idx) {
         if(state.getPath().length>idx && state.getPath()[idx].equals(segment)){
-            state.addArg(state.getPath()[idx]);
             state.push(new Tuple2<>(++idx,next));
         }
         return new Tuple2<>(null,state);

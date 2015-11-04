@@ -9,11 +9,17 @@ import com.lynx.sungka.server.util.Tuple2;
 /**
  * @author Adam Chlupacek
  * @version 1.0
- *          <-INPUT DESC->
+ * Part of routing on the server.
+ * This denotes a required type of method of the request to progress on this route.
  */
 public class Method implements Route {
     private MethodType type;
     private Route next;
+
+    public Method(MethodType type, Route next) {
+        this.type = type;
+        this.next = next;
+    }
 
     @Override
     public Tuple2<RequestResponse, ParseState> matchRequest(ParseState state, ServerContext ctx, int idx) {
