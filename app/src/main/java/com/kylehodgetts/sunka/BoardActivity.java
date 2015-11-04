@@ -8,6 +8,7 @@ import android.widget.GridLayout;
 import com.kylehodgetts.sunka.controller.GameManager;
 import com.kylehodgetts.sunka.controller.bus.EventBus;
 import com.kylehodgetts.sunka.event.NewGame;
+import com.kylehodgetts.sunka.event.TrayOnClickListener;
 import com.kylehodgetts.sunka.model.Board;
 import com.kylehodgetts.sunka.model.GameState;
 import com.kylehodgetts.sunka.model.Player;
@@ -63,7 +64,7 @@ public class BoardActivity extends AppCompatActivity {
                 button.setLayoutParams(param);
                 gridlayout.addView(button);
 
-                button.setOnClickListener(new TrayOnClick(tray, player, bus));
+                button.setOnClickListener(new TrayOnClickListener(tray, player, bus));
             }
         }
     }
