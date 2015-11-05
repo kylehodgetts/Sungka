@@ -2,7 +2,7 @@ package com.kylehodgetts.sunka.model;
 
 import com.kylehodgetts.sunka.controller.bus.BusState;
 import com.kylehodgetts.sunka.controller.bus.EventBus;
-import com.kylehodgetts.sunka.event.PlayerMove;
+import com.kylehodgetts.sunka.event.PlayerChoseTray;
 
 /**
  * @author Adam Chlupacek
@@ -98,7 +98,7 @@ public class GameState implements BusState {
        int xPosition = (int) (Math.random()* 6.0);
 
        if(!aiInitialised) {
-           initialEventGameState.feedEvent(new PlayerMove(xPosition,ai,ai));
+           initialEventGameState.feedEvent(new PlayerChoseTray(xPosition,ai));
            nextInitPhase(ai);
            aiInitialised = true;
         }

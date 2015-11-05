@@ -5,6 +5,7 @@ import android.app.Activity;
 import com.kylehodgetts.sunka.controller.bus.Event;
 import com.kylehodgetts.sunka.controller.bus.EventBus;
 import com.kylehodgetts.sunka.controller.bus.EventHandler;
+import com.kylehodgetts.sunka.event.NewGame;
 import com.kylehodgetts.sunka.event.NextTurn;
 import com.kylehodgetts.sunka.event.PlayerChoseTray;
 import com.kylehodgetts.sunka.util.Tuple2;
@@ -30,11 +31,20 @@ public class AI extends EventHandler<GameState> {
     @Override
     public Tuple2<GameState, Boolean> handleEvent(Event event, final GameState state) {
 
+        //normal turn
         if (event instanceof NextTurn && state.getCurrentPlayerIndex() == myIndex) {
             timer.schedule(new TimerTask() {
                 @Override
                 public void run() {
-                    bus.feedEvent(new PlayerChoseTray(getPreferredTray(state), myIndex));
+                    bus.feedEvent(new PlayerChoseTray(getRandomTray(state), myIndex));
+                }
+            }, TIMERDELAY);
+        //race to finish first turn
+        } else if (event instanceof NewGame && state.getCurrentPlayerIndex() < 1) {
+            timer.schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    bus.feedEvent(new PlayerChoseTray(getRandomTray(state), myIndex));
                 }
             }, TIMERDELAY);
         }
@@ -43,13 +53,13 @@ public class AI extends EventHandler<GameState> {
         return new Tuple2<>(state, false);
     }
 
-    private int getPreferredTray(GameState state) {
+    private int getRandomTray(GameState state) {
 
         Random r = new Random();
         int i = r.nextInt(7);
         Board b = state.getBoard();
 
-        while (b.getTray(i, myIndex) == 0) {
+        while (b.getTray(myIndex, i) == 0) {
             r.nextInt(7);
         }
 
