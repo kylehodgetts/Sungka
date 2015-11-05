@@ -25,4 +25,6 @@
     <string name="awaiting_connection">Awaiting connection...</string>
     <string name="opponent_score">Opponent Score</string>
     <string name="zero">0</string>
+    <string name="your_name">Your name:</string>
+    <string name="done">Done</string>
 </resources>

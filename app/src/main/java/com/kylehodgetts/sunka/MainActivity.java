@@ -1,17 +1,22 @@
 package com.kylehodgetts.sunka;
 
 import android.content.Intent;
-import android.content.res.AssetManager;
-import android.graphics.Typeface;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.kylehodgetts.sunka.uiutil.Fonts;
-
-import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -21,9 +26,64 @@ public class MainActivity extends AppCompatActivity {
     private Button mmbonline;
     private Button mmbexit;
 
+    //Statics for preferences
+    public static final String USER_NAME ="UserName";
+    public static final String SERVER_ID ="ServerID";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        final SharedPreferences prefs = getPreferences(0);
+        if(!prefs.contains(USER_NAME)){
+            setContentView(R.layout.new_user);
+        }else {
+            setUpMainScreen();
+        }
+
+        if (!prefs.contains(SERVER_ID)){
+            RequestQueue queue = Volley.newRequestQueue(this);
+            String url = "http://178.62.56.190:8080/user/id";
+
+            StringRequest request = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+                    Log.v("USER_ID","Gotten ID- " + response);
+                    SharedPreferences.Editor editor = prefs.edit();
+                    editor.putString(SERVER_ID,response.trim());
+                    editor.apply();
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Log.v("USER_ID","Could not get id for the user from server");
+                    Log.v("USER_ID",error.getMessage());
+                }
+            });
+
+            queue.add(request);
+        }
+    }
+
+    public void setName(View view){
+        findViewById(R.id.user_name);
+        String userName = ((EditText) findViewById(R.id.user_name)).getText().toString();
+        if (!userName.trim().isEmpty()){
+
+            SharedPreferences prefs = getPreferences(0);
+            SharedPreferences.Editor editor = prefs.edit();
+            editor.putString(USER_NAME,userName.trim());
+            editor.apply();
+
+            setUpMainScreen();
+        }
+    }
+
+    /**
+     * Sets up the main menu screen and assigns listeners to the buttons
+     */
+    private void setUpMainScreen(){
+
         setContentView(R.layout.activity_main);
 
         txtTeamName = (TextView) findViewById(R.id.teamName);

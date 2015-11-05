@@ -2,9 +2,11 @@ package com.lynx.sungka.server;
 
 import com.lynx.sungka.server.http.RequestResponse;
 import com.lynx.sungka.server.http.header.Header;
+import com.lynx.sungka.server.http.route.Alternative;
 import com.lynx.sungka.server.http.route.Bind;
 import com.lynx.sungka.server.http.route.Route;
 import com.lynx.sungka.server.http.route.Segment;
+import com.lynx.sungka.server.util.IDGen;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBAddress;
@@ -48,18 +50,32 @@ public class Server implements Runnable {
         running = true;
 
         // TODO: implement proper routing construction, for now just create routes with this
-        route = new Segment("me",new Bind() {
-            @Override
-            public RequestResponse run(ServerContext context, DBObject body, List<String> args) {
-                ArrayList<Header> headers = new ArrayList<>();
-                headers.add(new Header("Server","Simple rest server"));
-                headers.add(new Header("Content-Type", "text/html"));
-                DB tDB = context.getMongo().getDB("test");
-                DBObject o = new BasicDBObject("Hello","Yeah");
-                tDB.getCollection("myCollection").insert(o);
-                return new RequestResponse(headers,"<a>Hello</a>".getBytes(), RequestResponse.ResponseCode.OK);
-            }
-        });
+        route =
+                new Alternative(
+                    new Segment("user",new Alternative(
+                        new Segment("id", new Bind() {
+                            @Override
+                            public RequestResponse run(ServerContext context, DBObject body, List<String> args) {
+                                return new RequestResponse(new ArrayList<Header>(), IDGen.genId().getBytes(), RequestResponse.ResponseCode.OK);
+                            }
+                        })
+                    ))
+                );
+
+
+//
+//                new Segment("me",new Bind() {
+//            @Override
+//            public RequestResponse run(ServerContext context, DBObject body, List<String> args) {
+//                ArrayList<Header> headers = new ArrayList<>();
+//                headers.add(new Header("Server","Simple rest server"));
+//                headers.add(new Header("Content-Type", "text/html"));
+//                DB tDB = context.getMongo().getDB("test");
+//                DBObject o = new BasicDBObject("Hello","Yeah");
+//                tDB.getCollection("myCollection").insert(o);
+//                return new RequestResponse(headers,"<a>Hello</a>".getBytes(), RequestResponse.ResponseCode.OK);
+//            }
+//        });
         try {
             //Creating server context, access to all its resources
             context = new ServerContext(new DBAddress("localhost",27017,"local"));

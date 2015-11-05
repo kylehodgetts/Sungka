@@ -1,4 +1,8 @@
 apply plugin: 'java'
+apply plugin: 'application'
+
+
+mainClassName = "com.lynx.sungka.server.StartUp"
 
 repositories {
     mavenCentral()
@@ -8,3 +12,4 @@ dependencies{
     compile 'org.mongodb:mongo-java-driver:1.3'
     testCompile 'junit:junit:4.12'
 }
+
