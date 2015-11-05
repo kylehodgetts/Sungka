@@ -3,7 +3,7 @@ package com.kylehodgetts.sunka.controller;
 import android.app.Activity;
 
 import com.kylehodgetts.sunka.controller.bus.EventBus;
-import com.kylehodgetts.sunka.event.PlayerMove;
+import com.kylehodgetts.sunka.event.PlayerChoseTray;
 import com.kylehodgetts.sunka.model.Board;
 import com.kylehodgetts.sunka.model.GameState;
 import com.kylehodgetts.sunka.model.Player;
@@ -25,16 +25,6 @@ public class BoardControllerTest extends TestCase {
     private GameState state;
     private EventBus<GameState> bus;
 
-    private class ManagerTest extends GameManager{
-        public ManagerTest(EventBus<GameState> bus) {
-            super(bus);
-        }
-
-        @Override
-        public void render(GameState state, Activity activity) {}
-    }
-
-
     /**
      * Setup method to create a new game state, new players and a new EventBus to handle the events and
      * changes to the game state.
@@ -45,8 +35,8 @@ public class BoardControllerTest extends TestCase {
     protected void setUp() throws Exception {
         super.setUp();
 
-        state = new GameState(new Board(),new Player(),new Player());
-        bus = new EventBus<>(state,null);
+        state = new GameState(new Board(), new Player(), new Player());
+        bus = new EventBus<>(state, null);
         GameManager manager = new ManagerTest(bus);
         bus.registerHandler(manager);
     }
@@ -58,7 +48,7 @@ public class BoardControllerTest extends TestCase {
      * @return A String to show the state of the game board's shells and each player's store
      */
     public String printBoardState() {
-        return "Player 1 Store: "+state.getPlayer1().getStonesInPot() + "\n" +
+        return "Player 1 Store: " + state.getPlayer1().getStonesInPot() + "\n" +
                 state.getBoard() +
                 "Player 2 Store: " + state.getPlayer2().getStonesInPot() + "\n";
     }
@@ -72,20 +62,23 @@ public class BoardControllerTest extends TestCase {
     @Test
     public void testMoveOne() throws Exception {
 
-        for(int i = 0; i < 2; ++i) {
-            for(int j = 0; j < 7; ++j) {
-                bus.feedEvent(new PlayerMove(j, i, i));
+        for (int i = 0; i < 2; ++i) {
+            for (int j = 0; j < 7; ++j) {
+                bus.feedEvent(new PlayerChoseTray(j, i));
                 Thread.sleep(10000);
                 System.out.println(printBoardState());
 
                 int currentRow = i;
-                for(int k = 0; k < 13; ++k) {
-                    if(currentRow == i && (k+j) % 7 == j) { assertEquals(0, state.getBoard().getTray(i, j)); }
-                    else { assertEquals(k < 7 ? 8 : 7, state.getBoard().getTray(currentRow, (k+j) % 7)); }
-                    currentRow = (k+j) % 7 == 6? (currentRow+1) % 2 : currentRow;
+                for (int k = 0; k < 13; ++k) {
+                    if (currentRow == i && (k + j) % 7 == j) {
+                        assertEquals(0, state.getBoard().getTray(i, j));
+                    } else {
+                        assertEquals(k < 7 ? 8 : 7, state.getBoard().getTray(currentRow, (k + j) % 7));
+                    }
+                    currentRow = (k + j) % 7 == 6 ? (currentRow + 1) % 2 : currentRow;
                 }
-                assertEquals(i==0 ? 1 : 0, state.getPlayer1().getStonesInPot());
-                assertEquals(i==0 ? 0 : 1, state.getPlayer2().getStonesInPot());
+                assertEquals(i == 0 ? 1 : 0, state.getPlayer1().getStonesInPot());
+                assertEquals(i == 0 ? 0 : 1, state.getPlayer2().getStonesInPot());
                 setUp();
             }
         }
@@ -101,16 +94,19 @@ public class BoardControllerTest extends TestCase {
 
         for(int i = 0; i < 2; ++i) {
             for(int j = 0; j < 7; ++j) {
-                bus.feedEvent(new PlayerMove(j, i, i));
+                bus.feedEvent(new PlayerChoseTray(j, i));
                 Thread.sleep(10000);
-                bus.feedEvent(new PlayerMove(j, (i+1)%2, (i+1)%2));
+                bus.feedEvent(new PlayerChoseTray(j, (i + 1) % 2));
                 Thread.sleep(10000);
                 System.out.println(printBoardState());
 
                 int currentRow = i;
                 for(int k = 0; k < 13; ++k) {
-                    if((k+j) % 7 == j) { assertEquals(0, state.getBoard().getTray((i+1)%2, j)); }
-                    else { assertEquals(8, state.getBoard().getTray(currentRow, (k+j) % 7)); }
+                    if ((k + j) % 7 == j) {
+                        assertEquals(0, state.getBoard().getTray((i + 1) % 2, j));
+                    } else {
+                        assertEquals(8, state.getBoard().getTray(currentRow, (k + j) % 7));
+                    }
                     currentRow = (k+j) % 7 == 6? (currentRow+1) % 2 : currentRow;
                 }
                 assertEquals(1, state.getPlayer1().getStonesInPot());
@@ -130,21 +126,24 @@ public class BoardControllerTest extends TestCase {
     public void testFirstTurn() throws Exception {
 
         int i = 0;
-        for(int j = 0; j < 7; ++j) {
-            bus.feedEvent(new PlayerMove(j, i, i));
-            bus.feedEvent(new PlayerMove(j, (i+1)%2, (i+1)%2));
+        for (int j = 0; j < 7; ++j) {
+            bus.feedEvent(new PlayerChoseTray(j, i));
+            bus.feedEvent(new PlayerChoseTray(j, (i + 1) % 2));
             Thread.sleep(10000);
             System.out.println(printBoardState());
 
             int currentRow = i;
-            for(int k = 0; k < 13; ++k) {
-                if((k+j) % 7 == j) { assertEquals(0, state.getBoard().getTray((i+1)%2, j)); }
-                else { assertEquals(8, state.getBoard().getTray(currentRow, (k+j) % 7)); }
-                currentRow = (k+j) % 7 == 6? (currentRow+1) % 2 : currentRow;
+            for (int k = 0; k < 13; ++k) {
+                if ((k + j) % 7 == j) {
+                    assertEquals(0, state.getBoard().getTray((i + 1) % 2, j));
+                } else {
+                    assertEquals(8, state.getBoard().getTray(currentRow, (k + j) % 7));
+                }
+                currentRow = (k + j) % 7 == 6 ? (currentRow + 1) % 2 : currentRow;
             }
             assertEquals(1, state.getPlayer1().getStonesInPot());
             assertEquals(1, state.getPlayer2().getStonesInPot());
-            assertEquals(0, state.getPlayerOneTurn());
+            assertEquals(0, state.getCurrentPlayerIndex());
             setUp();
         }
 
@@ -161,8 +160,8 @@ public class BoardControllerTest extends TestCase {
 
         int i = 1;
         for(int j = 0; j < 7; ++j) {
-            bus.feedEvent(new PlayerMove(j, 1, 1));
-            bus.feedEvent(new PlayerMove(j, 0, 0));
+            bus.feedEvent(new PlayerChoseTray(j, 1));
+            bus.feedEvent(new PlayerChoseTray(j, 0));
             Thread.sleep(10000);
             System.out.println(printBoardState());
 
@@ -174,11 +173,21 @@ public class BoardControllerTest extends TestCase {
             }
             assertEquals(1, state.getPlayer1().getStonesInPot());
             assertEquals(1, state.getPlayer2().getStonesInPot());
-            assertEquals(1, state.getPlayerOneTurn());
+            assertEquals(1, state.getCurrentPlayerIndex());
             setUp();
         }
 
 
+    }
+
+    private class ManagerTest extends GameManager {
+        public ManagerTest(EventBus<GameState> bus) {
+            super(bus);
+        }
+
+        @Override
+        public void updateView(GameState state, Activity activity) {
+        }
     }
 
 
