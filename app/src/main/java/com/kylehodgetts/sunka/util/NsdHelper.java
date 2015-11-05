@@ -120,9 +120,11 @@ public class NsdHelper {
                 public void onServiceResolved(NsdServiceInfo serviceInfo) {
                     Log.e(TAG, "Resolve Succeeded. " + serviceInfo);
 
-                    if (serviceInfo.getServiceName().equals(mServiceName)) {
-                        Log.d(TAG, "Same IP.");
-                        return;
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                        if (serviceInfo.getServiceName().equals(mServiceName)) {
+                            Log.d(TAG, "Same IP.");
+                            return;
+                        }
                     }
                     mService = serviceInfo;
                 }

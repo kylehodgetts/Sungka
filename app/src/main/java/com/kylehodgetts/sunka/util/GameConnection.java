@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.example.android.nsdchat;
+package com.kylehodgetts.sunka.util;
 
 import android.os.Bundle;
 import android.os.Handler;
@@ -34,34 +34,34 @@ import java.net.UnknownHostException;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 
-public class ChatConnection {
+public class GameConnection {
 
     private Handler mUpdateHandler;
-    private ChatServer mChatServer;
-    private ChatClient mChatClient;
+    private GameServer mGameServer;
+    private GameClient mGameClient;
 
-    private static final String TAG = "ChatConnection";
+    private static final String TAG = "GameConnection";
 
     private Socket mSocket;
     private int mPort = -1;
 
-    public ChatConnection(Handler handler) {
+    public GameConnection(Handler handler) {
         mUpdateHandler = handler;
-        mChatServer = new ChatServer(handler);
+        mGameServer = new GameServer(handler);
     }
 
     public void tearDown() {
-        mChatServer.tearDown();
-        mChatClient.tearDown();
+        mGameServer.tearDown();
+        mGameClient.tearDown();
     }
 
     public void connectToServer(InetAddress address, int port) {
-        mChatClient = new ChatClient(address, port);
+        mGameClient = new GameClient(address, port);
     }
 
     public void sendMessage(String msg) {
-        if (mChatClient != null) {
-            mChatClient.sendMessage(msg);
+        if (mGameClient != null) {
+            mGameClient.sendMessage(msg);
         }
     }
     
@@ -114,11 +114,11 @@ public class ChatConnection {
         return mSocket;
     }
 
-    private class ChatServer {
+    private class GameServer {
         ServerSocket mServerSocket = null;
         Thread mThread = null;
 
-        public ChatServer(Handler handler) {
+        public GameServer(Handler handler) {
             mThread = new Thread(new ServerThread());
             mThread.start();
         }
@@ -147,7 +147,7 @@ public class ChatConnection {
                         Log.d(TAG, "ServerSocket Created, awaiting connection");
                         setSocket(mServerSocket.accept());
                         Log.d(TAG, "Connected.");
-                        if (mChatClient == null) {
+                        if (mGameClient == null) {
                             int port = mSocket.getPort();
                             InetAddress address = mSocket.getInetAddress();
                             connectToServer(address, port);
@@ -161,19 +161,19 @@ public class ChatConnection {
         }
     }
 
-    private class ChatClient {
+    private class GameClient {
 
         private InetAddress mAddress;
         private int PORT;
 
-        private final String CLIENT_TAG = "ChatClient";
+        private final String CLIENT_TAG = "GameClient";
 
         private Thread mSendThread;
         private Thread mRecThread;
 
-        public ChatClient(InetAddress address, int port) {
+        public GameClient(InetAddress address, int port) {
 
-            Log.d(CLIENT_TAG, "Creating chatClient");
+            Log.d(CLIENT_TAG, "Creating GameClient");
             this.mAddress = address;
             this.PORT = port;
 
