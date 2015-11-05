@@ -70,16 +70,8 @@ public class GameManager extends EventHandler<GameState> {
         } else return new Tuple2<>(state, false);
     }
 
-    /**
-     * Renders any changes made to the model and the game state on to the GUI on the UI Thread.
-     *
-     * @param state    The current state of the event bus
-     * @param activity The active activity
-     */
     @Override
-    public void render(final GameState state, final Activity activity) {
-        
-    }
+    public void updateView(GameState state, Activity activity) { }
 
 
     //TODO rename this to remove the 'event' bit

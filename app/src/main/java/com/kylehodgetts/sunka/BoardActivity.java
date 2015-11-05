@@ -1,15 +1,11 @@
 package com.kylehodgetts.sunka;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Gravity;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.GridLayout;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import com.kylehodgetts.sunka.controller.GameManager;
 import com.kylehodgetts.sunka.controller.ViewManager;
@@ -51,10 +47,13 @@ public class BoardActivity extends AppCompatActivity {
 
         for(int i=0; i < 2; ++i) {
             for(int j=0; j < 7; ++j) {
-                final LinearLayout button;
-                if(i==0) { button = (LinearLayout) getLayoutInflater().inflate(R.layout.buttonlayoutb, gridlayout, false); }
-                else { button = (LinearLayout) getLayoutInflater().inflate(R.layout.buttonlayouta, gridlayout, false); }
-                button.setId(Integer.parseInt(i + "" + j));
+                final LinearLayout linearLayout;
+                if(i==0) { linearLayout = (LinearLayout) getLayoutInflater().inflate(R.layout.buttonlayoutb, gridlayout, false); }
+                else { linearLayout = (LinearLayout) getLayoutInflater().inflate(R.layout.buttonlayouta, gridlayout, false); }
+                linearLayout.setId(Integer.parseInt(i + "" + j));
+
+
+                ImageButton button = (ImageButton) linearLayout.findViewById(R.id.button);
 
                 GridLayout.LayoutParams param = new GridLayout.LayoutParams();
                 param.columnSpec = GridLayout.spec(i == 1?6-j:j);
@@ -63,10 +62,10 @@ public class BoardActivity extends AppCompatActivity {
                 param.height=GridLayout.LayoutParams.WRAP_CONTENT;
                 param.setMargins(10,10,10,10);
                 param.setGravity(Gravity.FILL);
-                button.setLayoutParams(param);
-                gridlayout.addView(button);
+                linearLayout.setLayoutParams(param);
+                gridlayout.addView(linearLayout);
 
-                button.setOnClickListener(new TrayOnClickListener(tray, player, bus));
+                button.setOnClickListener(new TrayOnClickListener(j, i, bus));
             }
         }
     }

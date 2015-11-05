@@ -7,10 +7,10 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.kylehodgetts.sunka.R;
-import com.kylehodgetts.sunka.TrayOnClick;
 import com.kylehodgetts.sunka.controller.bus.Event;
 import com.kylehodgetts.sunka.controller.bus.EventBus;
 import com.kylehodgetts.sunka.controller.bus.EventHandler;
+import com.kylehodgetts.sunka.event.TrayOnClickListener;
 import com.kylehodgetts.sunka.model.Board;
 import com.kylehodgetts.sunka.model.GameState;
 import com.kylehodgetts.sunka.util.Tuple2;
@@ -29,12 +29,12 @@ public class ViewManager extends EventHandler<GameState> {
     }
 
     @Override
-    public Tuple2<GameState, Boolean> handleEvent(Event event, GameState state, EventBus<GameState> bus) {
+    public Tuple2<GameState, Boolean> handleEvent(Event event, GameState state) {
         return new Tuple2<>(state, false); //default case to make the eventBus not do anything
     }
 
     @Override
-    public void render(final GameState state, final Activity activity) {
+    public void updateView(final GameState state, final Activity activity) {
         activity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -74,21 +74,11 @@ public class ViewManager extends EventHandler<GameState> {
                         } else {
                             button.setImageResource(activity.getResources().getIdentifier("s9", "drawable", activity.getPackageName()));
                         }
-                        if (
-                                !state.getBoard().isEmptyTray(row, column)
-                                        && (
-                                        (state.getPlayerOneTurn() == row && !state.isDoingMove() && !state.isInitialising())
-                                                || state.playerInitialising(row)
-                                )
-                                ) {
-                            button.setOnClickListener(new TrayOnClick(column, row, row, bus));
-                        } else {
-                            button.setOnClickListener(null);
-                        }
+//
                     }
                 }
 
-                selectPlayer(activity, state, state.getPlayerOneTurn());
+                selectPlayer(activity, state, state.getCurrentPlayerIndex());
             }
         });
     }
@@ -155,4 +145,5 @@ public class ViewManager extends EventHandler<GameState> {
             imageButton.setPadding(35, 35, 35, 35);
         }
     }
+
 }
