@@ -1,8 +1,12 @@
 package com.kylehodgetts.sunka;
 
+import android.app.ActionBar;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Gravity;
+import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.GridLayout;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
@@ -30,8 +34,13 @@ public class BoardActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_board);
 
+        View decorView = getWindow().getDecorView();
+//         Hide the status bar.
+        int uiOptions = View.SYSTEM_UI_FLAG_FULLSCREEN;
+        decorView.setSystemUiVisibility(uiOptions);
+
+        this.setContentView(R.layout.activity_board);
         GameState state = new GameState(new Board(), new Player(), new Player());
         EventBus<GameState> bus = new EventBus<>(state, this);
         bus.registerHandler(new GameManager(bus));
@@ -60,7 +69,7 @@ public class BoardActivity extends AppCompatActivity {
                 param.rowSpec = GridLayout.spec((i+1)%2);
                 param.width=GridLayout.LayoutParams.WRAP_CONTENT;
                 param.height=GridLayout.LayoutParams.WRAP_CONTENT;
-                param.setMargins(10,10,10,10);
+                param.setMargins(10, 10, 10, 10);
                 param.setGravity(Gravity.FILL);
                 linearLayout.setLayoutParams(param);
                 gridlayout.addView(linearLayout);
