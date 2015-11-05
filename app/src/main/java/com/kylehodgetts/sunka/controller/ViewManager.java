@@ -140,7 +140,7 @@ public class ViewManager extends EventHandler<GameState> {
         for (int tray = 0; tray < 7; ++tray) {
             LinearLayout linearLayout = (LinearLayout) activity.findViewById(Integer.parseInt((playersTurn == 0 ? "1" : "0") + "" + tray));
             ImageButton imageButton = (ImageButton) linearLayout.findViewById(R.id.button);
-            imageButton.setBackgroundResource(R.drawable.wasbuttontransparent);
+            imageButton.setBackgroundResource(R.drawable.buttontransparent);
             imageButton.setPadding(35, 35, 35, 35);
         }
     }
