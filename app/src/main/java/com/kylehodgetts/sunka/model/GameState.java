@@ -11,6 +11,8 @@ import com.kylehodgetts.sunka.event.PlayerMove;
  */
 public class GameState implements BusState {
 
+    //TODO comment everything in this class
+
     private Board board;
     private Player player1;
     private Player player2;
@@ -27,6 +29,7 @@ public class GameState implements BusState {
         this.initialising = -2;
         this.doingMove = false;
     }
+
 
     public Board getBoard() {
         return board;

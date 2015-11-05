@@ -27,10 +27,9 @@ public abstract class EventHandler<T extends BusState> {
      *
      * @param event The incoming event from the bus to this handler
      * @param state The current state of the bus
-     * @param bus   The bus from which the event came to this handler
      * @return Returns the modified state together with a flag whether a render is required
      */
-    public abstract Tuple2<T, Boolean> handleEvent(Event event, T state, EventBus<T> bus);
+    public abstract Tuple2<T, Boolean> handleEvent(Event event, T state);
 
     /**
      * A method that renders the application, any changes to the view should be here

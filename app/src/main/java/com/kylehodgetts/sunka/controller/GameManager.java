@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.widget.Button;
 
 import com.kylehodgetts.sunka.R;
-import com.kylehodgetts.sunka.TrayOnClick;
 import com.kylehodgetts.sunka.controller.bus.Event;
 import com.kylehodgetts.sunka.controller.bus.EventBus;
 import com.kylehodgetts.sunka.controller.bus.EventHandler;
@@ -21,16 +20,15 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 /**
- * @author Adam Chlupacek
- * @version 1.0
- *          <p/>
+ * @author Adam Chlupacek. V2 By Jonathan Burton
+ * @version 2.0
  *          The controller for the main game logic
  */
 public class GameManager extends EventHandler<GameState> {
 
+    private static final int delay = 300;
     private Timer timer;
     private EventBus<GameState> bus;
-    private int delay = 300;
 
     /**
      * Default constructor for event handler, assigns its id that should be unique
@@ -46,11 +44,10 @@ public class GameManager extends EventHandler<GameState> {
      *
      * @param event The incoming event from the bus to this handler
      * @param state The current state of the bus
-     * @param bus   The bus from which the event came to this handler
      * @return Returns the modified state together with a flag whether a render is required
      */
     @Override
-    public Tuple2<GameState, Boolean> handleEvent(Event event, GameState state, EventBus<GameState> bus) {
+    public Tuple2<GameState, Boolean> handleEvent(Event event, GameState state) {
 
 
         if (event instanceof PlayerChoseTray) {
@@ -68,6 +65,7 @@ public class GameManager extends EventHandler<GameState> {
         } else return new Tuple2<>(state, false);
     }
 
+    //TODO move this into it's own class specifically for graphical events
     /**
      * Renders any changes made to the model and the game state on to the GUI on the UI Thread.
      *
@@ -90,50 +88,43 @@ public class GameManager extends EventHandler<GameState> {
                     for (int column = 0; column < 7; ++column) {
                         Button button = (Button) activity.findViewById(Integer.parseInt(row + "" + column));
                         button.setText(Integer.toString(currentBoard.getTray(row, column)));
-                        if (
-                                !state.getBoard().isEmptyTray(row, column)
-                                        && (
-                                        (state.getCurrentPlayerIndex() == row && !state.isDoingMove() && !state.isInitialising())
-                                                || state.playerInitialising(row)
-                                )
-                                ) {
-                            button.setOnClickListener(new TrayOnClick(column, row, bus));
-                        } else {
-                            button.setOnClickListener(null);
-                        }
                     }
                 }
             }
         });
     }
 
+    //TODO rename this to remove the 'event' bit
     /**
      * Processes the player move, and starts the moving of the pebbles
      *
      * @param trayChosen the location of selected tray
-     * @return
+     * @return new gameState
      */
     private GameState playerSelectedTrayEvent(GameState state, PlayerChoseTray trayChosen) {
         int trayIndex = trayChosen.getTrayIndex();
         int playerIndex = trayChosen.getPlayerIndex();
+        int shells = state.getBoard().getTray(playerIndex, trayIndex);
 
-        scheduleEvent(new ShellMovement(trayIndex == 6 ? 0 : trayIndex + 1, trayIndex == 6 ? (playerIndex + 1) % 2 : playerIndex, state.getBoard().emptyTray(playerIndex, trayIndex), true, trayChosen.getPlayerIndex()), delay, trayChosen.getPlayerIndex());
-        if (state.getCurrentPlayerIndex() == -1) {
-            state.setCurrentPlayerIndex(trayChosen.getPlayerIndex());
+        //horrific thing that determines if this move is valid, or just a player pressing random buttons
+        if (shells != 0 && ((state.getCurrentPlayerIndex() == playerIndex && !state.isDoingMove() && !state.isInitialising()) || state.playerInitialising(playerIndex))) {
+
+            state.setDoingMove(true);
+            if (state.getCurrentPlayerIndex() == -1)
+                state.setCurrentPlayerIndex(trayChosen.getPlayerIndex());
+            if (state.isInitialising()) state.nextInitPhase(trayChosen.getPlayerIndex());
+            scheduleEvent(new ShellMovement(trayIndex == 6 ? 0 : trayIndex + 1, trayIndex == 6 ? (playerIndex + 1) % 2 : playerIndex, state.getBoard().emptyTray(playerIndex, trayIndex), true, trayChosen.getPlayerIndex()), delay, trayChosen.getPlayerIndex());
+
         }
-        //System.out.println("Player " + state.getCurrentPlayerIndex()); //why not Log.v()?
-        if (state.isInitialising())
-            state.nextInitPhase(trayChosen.getPlayerIndex());
-        state.getBoard().emptyTray(playerIndex, trayIndex);
-        state.setDoingMove(true);
         return state;
     }
 
+    //TODO rename this to remove the 'event' bit
     /**
      * Processes one of the move tick of the players move
      * Moves the beads by one tray/store
      *
-     * @return
+     * @return new GameState
      */
     private GameState placeShellEvent(GameState state, ShellMovement move) {
 
@@ -145,7 +136,8 @@ public class GameManager extends EventHandler<GameState> {
         boolean repeatTurn = false;
 
         //we go past the pot and then have to go back, which is why the animation 'skips' when adding to the pots
-        if (first && trayIndex == 0) { //TODO disgusting hack for fixing of the moving straight into the store
+        if (first && trayIndex == 0) {
+            //TODO fix disgusting hack for fixing of the moving straight into the store. Schedule same event, but with one less shell?
             state.getPlayerFor(player).addToPot(1);
             shellsLeft--;
             repeatTurn = true;
@@ -173,13 +165,14 @@ public class GameManager extends EventHandler<GameState> {
         }
     }
 
+    //TODO rename this so all individual event handler methods have a consistent naming scheme
     /**
      * Processes the end of the turn for current player
      *
      * @param trayIndex   the column of the last tray we putted beads into
      * @param playerIndex the row of the last tray we putted beads into
      * @param repeat      whether the last bead ended in the store
-     * @return
+     * @return new GameState
      */
     private GameState endTurn(GameState state, int trayIndex, int playerIndex, boolean repeat, int player) {
         Board b = state.getBoard();
@@ -206,6 +199,7 @@ public class GameManager extends EventHandler<GameState> {
     }
 
 
+    //TODO potentially move this into the bus class to get around the stack over flow bug
     /**
      * Schedules an event to the timer for later dispatching
      *
@@ -222,5 +216,3 @@ public class GameManager extends EventHandler<GameState> {
     }
 
 }
-
-
