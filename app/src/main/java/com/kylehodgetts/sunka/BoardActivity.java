@@ -12,6 +12,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.kylehodgetts.sunka.controller.GameManager;
+import com.kylehodgetts.sunka.controller.ViewManager;
 import com.kylehodgetts.sunka.controller.bus.EventBus;
 import com.kylehodgetts.sunka.event.NewGame;
 import com.kylehodgetts.sunka.event.PlayerMove;
@@ -41,6 +42,7 @@ public class BoardActivity extends Activity {
         GameState state = new GameState(new Board(),new Player(),new Player());
         EventBus<GameState> bus = new EventBus<>(state,this);
         bus.registerHandler(new GameManager(bus));
+        bus.registerHandler(new ViewManager(bus));
 
         bus.feedEvent(new NewGame());
     }
