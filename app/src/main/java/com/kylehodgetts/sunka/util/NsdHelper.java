@@ -14,11 +14,12 @@
  * limitations under the License.
  */
 
-package com.example.android.nsdchat;
+package com.kylehodgetts.sunka.util;
 
 import android.content.Context;
 import android.net.nsd.NsdServiceInfo;
 import android.net.nsd.NsdManager;
+import android.os.Build;
 import android.util.Log;
 
 public class NsdHelper {
@@ -52,114 +53,135 @@ public class NsdHelper {
     }
 
     public void initializeDiscoveryListener() {
-        mDiscoveryListener = new NsdManager.DiscoveryListener() {
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN) {
+            mDiscoveryListener = new NsdManager.DiscoveryListener() {
 
-            @Override
-            public void onDiscoveryStarted(String regType) {
-                Log.d(TAG, "Service discovery started");
-            }
-
-            @Override
-            public void onServiceFound(NsdServiceInfo service) {
-                Log.d(TAG, "Service discovery success" + service);
-                if (!service.getServiceType().equals(SERVICE_TYPE)) {
-                    Log.d(TAG, "Unknown Service Type: " + service.getServiceType());
-                } else if (service.getServiceName().equals(mServiceName)) {
-                    Log.d(TAG, "Same machine: " + mServiceName);
-                } else if (service.getServiceName().contains(mServiceName)){
-                    mNsdManager.resolveService(service, mResolveListener);
+                @Override
+                public void onDiscoveryStarted(String regType) {
+                    Log.d(TAG, "Service discovery started");
                 }
-            }
 
-            @Override
-            public void onServiceLost(NsdServiceInfo service) {
-                Log.e(TAG, "service lost" + service);
-                if (mService == service) {
-                    mService = null;
+                @Override
+                public void onServiceFound(NsdServiceInfo service) {
+                    Log.d(TAG, "Service discovery success" + service);
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                        if (!service.getServiceType().equals(SERVICE_TYPE)) {
+                            Log.d(TAG, "Unknown Service Type: " + service.getServiceType());
+                        } else if (service.getServiceName().equals(mServiceName)) {
+                            Log.d(TAG, "Same machine: " + mServiceName);
+                        } else if (service.getServiceName().contains(mServiceName)){
+                            mNsdManager.resolveService(service, mResolveListener);
+                        }
+                    }
                 }
-            }
-            
-            @Override
-            public void onDiscoveryStopped(String serviceType) {
-                Log.i(TAG, "Discovery stopped: " + serviceType);        
-            }
 
-            @Override
-            public void onStartDiscoveryFailed(String serviceType, int errorCode) {
-                Log.e(TAG, "Discovery failed: Error code:" + errorCode);
-                mNsdManager.stopServiceDiscovery(this);
-            }
+                @Override
+                public void onServiceLost(NsdServiceInfo service) {
+                    Log.e(TAG, "service lost" + service);
+                    if (mService == service) {
+                        mService = null;
+                    }
+                }
 
-            @Override
-            public void onStopDiscoveryFailed(String serviceType, int errorCode) {
-                Log.e(TAG, "Discovery failed: Error code:" + errorCode);
-                mNsdManager.stopServiceDiscovery(this);
-            }
-        };
+                @Override
+                public void onDiscoveryStopped(String serviceType) {
+                    Log.i(TAG, "Discovery stopped: " + serviceType);
+                }
+
+                @Override
+                public void onStartDiscoveryFailed(String serviceType, int errorCode) {
+                    Log.e(TAG, "Discovery failed: Error code:" + errorCode);
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                        mNsdManager.stopServiceDiscovery(this);
+                    }
+                }
+
+                @Override
+                public void onStopDiscoveryFailed(String serviceType, int errorCode) {
+                    Log.e(TAG, "Discovery failed: Error code:" + errorCode);
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                        mNsdManager.stopServiceDiscovery(this);
+                    }
+                }
+            };
+        }
     }
 
     public void initializeResolveListener() {
-        mResolveListener = new NsdManager.ResolveListener() {
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN) {
+            mResolveListener = new NsdManager.ResolveListener() {
 
-            @Override
-            public void onResolveFailed(NsdServiceInfo serviceInfo, int errorCode) {
-                Log.e(TAG, "Resolve failed" + errorCode);
-            }
-
-            @Override
-            public void onServiceResolved(NsdServiceInfo serviceInfo) {
-                Log.e(TAG, "Resolve Succeeded. " + serviceInfo);
-
-                if (serviceInfo.getServiceName().equals(mServiceName)) {
-                    Log.d(TAG, "Same IP.");
-                    return;
+                @Override
+                public void onResolveFailed(NsdServiceInfo serviceInfo, int errorCode) {
+                    Log.e(TAG, "Resolve failed" + errorCode);
                 }
-                mService = serviceInfo;
-            }
-        };
+
+                @Override
+                public void onServiceResolved(NsdServiceInfo serviceInfo) {
+                    Log.e(TAG, "Resolve Succeeded. " + serviceInfo);
+
+                    if (serviceInfo.getServiceName().equals(mServiceName)) {
+                        Log.d(TAG, "Same IP.");
+                        return;
+                    }
+                    mService = serviceInfo;
+                }
+            };
+        }
     }
 
     public void initializeRegistrationListener() {
-        mRegistrationListener = new NsdManager.RegistrationListener() {
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN) {
+            mRegistrationListener = new NsdManager.RegistrationListener() {
 
-            @Override
-            public void onServiceRegistered(NsdServiceInfo NsdServiceInfo) {
-                mServiceName = NsdServiceInfo.getServiceName();
-            }
-            
-            @Override
-            public void onRegistrationFailed(NsdServiceInfo arg0, int arg1) {
-            }
+                @Override
+                public void onServiceRegistered(NsdServiceInfo NsdServiceInfo) {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                        mServiceName = NsdServiceInfo.getServiceName();
+                    }
+                }
 
-            @Override
-            public void onServiceUnregistered(NsdServiceInfo arg0) {
-            }
-            
-            @Override
-            public void onUnregistrationFailed(NsdServiceInfo serviceInfo, int errorCode) {
-            }
-            
-        };
+                @Override
+                public void onRegistrationFailed(NsdServiceInfo arg0, int arg1) {
+                }
+
+                @Override
+                public void onServiceUnregistered(NsdServiceInfo arg0) {
+                }
+
+                @Override
+                public void onUnregistrationFailed(NsdServiceInfo serviceInfo, int errorCode) {
+                }
+
+            };
+        }
     }
 
     public void registerService(int port) {
-        NsdServiceInfo serviceInfo  = new NsdServiceInfo();
-        serviceInfo.setPort(port);
-        serviceInfo.setServiceName(mServiceName);
-        serviceInfo.setServiceType(SERVICE_TYPE);
-        
-        mNsdManager.registerService(
-                serviceInfo, NsdManager.PROTOCOL_DNS_SD, mRegistrationListener);
-        
+        NsdServiceInfo serviceInfo  = null;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN) {
+            serviceInfo = new NsdServiceInfo();
+            serviceInfo.setPort(port);
+            serviceInfo.setServiceName(mServiceName);
+            serviceInfo.setServiceType(SERVICE_TYPE);
+
+            mNsdManager.registerService(
+                    serviceInfo, NsdManager.PROTOCOL_DNS_SD, mRegistrationListener);
+        }
+
     }
 
     public void discoverServices() {
-        mNsdManager.discoverServices(
-                SERVICE_TYPE, NsdManager.PROTOCOL_DNS_SD, mDiscoveryListener);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            mNsdManager.discoverServices(
+                    SERVICE_TYPE, NsdManager.PROTOCOL_DNS_SD, mDiscoveryListener);
+        }
     }
     
     public void stopDiscovery() {
-        mNsdManager.stopServiceDiscovery(mDiscoveryListener);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            mNsdManager.stopServiceDiscovery(mDiscoveryListener);
+        }
     }
 
     public NsdServiceInfo getChosenServiceInfo() {
@@ -167,6 +189,8 @@ public class NsdHelper {
     }
     
     public void tearDown() {
-        mNsdManager.unregisterService(mRegistrationListener);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            mNsdManager.unregisterService(mRegistrationListener);
+        }
     }
 }

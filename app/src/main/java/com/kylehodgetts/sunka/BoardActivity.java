@@ -25,6 +25,8 @@ import com.kylehodgetts.sunka.model.Player;
 
 public class BoardActivity extends AppCompatActivity {
 
+    private EventBus<GameState> bus;
+
     //TODO: Implement OnPause, OnResume, OnStop methods
 
     @Override
@@ -35,7 +37,7 @@ public class BoardActivity extends AppCompatActivity {
         makeXMLButtons();
 
         GameState state = new GameState(new Board(),new Player(),new Player());
-        EventBus<GameState> bus = new EventBus<>(state,this);
+        bus = new EventBus<>(state,this);
         bus.registerHandler(new GameManager(bus));
 
         bus.feedEvent(new NewGame());
@@ -59,4 +61,10 @@ public class BoardActivity extends AppCompatActivity {
             }
         }
     }
+
+    public EventBus<GameState> getBus() {
+        return bus;
+    }
+
+
 }

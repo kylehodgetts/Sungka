@@ -19,26 +19,39 @@ import java.net.Socket;
  * @author Kyle Hodgetts
  * @author Charlie Baker
  */
-public class GameServerAsyncTask extends AsyncTask {
+public class GameServer implements Runnable {
     private Context context;
     private ServerSocket serverSocket;
     private Socket client;
     private EventBus bus;
 
-    public GameServerAsyncTask(Context context, EventBus bus){
+    public GameServer(Context context, EventBus bus){
         this.context = context;
         this.bus = bus;
     }
 
     @Override
-    protected Void doInBackground(Object[] params) {
+    public void run() {
+        Log.d(WiFiDirectActivity.TAG, "Entered Server Thread");
+        String read = null;
         try{
             serverSocket = new ServerSocket(8888);
-            client = serverSocket.accept();
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        client = serverSocket.accept();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }).run();
+
+            Log.d(WiFiDirectActivity.TAG, "Server accepted");
 
             InputStream inputStream = client.getInputStream();
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
-            String read = bufferedReader.readLine();
+            read = bufferedReader.readLine();
             Log.d(WiFiDirectActivity.TAG, read);
 
             serverSocket.close();
@@ -47,6 +60,5 @@ public class GameServerAsyncTask extends AsyncTask {
         catch(IOException e) {
             e.printStackTrace();
         }
-        return null;
     }
 }
