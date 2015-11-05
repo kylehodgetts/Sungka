@@ -10,7 +10,6 @@ import com.kylehodgetts.sunka.R;
 import com.kylehodgetts.sunka.controller.bus.Event;
 import com.kylehodgetts.sunka.controller.bus.EventBus;
 import com.kylehodgetts.sunka.controller.bus.EventHandler;
-import com.kylehodgetts.sunka.event.TrayOnClickListener;
 import com.kylehodgetts.sunka.model.Board;
 import com.kylehodgetts.sunka.model.GameState;
 import com.kylehodgetts.sunka.util.Tuple2;
@@ -141,7 +140,7 @@ public class ViewManager extends EventHandler<GameState> {
         for (int tray = 0; tray < 7; ++tray) {
             LinearLayout linearLayout = (LinearLayout) activity.findViewById(Integer.parseInt((playersTurn == 0 ? "1" : "0") + "" + tray));
             ImageButton imageButton = (ImageButton) linearLayout.findViewById(R.id.button);
-            imageButton.setBackgroundResource(R.drawable.buttontransparent);
+            imageButton.setBackgroundResource(R.drawable.wasbuttontransparent);
             imageButton.setPadding(35, 35, 35, 35);
         }
     }
