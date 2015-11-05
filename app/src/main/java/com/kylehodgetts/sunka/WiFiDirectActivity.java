@@ -40,6 +40,10 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.kylehodgetts.sunka.util.GameClient;
+import com.kylehodgetts.sunka.util.GameClientAsyncTask;
+import com.kylehodgetts.sunka.util.GameServer;
+import com.kylehodgetts.sunka.util.GamerServerAsyncTask;
 import com.kylehodgetts.sunka.util.PeerListAdapter;
 
 import java.net.InetAddress;
@@ -67,6 +71,10 @@ public class WiFiDirectActivity extends Activity implements ChannelListener, Con
     private Channel channel;
     private BroadcastReceiver receiver = null;
 
+    private GamerServerAsyncTask server;
+    private GameClientAsyncTask client;
+    private BoardActivity boardActivity;
+
     /**
      * @param isWifiP2pEnabled the isWifiP2pEnabled to set
      */
@@ -83,6 +91,8 @@ public class WiFiDirectActivity extends Activity implements ChannelListener, Con
             @Override
             public void onClick(View v) {
 
+                boardActivity = new BoardActivity();
+                new GamerServerAsyncTask().execute();
             }
         });
         arrayListPeers = new ArrayList<>();
@@ -100,8 +110,8 @@ public class WiFiDirectActivity extends Activity implements ChannelListener, Con
                     @Override
                     public void onSuccess() {
                         Log.d(TAG, "Connection success");
-                        Intent i = new Intent(WiFiDirectActivity.this, BoardActivity.class);
-                        startActivity(i);
+                        client = new GameClientAsyncTask(boardActivity.getBus());
+                        client.execute();
                     }
 
                     @Override
