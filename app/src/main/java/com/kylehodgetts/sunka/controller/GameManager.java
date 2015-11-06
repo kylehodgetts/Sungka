@@ -1,7 +1,12 @@
 package com.kylehodgetts.sunka.controller;
 
 import android.app.Activity;
-import android.widget.Button;
+import android.graphics.Color;
+import android.widget.GridLayout;
+import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.kylehodgetts.sunka.R;
 import com.kylehodgetts.sunka.controller.bus.Event;
@@ -65,34 +70,9 @@ public class GameManager extends EventHandler<GameState> {
         } else return new Tuple2<>(state, false);
     }
 
-    //TODO move this into it's own class specifically for graphical events
-    /**
-     * Renders any changes made to the model and the game state on to the GUI on the UI Thread.
-     *
-     * @param state    The current state of the event bus
-     * @param activity The active activity
-     */
     @Override
-    public void updateView(final GameState state, final Activity activity) {
-        activity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                Button playerOneStore = (Button) activity.findViewById(R.id.buttonbs);
-                playerOneStore.setText(Integer.toString(state.getPlayer1().getStonesInPot()));
+    public void updateView(GameState state, Activity activity) { }
 
-                Button playerTwoStore = (Button) activity.findViewById(R.id.buttonas);
-                playerTwoStore.setText(Integer.toString(state.getPlayer2().getStonesInPot()));
-
-                Board currentBoard = state.getBoard();
-                for (int row = 0; row < 2; ++row) {
-                    for (int column = 0; column < 7; ++column) {
-                        Button button = (Button) activity.findViewById(Integer.parseInt(row + "" + column));
-                        button.setText(Integer.toString(currentBoard.getTray(row, column)));
-                    }
-                }
-            }
-        });
-    }
 
     //TODO rename this to remove the 'event' bit
     /**
@@ -108,13 +88,13 @@ public class GameManager extends EventHandler<GameState> {
 
         //horrific thing that determines if this move is valid, or just a player pressing random buttons
         if (shells != 0 && ((state.getCurrentPlayerIndex() == playerIndex && !state.isDoingMove() && !state.isInitialising()) || state.playerInitialising(playerIndex))) {
-
             state.setDoingMove(true);
             if (state.getCurrentPlayerIndex() == -1)
                 state.setCurrentPlayerIndex(trayChosen.getPlayerIndex());
             if (state.isInitialising()) state.nextInitPhase(trayChosen.getPlayerIndex());
             scheduleEvent(new ShellMovement(trayIndex == 6 ? 0 : trayIndex + 1, trayIndex == 6 ? (playerIndex + 1) % 2 : playerIndex, state.getBoard().emptyTray(playerIndex, trayIndex), true, trayChosen.getPlayerIndex()), delay, trayChosen.getPlayerIndex());
 
+        
         }
         return state;
     }
