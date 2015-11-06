@@ -141,8 +141,7 @@ public class GameManager extends EventHandler<GameState> {
         if (shellsLeft == 0) {
             return endTurn(state, trayIndex, playerIndex, repeatTurn, player);
         } else {
-            scheduleEvent(new HighLightTray((playerIndex) % 2, false, trayIndex == 6 ? 0 : trayIndex), delay, player);
-            scheduleEvent(new HighLightTray((playerIndex) % 2, true, trayIndex == 6 ? 0 : trayIndex + 1), delay, player);
+            scheduleEvent(new HighLightTray(trayIndex == 6 ? 0 : trayIndex + 1, trayIndex == 6 ? (playerIndex + 1) % 2 : playerIndex, player), 0, player);
             scheduleEvent(new ShellMovement(trayIndex == 6 ? 0 : trayIndex + 1, trayIndex == 6 ? (playerIndex + 1) % 2 : playerIndex, shellsLeft, false, player), delay, player);
             return state;
         }

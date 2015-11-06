@@ -8,25 +8,23 @@ import com.kylehodgetts.sunka.model.Player;
  */
 public class HighLightTray implements Event {
 
-    private int player;
     private int tray;
-    private boolean setHighlighted;
+    private int player;
+    private int currentPlayersTurn;
 
-    public HighLightTray(int player, boolean setHighlighted, int tray) {
-        this.player = player;
-        this.setHighlighted = setHighlighted;
+    public HighLightTray(int tray, int player, int currentPlayersTurn) {
         this.tray = tray;
+        this.player = player;
+        this.currentPlayersTurn = currentPlayersTurn;
     }
 
     public int getTray() {
         return tray;
     }
 
-    public boolean isSetHighlighted() {
-        return setHighlighted;
-    }
-
     public int getPlayer() {
         return player;
     }
+
+    public int getCurrentPlayersTurn() { return currentPlayersTurn; }
 }

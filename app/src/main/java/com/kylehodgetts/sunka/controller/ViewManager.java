@@ -38,7 +38,7 @@ public class ViewManager extends EventHandler<GameState> {
     public Tuple2<GameState, Boolean> handleEvent(Event event, GameState state) {
         if(event instanceof HighLightTray) {
             highlightTray(event);
-            return new Tuple2<>(state, true);
+            return new Tuple2<>(state, false);
         }
 
         return new Tuple2<>(state, false); //default case to make the eventBus not do anything
@@ -50,16 +50,15 @@ public class ViewManager extends EventHandler<GameState> {
             public void run() {
                 int player = ((HighLightTray) event).getPlayer();
                 int tray = ((HighLightTray) event).getTray();
-                boolean toHighlight = ((HighLightTray) event).isSetHighlighted();
+                int currentPlayersTurn = ((HighLightTray) event).getCurrentPlayersTurn();
 
                 LinearLayout linearLayout = (LinearLayout) activity.findViewById(Integer.parseInt(player+""+tray));
                 ImageButton imageButton = (ImageButton) linearLayout.findViewById(R.id.button);
-                GradientDrawable drawable = (GradientDrawable) imageButton.getBackground();
+                GradientDrawable drawable = (GradientDrawable) imageButton.getBackground().getConstantState().newDrawable().mutate();
 
-                if(toHighlight) {
-                    drawable.setStroke(5, player == 1 ? Color.parseColor("#C4213C") : Color.parseColor("#4CACC4"));
-                }
-                else { drawable.setStroke(5, Color.parseColor("#878787")); }
+                drawable.setStroke(8, currentPlayersTurn == 0 ? Color.parseColor("#C4213C") : Color.parseColor("#4CACC4"));
+                imageButton.setBackground(drawable);
+                imageButton.setPadding(35,35,35,35);
             }
         });
     }
