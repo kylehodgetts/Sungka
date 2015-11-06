@@ -1,6 +1,10 @@
 package com.kylehodgetts.sunka;
 
 import android.app.Activity;
+import android.content.Context;
+import android.net.nsd.NsdManager;
+import android.net.nsd.NsdServiceInfo;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.TextView;
@@ -24,6 +28,9 @@ public class HostActivity extends Activity {
     private TextView txtStatus;
 
     private ServerSocket serverSocket;
+    private NsdManager.RegistrationListener registrationListener;
+    private String serviceName;
+    private NsdManager nsdManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,11 +40,52 @@ public class HostActivity extends Activity {
         txtAddress = (TextView) findViewById(R.id.txtHostAddress);
         txtPort = (TextView) findViewById(R.id.txtHostPort);
         txtStatus = (TextView) findViewById(R.id.txtStatus);
-
         txtAddress.setText(getIpAddress());
 
-        Thread serverSocketThread = new Thread(new SocketServerThread());
-        serverSocketThread.start();
+        registerService(8080);
+    }
+
+    public void registerService(int port) {
+        NsdServiceInfo serviceInfo = null;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN) {
+            serviceInfo = new NsdServiceInfo();
+            serviceInfo.setServiceName("Sunka-lynx-" + System.currentTimeMillis());
+            serviceInfo.setServiceType("_http._tcp.");
+            serviceInfo.setPort(port);
+            initialiseRegistrationListener();
+            nsdManager = (NsdManager)getApplicationContext().getSystemService(Context.NSD_SERVICE);
+            nsdManager.registerService(serviceInfo, NsdManager.PROTOCOL_DNS_SD, registrationListener);
+        }
+    }
+
+    public void initialiseRegistrationListener() {
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN) {
+            registrationListener = new NsdManager.RegistrationListener() {
+                @Override
+                public void onRegistrationFailed(NsdServiceInfo serviceInfo, int errorCode) {
+                }
+
+                @Override
+                public void onUnregistrationFailed(NsdServiceInfo serviceInfo, int errorCode) {
+
+                }
+
+                @Override
+                public void onServiceRegistered(NsdServiceInfo serviceInfo) {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                        serviceName = serviceInfo.getServiceName();
+                        Log.d("HOST ACTIVITY: ", "Something happened");
+                    }
+                    Thread serverSocketThread = new Thread(new SocketServerThread());
+                    serverSocketThread.start();
+                }
+
+                @Override
+                public void onServiceUnregistered(NsdServiceInfo serviceInfo) {
+
+                }
+            };
+        }
     }
 
     private class SocketServerThread extends Thread {
