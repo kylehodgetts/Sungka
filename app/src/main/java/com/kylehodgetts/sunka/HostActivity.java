@@ -84,7 +84,7 @@ public class HostActivity extends Activity {
         @Override
         public void run() {
             OutputStream outputStream;
-            final String message = "I AM HERE";
+            final String message = "Connected";
             try{
                 outputStream = hostThreadSocket.getOutputStream();
                 PrintStream printStream = new PrintStream(outputStream);
