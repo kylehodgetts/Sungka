@@ -2,10 +2,7 @@ package com.kylehodgetts.sunka;
 
 import android.app.Activity;
 import android.content.Context;
-<<<<<<< HEAD
 import android.content.Intent;
-=======
->>>>>>> f8242765f4e1a314c9cc799cff678b7014a87225
 import android.net.nsd.NsdManager;
 import android.net.nsd.NsdServiceInfo;
 import android.os.Build;
@@ -99,10 +96,6 @@ public class HostActivity extends Activity {
 
             @Override
             public void onServiceUnregistered(NsdServiceInfo serviceInfo) {
-<<<<<<< HEAD
-=======
-
->>>>>>> f8242765f4e1a314c9cc799cff678b7014a87225
             }
         };
 
@@ -122,69 +115,18 @@ public class HostActivity extends Activity {
                     }
                 });
 
-<<<<<<< HEAD
                 Socket socket = serverSocket.accept();
                 Intent i = new Intent(HostActivity.this, BoardActivity.class);
                 SingletonSocket.setSocket(socket);
                 i.putExtra(BoardActivity.EXTRA_INT, BoardActivity.ONLINE);
                 startActivity(i);
-
-=======
-
-                while(true) {
-                    final Socket socket = serverSocket.accept();
-                    Log.d(WiFiDirectActivity.TAG, "Server Accepted");
-                    HostActivity.this.runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            txtStatus.setText("Connected from " + socket.getInetAddress() + ":" + socket.getPort());
-                        }
-
-                    });
-                    SocketServerReplyThread socketServerReplyThread = new SocketServerReplyThread(socket);
-                    socketServerReplyThread.start();
-                }
->>>>>>> f8242765f4e1a314c9cc799cff678b7014a87225
             } catch (IOException e) {
                 e.printStackTrace();
             }
 
         }
     }
-
-<<<<<<< HEAD
-=======
-    private class SocketServerReplyThread extends Thread {
-        private Socket hostThreadSocket;
-
-        public SocketServerReplyThread(Socket hostThreadSocket) {
-            this.hostThreadSocket = hostThreadSocket;
-        }
-
-        @Override
-        public void run() {
-            OutputStream outputStream;
-            final String message = "Connected";
-            try{
-                outputStream = hostThreadSocket.getOutputStream();
-                PrintStream printStream = new PrintStream(outputStream);
-                printStream.print(message);
-                printStream.close();
-
-                HostActivity.this.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        txtStatus.setText(txtStatus.getText() + " " + message);
-                    }
-                });
-            }
-            catch(IOException e){
-                e.printStackTrace();
-            }
-        }
-    }
-
->>>>>>> f8242765f4e1a314c9cc799cff678b7014a87225
+    
     private String getIpAddress() {
         String ip = "";
         try{
