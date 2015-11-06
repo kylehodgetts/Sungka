@@ -77,16 +77,7 @@ public class WiFiDirectActivity extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_wifidirect);
-
         services = new ArrayList<>();
-
-//        btnConnect.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Log.d(TAG, "Connect clicked");
-//                new MyClientTask(editAddress.getText().toString(),Integer.parseInt(editPort.getText().toString())).execute();
-//            }
-//        });
         btnHost = (Button) findViewById(R.id.btnHost);
         btnHost.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -107,9 +98,7 @@ public class WiFiDirectActivity extends Activity {
             initialiseDiscoveryListener();
         }
         nsdManager = (NsdManager)getApplicationContext().getSystemService(Context.NSD_SERVICE);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-            nsdManager.discoverServices("_http._tcp", NsdManager.PROTOCOL_DNS_SD, discoveryListener);
-        }
+        nsdManager.discoverServices("_http._tcp", NsdManager.PROTOCOL_DNS_SD, discoveryListener);
         foundServices = (ListView) findViewById(R.id.list_found_services);
         foundServices.setAdapter(new ServiceAdapter(getApplicationContext(),services));
         renderList();
@@ -142,7 +131,6 @@ public class WiFiDirectActivity extends Activity {
 
     }
 
-    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     public void initialiseDiscoveryListener(){
         discoveryListener = new NsdManager.DiscoveryListener() {
             @Override
@@ -283,7 +271,7 @@ public class WiFiDirectActivity extends Activity {
 
         @Override
         protected void onPostExecute(Void result) {
-           // textResponse.setText(response);
+            // textResponse.setText(response);
             super.onPostExecute(result);
         }
     }
