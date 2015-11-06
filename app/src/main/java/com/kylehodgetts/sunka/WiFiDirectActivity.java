@@ -49,6 +49,7 @@ import com.kylehodgetts.sunka.util.PeerListAdapter;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.concurrent.ExecutionException;
 
 /**
  * @author Kyle Hodgetts
@@ -58,6 +59,8 @@ import java.util.ArrayList;
 public class WiFiDirectActivity extends Activity implements ChannelListener, ConnectionInfoListener {
 
     public static final String TAG = "wifidirectactivity";
+    public static final int PORT = 8080;
+
     private ListView peerList;
     private Button btnHostGame;
     private ArrayList<WifiP2pDevice> arrayListPeers;
@@ -90,9 +93,9 @@ public class WiFiDirectActivity extends Activity implements ChannelListener, Con
         btnHostGame.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 boardActivity = new BoardActivity();
-                new GamerServerAsyncTask().execute();
+                server = new GamerServerAsyncTask(boardActivity.getBus());
+                server.execute(null);
             }
         });
         arrayListPeers = new ArrayList<>();
@@ -102,16 +105,21 @@ public class WiFiDirectActivity extends Activity implements ChannelListener, Con
         peerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                WifiP2pDevice device = (WifiP2pDevice) parent.getItemAtPosition(position);
-                WifiP2pConfig config = new WifiP2pConfig();
+                final WifiP2pDevice device = (WifiP2pDevice) parent.getItemAtPosition(position);
+                final WifiP2pConfig config = new WifiP2pConfig();
                 config.deviceAddress = device.deviceAddress;
                 config.wps.setup = WpsInfo.PBC;
                 manager.connect(channel, config, new ActionListener() {
                     @Override
                     public void onSuccess() {
                         Log.d(TAG, "Connection success");
-                        client = new GameClientAsyncTask(boardActivity.getBus());
-                        client.execute();
+
+//                        manager.requestConnectionInfo(channel, new ConnectionInfoListener() {
+//                            @Override
+//                            public void onConnectionInfoAvailable(WifiP2pInfo info) {
+//                                InetAddress address = info.groupOwnerAddress;
+//                            }
+//                        });
                     }
 
                     @Override
@@ -169,12 +177,19 @@ public class WiFiDirectActivity extends Activity implements ChannelListener, Con
         try {
             InetAddress groupOwnerAddress = InetAddress.getByName(info.groupOwnerAddress.getHostAddress());
             // After the group negotiation, we can determine the group owner.
-            if (info.groupFormed && info.isGroupOwner) {
 
+            boardActivity = new BoardActivity();
+            if (info.groupFormed && info.isGroupOwner) {
                 Log.d(TAG, "isGroupOwner");
+
             } else if (info.groupFormed) {
                 Log.d(TAG, "groupFormed");
+
+                client = new GameClientAsyncTask(boardActivity.getBus(), groupOwnerAddress);
+                client.execute();
             }
+
+
         }
         catch (UnknownHostException e) {
             e.printStackTrace();

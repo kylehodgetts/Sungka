@@ -23,13 +23,11 @@ public class GameClient implements Runnable {
 
     public static final String GAME_CLIENT_SERVER_TAG = "Game Client Server";
 
-    private Context context;
     private EventBus bus;
     private Socket socket;
 
 
-    public GameClient(Context context, EventBus bus) {
-        this.context = context;
+    public GameClient(EventBus bus) {
         this.bus = bus;
         this.socket = new Socket();
     }
@@ -40,20 +38,15 @@ public class GameClient implements Runnable {
         try {
             Log.d(WiFiDirectActivity.TAG, "Entered Client Thread");
             socket.bind(null);
-            socket.connect(new InetSocketAddress(8888));
-
+            socket.connect(new InetSocketAddress(WiFiDirectActivity.PORT));
             Log.d(WiFiDirectActivity.TAG, "Client accepted");
 
-            OutputStream outputStream = socket.getOutputStream();
-            InputStream inputStream = socket.getInputStream();
-
-            while(!Thread.currentThread().isInterrupted()) {
-
-                PrintWriter writer = new PrintWriter(new BufferedWriter(new OutputStreamWriter(outputStream)), true);
-                writer.append("TESTING this shit works!");
-                outputStream.flush();
-                Log.d(GAME_CLIENT_SERVER_TAG, "Sent ");
-            }
+           while(!Thread.currentThread().isInterrupted()) {
+               SendingThread sendingThread = new SendingThread(socket);
+               sendingThread.doInBackground(null);
+               ReceivingThread receivingThread = new ReceivingThread(socket);
+               //receivingThread.run();
+           }
 
 
             socket.close();

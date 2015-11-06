@@ -1,78 +1,65 @@
 package com.kylehodgetts.sunka.util;
 
-import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.kylehodgetts.sunka.WiFiDirectActivity;
 import com.kylehodgetts.sunka.controller.bus.EventBus;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
+import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.UnknownHostException;
 
 /**
  * Created by CBaker on 05/11/2015.
  */
-public class GameClientAsyncTask extends AsyncTask{
+public class GameClientAsyncTask extends AsyncTask {
 
     private EventBus bus;
     private Socket socket;
+    private InetAddress host;
 
 
-    public GameClientAsyncTask(EventBus bus) {
+    public GameClientAsyncTask(EventBus bus, final InetAddress host) {
         this.bus = bus;
-        socket = new Socket();
+        this.host = host;
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    socket = new Socket();
+                    //socket.bind(null);
+                    socket.connect(new InetSocketAddress(host, WiFiDirectActivity.PORT), 1000);
+
+                } catch (UnknownHostException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
     }
 
     @Override
-    protected Object doInBackground(Object[] params) {
+    protected Void doInBackground(Object... params) {
 
         try {
-            socket.bind(null);
-            socket.connect(new InetSocketAddress(8888), 500);
+            Log.d(WiFiDirectActivity.TAG, "Entered Client Thread");
+            socket.connect(new InetSocketAddress(WiFiDirectActivity.PORT));
+            Log.d(WiFiDirectActivity.TAG, "Client accepted");
 
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        InputStream inputStream = socket.getInputStream();
-                        BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
-
-
-                        Log.d("Client Recieving Thread", reader.readLine() );
-
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+            while (!Thread.currentThread().isInterrupted()) {
+                SendingThread sendingThread = new SendingThread(socket);
+                sendingThread.doInBackground(null);
+                ReceivingThread receivingThread = new ReceivingThread(socket);
+                //receivingThread.run();
+            }
 
 
-                }
-            }).start();
-
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        OutputStream outputStream = socket.getOutputStream();
-
-                        PrintWriter writer = new PrintWriter(new BufferedWriter(new OutputStreamWriter(outputStream)), true);
-                        writer.println("testing this shit works!!!!!");
-                        writer.flush();
-
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-
-                }
-            }).start();
+            socket.close();
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -80,4 +67,5 @@ public class GameClientAsyncTask extends AsyncTask{
 
         return null;
     }
+
 }
