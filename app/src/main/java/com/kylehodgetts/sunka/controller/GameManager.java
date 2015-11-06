@@ -199,7 +199,7 @@ public class GameManager extends EventHandler<GameState> {
     }
 
 
-    //TODO potentially move this into the bus class to get around the stack over flow bug
+    //TODO potentially move this into the bus class for less code replication
     /**
      * Schedules an event to the timer for later dispatching
      *

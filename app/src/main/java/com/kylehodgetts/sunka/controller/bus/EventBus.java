@@ -24,7 +24,7 @@ import java.util.Queue;
 public class EventBus<T extends BusState> {
 
     private Queue<Event> eventBuffer;
-    private List<EventHandler<T>> handlers; //TODO have one logic handler, and one graphics handler, not a list
+    private List<EventHandler<T>> handlers;
     private T state;
     private Activity activity;
     private boolean dispatchingEvent;
@@ -74,7 +74,6 @@ public class EventBus<T extends BusState> {
         }
     }
 
-    //TODO this makes me feel funny. Would like it be able to run without potentially causing a stack overflow request?
     /**
      * Feeds an event to the bus, if the bus is already dispatching an event to its handlers,
      * the event will get stored in a queue to be dealt with after the bus deals with current event
@@ -90,7 +89,7 @@ public class EventBus<T extends BusState> {
             dispatchingEvent = true;
             performEvent(event);
             while (!eventBuffer.isEmpty()) {
-                performEvent(eventBuffer.remove()); //TODO have a logic and a Graphics handler
+                performEvent(eventBuffer.remove());
             }
             if (displayNeedsUpdating) {
                 for (EventHandler<T> handler : handlers) {
