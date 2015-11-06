@@ -1,4 +1,4 @@
-package com.kylehodgetts.sunka.model;
+package com.kylehodgetts.sunka.controller;
 
 import android.app.Activity;
 
@@ -8,21 +8,23 @@ import com.kylehodgetts.sunka.controller.bus.EventHandler;
 import com.kylehodgetts.sunka.event.NewGame;
 import com.kylehodgetts.sunka.event.NextTurn;
 import com.kylehodgetts.sunka.event.PlayerChoseTray;
+import com.kylehodgetts.sunka.model.Board;
+import com.kylehodgetts.sunka.model.GameState;
 import com.kylehodgetts.sunka.util.Tuple2;
 
 import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class AI extends EventHandler<GameState> {
+public class AIManager extends EventHandler<GameState> {
 //At this point it only evaluates the best move for the first round
 
     private final int myIndex = 1;
+    private final int TIMERDELAY = 1000; //delay before AI makes a move
     private EventBus<GameState> bus;
     private Timer timer;
-    private final int TIMERDELAY = 1000; //delay before AI makes a move
 
-    public AI(EventBus<GameState> bus) {
+    public AIManager(EventBus<GameState> bus) {
         super("ai");
         this.bus = bus;
         timer = new Timer("aiTimer");
