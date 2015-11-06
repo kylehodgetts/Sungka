@@ -91,10 +91,21 @@ public class WiFiDirectActivity extends Activity {
         btnHost.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if(nsdManager != null) {
+                    try{
+                        nsdManager.stopServiceDiscovery(discoveryListener);
+                        discoveryListener = null;
+                    }
+                    catch(IllegalArgumentException e) {
+                        discoveryListener = null;
+                    }
+                }
                 startActivity(new Intent(WiFiDirectActivity.this, HostActivity.class));
             }
         });
-        initialiseDiscoveryListener();
+        if(discoveryListener == null) {
+            initialiseDiscoveryListener();
+        }
         nsdManager = (NsdManager)getApplicationContext().getSystemService(Context.NSD_SERVICE);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
             nsdManager.discoverServices("_http._tcp", NsdManager.PROTOCOL_DNS_SD, discoveryListener);
@@ -112,16 +123,24 @@ public class WiFiDirectActivity extends Activity {
     }
 
     /** register the BroadcastReceiver with the intent values to be matched */
+
     @Override
-    public void onResume() {
+    protected void onResume() {
         super.onResume();
+        if(discoveryListener == null) {
+            initialiseDiscoveryListener();
+        }
     }
 
     @Override
-    public void onPause() {
+    protected void onPause() {
+        if(discoveryListener != null){
+            nsdManager.stopServiceDiscovery(discoveryListener);
+            discoveryListener = null;
+        }
         super.onPause();
-    }
 
+    }
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     public void initialiseDiscoveryListener(){
@@ -178,6 +197,16 @@ public class WiFiDirectActivity extends Activity {
             @Override
             public void onServiceLost(NsdServiceInfo serviceInfo) {
                 Log.d("DISCOVERY SERVICE", " onServiceLost()");
+                Log.d("onServiceLost ", serviceInfo.getServiceName());
+                for(NsdServiceInfo service : services) {
+                    Log.d("onServiceLost ", service.getServiceName());
+                    if(service.getServiceName().equals(serviceInfo.getServiceName())){
+                        services.remove(service);
+                        break;
+                    }
+                }
+                Log.d("onServiceLost: ", "Will render list");
+                renderList();
             }
         };
 
@@ -185,8 +214,13 @@ public class WiFiDirectActivity extends Activity {
     }
 
     private void renderList(){
-        foundServices = (ListView) findViewById(R.id.list_found_services);
-        foundServices.setAdapter(new ServiceAdapter(getApplicationContext(),services));
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                foundServices = (ListView) findViewById(R.id.list_found_services);
+                foundServices.setAdapter(new ServiceAdapter(getApplicationContext(), services));
+            }
+        });
     }
 
 
@@ -252,7 +286,5 @@ public class WiFiDirectActivity extends Activity {
            // textResponse.setText(response);
             super.onPostExecute(result);
         }
-
     }
-
 }
