@@ -45,6 +45,16 @@ public class HostActivity extends Activity {
         registerService(8080);
     }
 
+    @Override
+    protected void onStop() {
+        super.onStop();
+        try {
+            serverSocket.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     public void registerService(int port) {
         NsdServiceInfo serviceInfo = null;
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN) {
@@ -119,6 +129,7 @@ public class HostActivity extends Activity {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+
         }
     }
 

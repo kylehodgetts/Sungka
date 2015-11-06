@@ -79,16 +79,14 @@ public class WiFiDirectActivity extends Activity {
         setContentView(R.layout.activity_wifidirect);
 
         services = new ArrayList<>();
-        editAddress = (EditText) findViewById(R.id.editTextAddress);
-        editPort = (EditText) findViewById(R.id.editTextPort);
-        btnConnect = (Button) findViewById(R.id.btnConnect);
-        btnConnect.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.d(TAG, "Connect clicked");
-                new MyClientTask(editAddress.getText().toString(),Integer.parseInt(editPort.getText().toString())).execute();
-            }
-        });
+
+//        btnConnect.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Log.d(TAG, "Connect clicked");
+//                new MyClientTask(editAddress.getText().toString(),Integer.parseInt(editPort.getText().toString())).execute();
+//            }
+//        });
         btnHost = (Button) findViewById(R.id.btnHost);
         btnHost.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -96,11 +94,21 @@ public class WiFiDirectActivity extends Activity {
                 startActivity(new Intent(WiFiDirectActivity.this, HostActivity.class));
             }
         });
+        initialiseDiscoveryListener();
         nsdManager = (NsdManager)getApplicationContext().getSystemService(Context.NSD_SERVICE);
-
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            nsdManager.discoverServices("_http._tcp", NsdManager.PROTOCOL_DNS_SD, discoveryListener);
+        }
         foundServices = (ListView) findViewById(R.id.list_found_services);
         foundServices.setAdapter(new ServiceAdapter(getApplicationContext(),services));
         renderList();
+        foundServices.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                NsdServiceInfo serviceInfo = (NsdServiceInfo) parent.getItemAtPosition(position);
+                new MyClientTask(serviceInfo.getHost().toString(), serviceInfo.getPort()).execute();
+            }
+        });
     }
 
     /** register the BroadcastReceiver with the intent values to be matched */
@@ -120,12 +128,12 @@ public class WiFiDirectActivity extends Activity {
         discoveryListener = new NsdManager.DiscoveryListener() {
             @Override
             public void onStartDiscoveryFailed(String serviceType, int errorCode) {
-
+                Log.d("DISCOVERY SERVICE", " onStartDiscoveryFailed()");
             }
 
             @Override
             public void onStopDiscoveryFailed(String serviceType, int errorCode) {
-
+                Log.d("DISCOVERY SERVICE", " onStopDiscoveryFailed()");
             }
 
             @Override
@@ -135,11 +143,12 @@ public class WiFiDirectActivity extends Activity {
 
             @Override
             public void onDiscoveryStopped(String serviceType) {
-
+                Log.d("DISCOVERY SERVICE", " onDiscoveryStopped()");
             }
 
             @Override
             public void onServiceFound(NsdServiceInfo serviceInfo) {
+                Log.d("DISCOVERY SERVICE", " onServiceFound()");
                 if (serviceInfo.getServiceName().matches("Sunka-lynx-.*")){
                     nsdManager.resolveService(serviceInfo, new NsdManager.ResolveListener() {
                         @Override
@@ -150,7 +159,7 @@ public class WiFiDirectActivity extends Activity {
                         @Override
                         public void onServiceResolved(NsdServiceInfo serviceInfo) {
                             Log.d("RESOLVING","DID resolve" + serviceInfo);
-                            if (serviceInfo.getServiceName().equals(HostActivity.serviceName)){
+                            if (serviceInfo.getServiceName().equals("")){
                                 Log.d("RESOLVING","FOUND ourselves");
                                 return;
                             }
@@ -168,7 +177,7 @@ public class WiFiDirectActivity extends Activity {
 
             @Override
             public void onServiceLost(NsdServiceInfo serviceInfo) {
-
+                Log.d("DISCOVERY SERVICE", " onServiceLost()");
             }
         };
 
@@ -188,7 +197,7 @@ public class WiFiDirectActivity extends Activity {
         String response = "";
 
         MyClientTask(String addr, int port){
-            dstAddress = addr;
+            dstAddress = addr.replaceAll("/", "");
             dstPort = port;
         }
 
