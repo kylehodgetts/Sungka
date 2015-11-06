@@ -23,6 +23,7 @@ import java.util.Enumeration;
  * Created by kylehodgetts on 06/11/2015.
  */
 public class HostActivity extends Activity {
+    private static final int PORT = 8080;
     private TextView txtAddress;
     private TextView txtPort;
     private TextView txtStatus;
@@ -42,24 +43,29 @@ public class HostActivity extends Activity {
         txtStatus = (TextView) findViewById(R.id.txtStatus);
         txtAddress.setText(getIpAddress());
 
-        registerService(8080);
+        registerService(PORT);
     }
 
     @Override
-    protected void onStop() {
-        super.onStop();
+    protected void onDestroy(){
+        if(registrationListener != null){
+            nsdManager.unregisterService(registrationListener);
+            registrationListener = null;
+        }
         try {
             serverSocket.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
+        super.onDestroy();
+        Log.d("HostActivity: ", "onDestroy");
     }
 
     public void registerService(int port) {
         NsdServiceInfo serviceInfo = null;
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN) {
             serviceInfo = new NsdServiceInfo();
-            serviceInfo.setServiceName("Sunka-lynx-" + System.currentTimeMillis());
+            serviceInfo.setServiceName("Sunka-lynx-" + "TESTNAME");
             serviceInfo.setServiceType("_http._tcp.");
             serviceInfo.setPort(port);
             initialiseRegistrationListener();
