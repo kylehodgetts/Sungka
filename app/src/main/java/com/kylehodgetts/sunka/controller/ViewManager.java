@@ -2,6 +2,10 @@ package com.kylehodgetts.sunka.controller;
 
 import android.app.Activity;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.GradientDrawable;
+import android.graphics.drawable.ShapeDrawable;
+import android.graphics.drawable.shapes.RectShape;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -10,6 +14,7 @@ import com.kylehodgetts.sunka.R;
 import com.kylehodgetts.sunka.controller.bus.Event;
 import com.kylehodgetts.sunka.controller.bus.EventBus;
 import com.kylehodgetts.sunka.controller.bus.EventHandler;
+import com.kylehodgetts.sunka.event.HighLightTray;
 import com.kylehodgetts.sunka.model.Board;
 import com.kylehodgetts.sunka.model.GameState;
 import com.kylehodgetts.sunka.util.Tuple2;
@@ -20,16 +25,43 @@ import com.kylehodgetts.sunka.util.Tuple2;
 public class ViewManager extends EventHandler<GameState> {
 
     private EventBus<GameState> bus;
+    private Activity activity;
 
 
-    public ViewManager(EventBus<GameState> bus) {
+    public ViewManager(EventBus<GameState> bus, Activity activity) {
         super("ViewManager");
         this.bus = bus;
+        this.activity = activity;
     }
 
     @Override
     public Tuple2<GameState, Boolean> handleEvent(Event event, GameState state) {
+        if(event instanceof HighLightTray) {
+            highlightTray(event);
+            return new Tuple2<>(state, true);
+        }
+
         return new Tuple2<>(state, false); //default case to make the eventBus not do anything
+    }
+
+    private void highlightTray(final Event event) {
+        activity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                int player = ((HighLightTray) event).getPlayer();
+                int tray = ((HighLightTray) event).getTray();
+                boolean toHighlight = ((HighLightTray) event).isSetHighlighted();
+
+                LinearLayout linearLayout = (LinearLayout) activity.findViewById(Integer.parseInt(player+""+tray));
+                ImageButton imageButton = (ImageButton) linearLayout.findViewById(R.id.button);
+                GradientDrawable drawable = (GradientDrawable) imageButton.getBackground();
+
+                if(toHighlight) {
+                    drawable.setStroke(5, player == 1 ? Color.parseColor("#C4213C") : Color.parseColor("#4CACC4"));
+                }
+                else { drawable.setStroke(5, Color.parseColor("#878787")); }
+            }
+        });
     }
 
     @Override
@@ -73,7 +105,6 @@ public class ViewManager extends EventHandler<GameState> {
                         } else {
                             button.setImageResource(activity.getResources().getIdentifier("s9", "drawable", activity.getPackageName()));
                         }
-//
                     }
                 }
 

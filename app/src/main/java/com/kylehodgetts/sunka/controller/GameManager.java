@@ -13,6 +13,7 @@ import com.kylehodgetts.sunka.controller.bus.Event;
 import com.kylehodgetts.sunka.controller.bus.EventBus;
 import com.kylehodgetts.sunka.controller.bus.EventHandler;
 import com.kylehodgetts.sunka.event.EndGame;
+import com.kylehodgetts.sunka.event.HighLightTray;
 import com.kylehodgetts.sunka.event.NewGame;
 import com.kylehodgetts.sunka.event.NextTurn;
 import com.kylehodgetts.sunka.event.PlayerChoseTray;
@@ -140,6 +141,8 @@ public class GameManager extends EventHandler<GameState> {
         if (shellsLeft == 0) {
             return endTurn(state, trayIndex, playerIndex, repeatTurn, player);
         } else {
+            scheduleEvent(new HighLightTray((playerIndex) % 2, false, trayIndex == 6 ? 0 : trayIndex), delay, player);
+            scheduleEvent(new HighLightTray((playerIndex) % 2, true, trayIndex == 6 ? 0 : trayIndex + 1), delay, player);
             scheduleEvent(new ShellMovement(trayIndex == 6 ? 0 : trayIndex + 1, trayIndex == 6 ? (playerIndex + 1) % 2 : playerIndex, shellsLeft, false, player), delay, player);
             return state;
         }

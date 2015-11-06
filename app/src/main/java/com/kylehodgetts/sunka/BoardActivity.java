@@ -1,6 +1,7 @@
 package com.kylehodgetts.sunka;
 
 import android.app.ActionBar;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Gravity;
@@ -31,20 +32,19 @@ public class BoardActivity extends AppCompatActivity {
 
     //TODO: Implement OnPause, OnResume, OnStop methods. And within all other necessary classes
 
+    View decorView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        View decorView = getWindow().getDecorView();
-//         Hide the status bar.
-        int uiOptions = View.SYSTEM_UI_FLAG_FULLSCREEN;
-        decorView.setSystemUiVisibility(uiOptions);
+        decorView = getWindow().getDecorView();
 
         this.setContentView(R.layout.activity_board);
         GameState state = new GameState(new Board(), new Player(), new Player());
         EventBus<GameState> bus = new EventBus<>(state, this);
         bus.registerHandler(new GameManager(bus));
-        bus.registerHandler(new ViewManager(bus));
+        bus.registerHandler(new ViewManager(bus, this));
 
         makeXMLButtons(bus);
 
@@ -78,4 +78,23 @@ public class BoardActivity extends AppCompatActivity {
             }
         }
     }
+
+
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+        if (hasFocus) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                decorView.setSystemUiVisibility(
+                        View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                                | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                                | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                                | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                                | View.SYSTEM_UI_FLAG_FULLSCREEN
+                                | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
+            }
+        }
+
+    }
+
 }
