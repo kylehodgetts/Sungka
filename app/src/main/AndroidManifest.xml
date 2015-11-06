@@ -27,6 +27,7 @@
         </activity>
         <activity android:name=".BoardActivity"></activity>
         <activity android:name=".WiFiDirectActivity"></activity>
+        <activity android:name=".HostActivity"></activity>
     </application>
 
 </manifest>

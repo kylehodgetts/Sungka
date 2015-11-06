@@ -2,6 +2,7 @@ package com.kylehodgetts.sunka;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.TextView;
 
 import java.io.IOException;
@@ -49,21 +50,23 @@ public class HostActivity extends Activity {
                 HostActivity.this.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        txtPort.setText(serverSocket.getLocalPort());
+                        txtPort.setText(""+serverSocket.getLocalPort());
                     }
                 });
 
+
                 while(true) {
                     final Socket socket = serverSocket.accept();
+                    Log.d(WiFiDirectActivity.TAG, "Server Accepted");
                     HostActivity.this.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
                             txtStatus.setText("Connected from " + socket.getInetAddress() + ":" + socket.getPort());
                         }
 
-                        SocketServerReplyThread socketServerReplyThread = new SocketServerReplyThread(socket);
                     });
-
+                    SocketServerReplyThread socketServerReplyThread = new SocketServerReplyThread(socket);
+                    socketServerReplyThread.start();
                 }
             } catch (IOException e) {
                 e.printStackTrace();
@@ -113,7 +116,7 @@ public class HostActivity extends Activity {
                     InetAddress inetAddress = enumInet.nextElement();
 
                     if(inetAddress.isSiteLocalAddress()) {
-                        ip += "Site Local Address: " + inetAddress.getHostAddress() + "\n";
+                        ip += inetAddress.getHostAddress() + "\n";
                     }
                 }
             }

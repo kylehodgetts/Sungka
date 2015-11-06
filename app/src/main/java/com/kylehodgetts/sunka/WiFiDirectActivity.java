@@ -28,6 +28,7 @@ import android.net.wifi.p2p.WifiP2pManager;
 import android.net.wifi.p2p.WifiP2pManager.ActionListener;
 import android.net.wifi.p2p.WifiP2pManager.Channel;
 import android.net.wifi.p2p.WifiP2pManager.ChannelListener;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -39,6 +40,11 @@ import android.widget.Toast;
 
 import com.kylehodgetts.sunka.controller.wifi.PeerListAdapter;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.Socket;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -62,6 +68,13 @@ public class WiFiDirectActivity extends Activity {
         editAddress = (EditText) findViewById(R.id.editTextAddress);
         editPort = (EditText) findViewById(R.id.editTextPort);
         btnConnect = (Button) findViewById(R.id.btnConnect);
+        btnConnect.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG, "Connect clicked");
+                new MyClientTask(editAddress.getText().toString(),Integer.parseInt(editPort.getText().toString())).execute();
+            }
+        });
         btnHost = (Button) findViewById(R.id.btnHost);
         btnHost.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -83,6 +96,69 @@ public class WiFiDirectActivity extends Activity {
         super.onPause();
     }
 
+    public class MyClientTask extends AsyncTask<Void, Void, Void> {
 
+        String dstAddress;
+        int dstPort;
+        String response = "";
+
+        MyClientTask(String addr, int port){
+            dstAddress = addr;
+            dstPort = port;
+        }
+
+        @Override
+        protected Void doInBackground(Void... arg0) {
+            Log.d(TAG, "MyClientTask Started");
+
+            Socket socket = null;
+
+            try {
+                socket = new Socket(dstAddress, dstPort);
+
+                ByteArrayOutputStream byteArrayOutputStream =
+                        new ByteArrayOutputStream(1024);
+                byte[] buffer = new byte[1024];
+
+                int bytesRead;
+                InputStream inputStream = socket.getInputStream();
+
+    /*
+     * notice:
+     * inputStream.read() will block if no data return
+     */
+                while ((bytesRead = inputStream.read(buffer)) != -1){
+                    byteArrayOutputStream.write(buffer, 0, bytesRead);
+                    response += byteArrayOutputStream.toString("UTF-8");
+                }
+
+            } catch (UnknownHostException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+                response = "UnknownHostException: " + e.toString();
+            } catch (IOException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+                response = "IOException: " + e.toString();
+            }finally{
+                if(socket != null){
+                    try {
+                        socket.close();
+                    } catch (IOException e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                    }
+                }
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void result) {
+           // textResponse.setText(response);
+            super.onPostExecute(result);
+        }
+
+    }
 
 }
