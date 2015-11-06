@@ -202,7 +202,8 @@ public class WiFiDirectActivity extends Activity {
                 socket = new Socket(dstAddress, dstPort);
                 Intent i = new Intent(WiFiDirectActivity.this, BoardActivity.class);
                 SingletonSocket.setSocket(socket);
-                i.putExtra("gamemode", 3);
+                i.putExtra(BoardActivity.EXTRA_INT, BoardActivity.ONLINE);
+                startActivity(i);
 
             } catch (UnknownHostException e) {
                 // TODO Auto-generated catch block
