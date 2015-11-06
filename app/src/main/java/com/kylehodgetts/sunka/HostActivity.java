@@ -29,7 +29,7 @@ public class HostActivity extends Activity {
 
     private ServerSocket serverSocket;
     private NsdManager.RegistrationListener registrationListener;
-    private String serviceName;
+    public static String serviceName = "";
     private NsdManager nsdManager;
 
     @Override
