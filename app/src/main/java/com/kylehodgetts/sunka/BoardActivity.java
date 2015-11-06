@@ -10,6 +10,7 @@ import android.widget.LinearLayout;
 
 import com.kylehodgetts.sunka.controller.AIManager;
 import com.kylehodgetts.sunka.controller.GameManager;
+import com.kylehodgetts.sunka.controller.OnlineGameManager;
 import com.kylehodgetts.sunka.controller.ViewManager;
 import com.kylehodgetts.sunka.controller.bus.EventBus;
 import com.kylehodgetts.sunka.event.NewGame;
@@ -58,6 +59,7 @@ public class BoardActivity extends AppCompatActivity {
             makeXMLButtons(bus, true);
         } else if (gameType == ONLINE) {
             //TODO bus.registerHandler(ONLINEHANDLER)
+            bus.registerHandler(new OnlineGameManager(bus));
             makeXMLButtons(bus, false);
         }
 
