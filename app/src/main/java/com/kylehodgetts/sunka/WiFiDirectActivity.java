@@ -16,11 +16,14 @@
 
 package com.kylehodgetts.sunka;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.net.nsd.NsdManager;
+import android.net.nsd.NsdServiceInfo;
 import android.net.wifi.p2p.WifiP2pConfig;
 import android.net.wifi.p2p.WifiP2pDevice;
 import android.net.wifi.p2p.WifiP2pDeviceList;
@@ -29,6 +32,7 @@ import android.net.wifi.p2p.WifiP2pManager.ActionListener;
 import android.net.wifi.p2p.WifiP2pManager.Channel;
 import android.net.wifi.p2p.WifiP2pManager.ChannelListener;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -60,11 +64,21 @@ public class WiFiDirectActivity extends Activity {
     private EditText editPort;
     private Button btnConnect;
     private Button btnHost;
+    private ListView foundServices;
+
+    private NsdManager.DiscoveryListener discoveryListener;
+    private NsdManager nsdManager;
+
+
+    private List<NsdServiceInfo> services;
+
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_wifidirect);
 
+        services = new ArrayList<>();
         editAddress = (EditText) findViewById(R.id.editTextAddress);
         editPort = (EditText) findViewById(R.id.editTextPort);
         btnConnect = (Button) findViewById(R.id.btnConnect);
@@ -82,7 +96,11 @@ public class WiFiDirectActivity extends Activity {
                 startActivity(new Intent(WiFiDirectActivity.this, HostActivity.class));
             }
         });
+        nsdManager = (NsdManager)getApplicationContext().getSystemService(Context.NSD_SERVICE);
 
+        foundServices = (ListView) findViewById(R.id.list_found_services);
+        foundServices.setAdapter(new ServiceAdapter(getApplicationContext(),services));
+        renderList();
     }
 
     /** register the BroadcastReceiver with the intent values to be matched */
@@ -95,6 +113,73 @@ public class WiFiDirectActivity extends Activity {
     public void onPause() {
         super.onPause();
     }
+
+
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+    public void initialiseDiscoveryListener(){
+        discoveryListener = new NsdManager.DiscoveryListener() {
+            @Override
+            public void onStartDiscoveryFailed(String serviceType, int errorCode) {
+
+            }
+
+            @Override
+            public void onStopDiscoveryFailed(String serviceType, int errorCode) {
+
+            }
+
+            @Override
+            public void onDiscoveryStarted(String serviceType) {
+                Log.d("DISCOVERY_SERVICE","Discovery started");
+            }
+
+            @Override
+            public void onDiscoveryStopped(String serviceType) {
+
+            }
+
+            @Override
+            public void onServiceFound(NsdServiceInfo serviceInfo) {
+                if (serviceInfo.getServiceName().matches("Sunka-lynx-.*")){
+                    nsdManager.resolveService(serviceInfo, new NsdManager.ResolveListener() {
+                        @Override
+                        public void onResolveFailed(NsdServiceInfo serviceInfo, int errorCode) {
+
+                        }
+
+                        @Override
+                        public void onServiceResolved(NsdServiceInfo serviceInfo) {
+                            Log.d("RESOLVING","DID resolve" + serviceInfo);
+                            if (serviceInfo.getServiceName().equals(HostActivity.serviceName)){
+                                Log.d("RESOLVING","FOUND ourselves");
+                                return;
+                            }
+                            services.add(serviceInfo);
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    renderList();
+                                }
+                            });
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void onServiceLost(NsdServiceInfo serviceInfo) {
+
+            }
+        };
+
+
+    }
+
+    private void renderList(){
+        foundServices = (ListView) findViewById(R.id.list_found_services);
+        foundServices.setAdapter(new ServiceAdapter(getApplicationContext(),services));
+    }
+
 
     public class MyClientTask extends AsyncTask<Void, Void, Void> {
 
