@@ -7,6 +7,7 @@ import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.RectShape;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -18,8 +19,10 @@ import com.kylehodgetts.sunka.controller.bus.EventBus;
 import com.kylehodgetts.sunka.controller.bus.EventHandler;
 import com.kylehodgetts.sunka.event.EndGame;
 import com.kylehodgetts.sunka.event.HighLightTray;
+import com.kylehodgetts.sunka.event.NewGame;
 import com.kylehodgetts.sunka.model.Board;
 import com.kylehodgetts.sunka.model.GameState;
+import com.kylehodgetts.sunka.model.Player;
 import com.kylehodgetts.sunka.util.Tuple2;
 
 /**
@@ -50,10 +53,29 @@ public class ViewManager extends EventHandler<GameState> {
         return new Tuple2<>(state, false); //default case to make the eventBus not do anything
     }
 
-    private void flipLayout(){
-        ViewFlipper vf = (ViewFlipper) findViewById(R.id.viewFlipper);
-        vf.showNext();
-    }
+    public void flipLayout(){
+        activity.runOnUiThread(new Runnable() {
+
+            @Override
+            public void run() {
+                ViewFlipper vf = (ViewFlipper) activity.findViewById(R.id.viewFlipper);
+                vf.showNext();
+                 Button restart = (Button) activity.findViewById(R.id.bAgain);
+                restart.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        flipLayout();
+                        GameState state = new GameState(new Board(), new Player(), new Player());
+                      updateView(state,activity);
+                    }
+                });
+
+            }
+
+           });
+        }
+
+
     private void highlightTray(final Event event) {
         activity.runOnUiThread(new Runnable() {
             @Override

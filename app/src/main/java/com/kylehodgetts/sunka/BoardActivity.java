@@ -27,7 +27,7 @@ import com.kylehodgetts.sunka.model.Player;
  * @author Phileas Hocquard
  * @author Charlie Baker
  * @author Jonathan Burton
- * @version 1.3
+ * @version 1.4
  */
 public class BoardActivity extends AppCompatActivity {
 
@@ -46,10 +46,9 @@ public class BoardActivity extends AppCompatActivity {
         EventBus<GameState> bus = new EventBus<>(state, this);
         bus.registerHandler(new GameManager(bus));
         bus.registerHandler(new ViewManager(bus, this));
-
         makeXMLButtons(bus); bus.feedEvent(new NewGame());
 
-    }
+}
 
     private void makeXMLButtons(EventBus bus) {
         GridLayout gridlayout = (GridLayout) findViewById(R.id.gridLayout);
