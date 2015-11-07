@@ -3,21 +3,30 @@ package com.kylehodgetts.sunka.controller;
 import android.app.Activity;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.ViewFlipper;
 
 import com.kylehodgetts.sunka.R;
 import com.kylehodgetts.sunka.controller.bus.Event;
 import com.kylehodgetts.sunka.controller.bus.EventBus;
 import com.kylehodgetts.sunka.controller.bus.EventHandler;
+import com.kylehodgetts.sunka.event.EndGame;
 import com.kylehodgetts.sunka.event.HighLightTray;
+import com.kylehodgetts.sunka.event.NewGame;
 import com.kylehodgetts.sunka.model.Board;
 import com.kylehodgetts.sunka.model.GameState;
 import com.kylehodgetts.sunka.util.Tuple2;
 
+
 /**
- * Created by CBaker on 05/11/2015.
+ *
+ * @author Charlie Baker
+ * @version 1.0
+ * V1.2 Phileas Hocquard
  */
 public class ViewManager extends EventHandler<GameState> {
 
@@ -37,8 +46,46 @@ public class ViewManager extends EventHandler<GameState> {
             highlightTray(event);
             return new Tuple2<>(state, false);
         }
+
+        if (event instanceof EndGame){
+            flipLayout(state);
+        }
+
         return new Tuple2<>(state, false); //default case to make the eventBus not do anything
     }
+
+    /**
+     * Method to Flip Between the boardLayout and the GameOver Layout
+     * (This avoid loading a new intent of Activity. )
+     */
+    public void flipLayout(final GameState state){
+
+        activity.runOnUiThread(new Runnable() {
+
+            @Override
+            public void run() {
+                ViewFlipper vf = (ViewFlipper) activity.findViewById(R.id.viewFlipper);
+                vf.showNext();
+                TextView leftScore = (TextView) activity.findViewById(R.id.your_score);
+                TextView rightScore = (TextView) activity.findViewById(R.id.opponent_score);
+                leftScore.setText(""+state.getPlayer2().getWonGames());
+                rightScore.setText(""+state.getPlayer1().getWonGames());
+
+                 Button restart = (Button) activity.findViewById(R.id.bAgain);
+                restart.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        bus.feedEvent(new NewGame());
+                        flipLayout(state);
+                    }
+
+                });
+
+            }
+
+           });
+        }
+
 
     private void highlightTray(final Event event) {
         activity.runOnUiThread(new Runnable() {

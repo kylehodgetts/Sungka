@@ -1,9 +1,11 @@
 package com.kylehodgetts.sunka;
 
 import android.app.ActionBar;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
@@ -27,7 +29,7 @@ import com.kylehodgetts.sunka.model.Player;
  * @author Phileas Hocquard
  * @author Charlie Baker
  * @author Jonathan Burton
- * @version 1.3
+ * @version 1.4
  */
 public class BoardActivity extends AppCompatActivity {
 
@@ -43,14 +45,12 @@ public class BoardActivity extends AppCompatActivity {
 
         this.setContentView(R.layout.activity_board);
         GameState state = new GameState(new Board(), new Player(), new Player());
-        EventBus<GameState> bus = new EventBus<>(state, this);
+        EventBus<GameState> bus = new EventBus<>(state,this);
         bus.registerHandler(new GameManager(bus));
         bus.registerHandler(new ViewManager(bus, this));
+        makeXMLButtons(bus); bus.feedEvent(new NewGame());
 
-        makeXMLButtons(bus);
-
-        bus.feedEvent(new NewGame());
-    }
+}
 
     private void makeXMLButtons(EventBus bus) {
         GridLayout gridlayout = (GridLayout) findViewById(R.id.gridLayout);
@@ -99,6 +99,14 @@ public class BoardActivity extends AppCompatActivity {
             }
         }
 
+    }
+
+    /**
+     * Method that allows us to return to the main menu .
+     */
+    public void returnToMainMenu(View view){
+        Intent intent = new Intent(BoardActivity.this,MainActivity.class);
+        BoardActivity.this.startActivity(intent);
     }
 
 }

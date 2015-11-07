@@ -27,7 +27,8 @@ import java.util.TimerTask;
 
 /**
  * @author Adam Chlupacek. V2 By Jonathan Burton
- * @version 2.0
+ * ,2.1 Phileas Hocquard
+ * @version 2.1
  *          The controller for the main game logic
  */
 public class GameManager extends EventHandler<GameState> {
@@ -67,7 +68,10 @@ public class GameManager extends EventHandler<GameState> {
             state.setDoingMove(false);
             return new Tuple2<>(state, true);
         } else if (event instanceof NewGame) {
-            return new Tuple2<>(state, true); //TODO Should set the board to initial state
+            state.getPlayer1().resetStonesInPot();
+            state.getPlayer2().resetStonesInPot();
+            state = new GameState(new Board(),state.getPlayer1(),state.getPlayer2());
+            return new Tuple2<>(state, true);
         } else return new Tuple2<>(state, false);
     }
 
@@ -169,6 +173,8 @@ public class GameManager extends EventHandler<GameState> {
             }
         }
         if (b.isEmptyRow(0) && b.isEmptyRow(1)) {
+            if(state.getPlayer1().getStonesInPot()>state.getPlayer2().getStonesInPot()){state.getPlayer1().addWonGames();}
+            else{state.getPlayer2().addWonGames();}
             bus.feedEvent(new EndGame());
             return state;
         }
@@ -196,5 +202,6 @@ public class GameManager extends EventHandler<GameState> {
             }
         }, millis);
     }
+
 
 }
