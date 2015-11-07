@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" >
+    android:orientation="vertical">
 
     <ImageButton
         style="?android:attr/buttonStyleSmall"
@@ -17,6 +17,7 @@
         android:background="@drawable/buttonb"
         android:layout_weight="1"
         android:scaleType="centerCrop"
+        android:layout_margin="@dimen/cellMargin"
         />
 
     <TextView

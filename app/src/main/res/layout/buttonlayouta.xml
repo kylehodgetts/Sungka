@@ -3,7 +3,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_height="match_parent"
     android:layout_width="match_parent"
-    android:orientation="vertical" >
+    android:orientation="vertical"
+    >
 
     <TextView
         android:id="@+id/tv"
@@ -24,7 +25,8 @@
         android:background="@drawable/buttona"
         android:id="@+id/button"
         android:layout_weight="1"
-        android:scaleType="centerCrop"/>
+        android:scaleType="centerCrop"
+        android:layout_margin="@dimen/cellMargin"/>
 
 </LinearLayout>
 

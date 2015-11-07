@@ -2,10 +2,7 @@ package com.kylehodgetts.sunka.controller;
 
 import android.app.Activity;
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
-import android.graphics.drawable.ShapeDrawable;
-import android.graphics.drawable.shapes.RectShape;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -40,7 +37,6 @@ public class ViewManager extends EventHandler<GameState> {
             highlightTray(event);
             return new Tuple2<>(state, false);
         }
-
         return new Tuple2<>(state, false); //default case to make the eventBus not do anything
     }
 

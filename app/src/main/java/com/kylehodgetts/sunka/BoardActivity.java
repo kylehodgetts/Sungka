@@ -11,6 +11,7 @@ import android.view.WindowManager;
 import android.widget.GridLayout;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.Space;
 
 import com.kylehodgetts.sunka.controller.GameManager;
 import com.kylehodgetts.sunka.controller.ViewManager;
@@ -65,12 +66,15 @@ public class BoardActivity extends AppCompatActivity {
                 ImageButton button = (ImageButton) linearLayout.findViewById(R.id.button);
 
                 GridLayout.LayoutParams param = new GridLayout.LayoutParams();
-                param.columnSpec = GridLayout.spec(i == 1?6-j:j);
-                param.rowSpec = GridLayout.spec((i+1)%2);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    param.columnSpec = GridLayout.spec(i == 1?6-j:j,2f);
+                    param.rowSpec = GridLayout.spec((i+1)%2, 2f);
+
+                }
                 param.width=GridLayout.LayoutParams.WRAP_CONTENT;
                 param.height=GridLayout.LayoutParams.WRAP_CONTENT;
-                param.setMargins(10, 10, 10, 10);
                 param.setGravity(Gravity.FILL);
+
                 linearLayout.setLayoutParams(param);
                 gridlayout.addView(linearLayout);
 
