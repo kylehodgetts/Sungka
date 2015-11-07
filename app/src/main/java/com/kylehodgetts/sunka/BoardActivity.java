@@ -4,6 +4,7 @@ import android.app.ActionBar;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
@@ -46,9 +47,8 @@ public class BoardActivity extends AppCompatActivity {
         bus.registerHandler(new GameManager(bus));
         bus.registerHandler(new ViewManager(bus, this));
 
-        makeXMLButtons(bus);
+        makeXMLButtons(bus); bus.feedEvent(new NewGame());
 
-        bus.feedEvent(new NewGame());
     }
 
     private void makeXMLButtons(EventBus bus) {

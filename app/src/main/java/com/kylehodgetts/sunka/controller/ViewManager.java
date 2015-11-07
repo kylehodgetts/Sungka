@@ -6,14 +6,17 @@ import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.RectShape;
+import android.view.View;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.ViewFlipper;
 
 import com.kylehodgetts.sunka.R;
 import com.kylehodgetts.sunka.controller.bus.Event;
 import com.kylehodgetts.sunka.controller.bus.EventBus;
 import com.kylehodgetts.sunka.controller.bus.EventHandler;
+import com.kylehodgetts.sunka.event.EndGame;
 import com.kylehodgetts.sunka.event.HighLightTray;
 import com.kylehodgetts.sunka.model.Board;
 import com.kylehodgetts.sunka.model.GameState;
@@ -40,10 +43,17 @@ public class ViewManager extends EventHandler<GameState> {
             highlightTray(event);
             return new Tuple2<>(state, false);
         }
+        if (event instanceof EndGame){
+            flipLayout();
+        }
 
         return new Tuple2<>(state, false); //default case to make the eventBus not do anything
     }
 
+    private void flipLayout(){
+        ViewFlipper vf = (ViewFlipper) findViewById(R.id.viewFlipper);
+        vf.showNext();
+    }
     private void highlightTray(final Event event) {
         activity.runOnUiThread(new Runnable() {
             @Override
