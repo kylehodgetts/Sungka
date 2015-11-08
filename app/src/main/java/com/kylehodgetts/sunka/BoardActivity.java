@@ -103,7 +103,6 @@ public class BoardActivity extends AppCompatActivity {
             for(int i = 1; i < gridLayout.getChildCount(); ++i) {
                 int width = gridLayout.getChildAt(i).getWidth();
                 gridLayout.getChildAt(i).setMinimumHeight(width);
-                gridLayout.getChildAt(i).setMinimumWidth(width);
             }
         }
     }
