@@ -5,27 +5,25 @@
     android:orientation="vertical">
 
     <ImageButton
+        android:id="@+id/button"
         style="?android:attr/buttonStyleSmall"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:textColor="#FFFFFF"
+        android:layout_margin="@dimen/cellMargin"
+        android:layout_weight="1"
+        android:background="@drawable/buttonb"
+        android:scaleType="centerCrop"
         android:shadowColor="#A8A8A8"
         android:shadowDx="0"
         android:shadowDy="0"
         android:shadowRadius="5"
-        android:id="@+id/button"
-        android:background="@drawable/buttonb"
-        android:layout_weight="1"
-        android:scaleType="centerCrop"
-        android:layout_margin="@dimen/cellMargin"
-        />
+        android:textColor="#FFFFFF" />
 
     <TextView
         android:id="@+id/tv"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="12sp"
-        android:textAlignment="center"/>
-
+        android:textAlignment="center"
+        android:textSize="12sp" />
 
 </LinearLayout>

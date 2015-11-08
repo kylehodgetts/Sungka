@@ -24,35 +24,70 @@ import com.kylehodgetts.sunka.util.Tuple2;
 
 
 /**
+ * View Manager class Event handler in order to handle all the Graphical User Interface events and
+ * to update the game board view accordingly.
  *
  * @author Charlie Baker
- * @version 1.0
- * V1.2 Phileas Hocquard
+ * @version 1.3
+ *          V1.2 Phileas Hocquard
  */
 public class ViewManager extends EventHandler<GameState> {
 
+    /**
+     * The game's event bus that passes the event to this registered handler.
+     */
     private EventBus<GameState> bus;
+
+    /**
+     * The activity that needs it's view to be updated.
+     */
     private Activity activity;
 
 
+    /**
+     * Default constructor requiring the game's {@link EventBus} and the {@link Activity} which
+     * requires it's current view updated.
+     *
+     * @param bus      {@link EventBus} of the current game
+     * @param activity {@link Activity} the activity to have it's view updated
+     */
     public ViewManager(EventBus<GameState> bus, Activity activity) {
-        super("ViewManager");
+        super("ViewManager");   // Sends Event Handler ID string to the super class constructor
         this.bus = bus;
         this.activity = activity;
     }
 
+    /**
+     * Method to determine what type of event has come into this handler from the {@link EventBus}
+     * to handle that event appropriately based on the current {@link GameState} then return
+     * the relevant Tuple whether if the View needs to be updated further.
+     *
+     * @param event The incoming event from the bus to this handler
+     * @param state The current state of the bus
+     * @return {@link Tuple2} of the {@link GameState} and a boolean if further rendering is required.
+     */
     @Override
     public Tuple2<GameState, Boolean> handleEvent(Event event, GameState state) {
-        if(event instanceof HighLightTray) { highlightTray(event); }
-        else if(event instanceof HighlightPlayerStore) { highlightStore(event); }
+        if (event instanceof HighLightTray) {
+            highlightTray(event);
+        } else if (event instanceof HighlightPlayerStore) {
+            highlightStore(event);
+        }
 
-        if (event instanceof EndGame){
+        if (event instanceof EndGame) {
             flipLayout(state);
         }
 
         return new Tuple2<>(state, false); //default case to make the eventBus not do anything
     }
 
+    /**
+     * Highlight's the current player's Store when their move is to increment a shell in their own
+     * store in order to provide the user with feedback.
+     * Called if the event to this handler is {@link HighlightPlayerStore}
+     *
+     * @param event the {@link Event} passed to this handler to trigger this method and view update.
+     */
     private void highlightStore(final Event event) {
         activity.runOnUiThread(new Runnable() {
             @Override
@@ -60,10 +95,9 @@ public class ViewManager extends EventHandler<GameState> {
                 int player = ((HighlightPlayerStore) event).getPlayer();
 
                 LinearLayout playerStoreLayout;
-                if(player == 0) {
+                if (player == 0) {
                     playerStoreLayout = (LinearLayout) activity.findViewById(R.id.playerBStore);
-                }
-                else {
+                } else {
                     playerStoreLayout = (LinearLayout) activity.findViewById(R.id.playerAStore);
                 }
                 GradientDrawable storeBackground = (GradientDrawable) playerStoreLayout.getBackground().getConstantState().newDrawable().mutate();
@@ -78,7 +112,7 @@ public class ViewManager extends EventHandler<GameState> {
      * Method to Flip Between the boardLayout and the GameOver Layout
      * (This avoid loading a new intent of Activity. )
      */
-    public void flipLayout(final GameState state){
+    public void flipLayout(final GameState state) {
 
         activity.runOnUiThread(new Runnable() {
 
@@ -88,10 +122,10 @@ public class ViewManager extends EventHandler<GameState> {
                 vf.showNext();
                 TextView leftScore = (TextView) activity.findViewById(R.id.your_score);
                 TextView rightScore = (TextView) activity.findViewById(R.id.opponent_score);
-                leftScore.setText(""+state.getPlayer2().getWonGames());
-                rightScore.setText(""+state.getPlayer1().getWonGames());
+                leftScore.setText("" + state.getPlayer2().getWonGames());
+                rightScore.setText("" + state.getPlayer1().getWonGames());
 
-                 Button restart = (Button) activity.findViewById(R.id.bAgain);
+                Button restart = (Button) activity.findViewById(R.id.bAgain);
                 restart.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -100,13 +134,19 @@ public class ViewManager extends EventHandler<GameState> {
                     }
 
                 });
-
             }
 
-           });
-        }
+        });
+    }
 
 
+    /**
+     * Highlights a tray to provide feedback to the user that the tray is to be incremented with a
+     * shell in the relevant colour depending on the player that is causing the tray to be incremented.
+     * Called if the this {@link EventHandler} receives a {@link HighLightTray} event
+     *
+     * @param event {@link Event} that triggers this method to run in order to highlight the relevant tray
+     */
     private void highlightTray(final Event event) {
         activity.runOnUiThread(new Runnable() {
             @Override
@@ -115,17 +155,25 @@ public class ViewManager extends EventHandler<GameState> {
                 int tray = ((HighLightTray) event).getTray();
                 int currentPlayersTurn = ((HighLightTray) event).getCurrentPlayersTurn();
 
-                LinearLayout linearLayout = (LinearLayout) activity.findViewById(Integer.parseInt(player+""+tray));
+                LinearLayout linearLayout = (LinearLayout) activity.findViewById(Integer.parseInt(player + "" + tray));
                 ImageButton imageButton = (ImageButton) linearLayout.findViewById(R.id.button);
                 GradientDrawable drawable = (GradientDrawable) imageButton.getBackground().getConstantState().newDrawable().mutate();
 
                 drawable.setStroke(8, currentPlayersTurn == 0 ? Color.parseColor("#C4213C") : Color.parseColor("#2D8BA8"));
                 imageButton.setBackground(drawable);
-                imageButton.setPadding(35,35,35,35);
+                imageButton.setPadding(35, 35, 35, 35);
             }
         });
     }
 
+    /**
+     * Updates every component in the active {@link Activity} layout view depending on the current
+     * {@link GameState} should a the EventBus receive a Tuple with a true boolean including the
+     * relevant images representing the number shells in each tray.
+     *
+     * @param state    The current state of the event bus
+     * @param activity The active activity
+     */
     @Override
     public void updateView(final GameState state, final Activity activity) {
         activity.runOnUiThread(new Runnable() {
