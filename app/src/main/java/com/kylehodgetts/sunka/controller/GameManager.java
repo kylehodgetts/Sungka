@@ -14,6 +14,7 @@ import com.kylehodgetts.sunka.controller.bus.EventBus;
 import com.kylehodgetts.sunka.controller.bus.EventHandler;
 import com.kylehodgetts.sunka.event.EndGame;
 import com.kylehodgetts.sunka.event.HighLightTray;
+import com.kylehodgetts.sunka.event.HighlightPlayerStore;
 import com.kylehodgetts.sunka.event.NewGame;
 import com.kylehodgetts.sunka.event.NextTurn;
 import com.kylehodgetts.sunka.event.PlayerChoseTray;
@@ -124,6 +125,7 @@ public class GameManager extends EventHandler<GameState> {
         if (first && trayIndex == 0) {
             //TODO fix disgusting hack for fixing of the moving straight into the store. Schedule same event, but with one less shell?
             state.getPlayerFor(player).addToPot(1);
+            scheduleEvent(new HighlightPlayerStore(player), 0, player);
             shellsLeft--;
             repeatTurn = true;
             if (shellsLeft > 0) {
@@ -137,6 +139,7 @@ public class GameManager extends EventHandler<GameState> {
             shellsLeft--;
             if (trayIndex == 6 && player == playerIndex && shellsLeft > 0) {
                 state.getPlayerFor(player).addToPot(1);
+                scheduleEvent(new HighlightPlayerStore(player), 0, player);
                 shellsLeft--;
                 repeatTurn = true;
             }

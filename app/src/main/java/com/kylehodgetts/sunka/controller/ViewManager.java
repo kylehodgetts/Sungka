@@ -16,6 +16,7 @@ import com.kylehodgetts.sunka.controller.bus.EventBus;
 import com.kylehodgetts.sunka.controller.bus.EventHandler;
 import com.kylehodgetts.sunka.event.EndGame;
 import com.kylehodgetts.sunka.event.HighLightTray;
+import com.kylehodgetts.sunka.event.HighlightPlayerStore;
 import com.kylehodgetts.sunka.event.NewGame;
 import com.kylehodgetts.sunka.model.Board;
 import com.kylehodgetts.sunka.model.GameState;
@@ -42,16 +43,35 @@ public class ViewManager extends EventHandler<GameState> {
 
     @Override
     public Tuple2<GameState, Boolean> handleEvent(Event event, GameState state) {
-        if(event instanceof HighLightTray) {
-            highlightTray(event);
-            return new Tuple2<>(state, false);
-        }
+        if(event instanceof HighLightTray) { highlightTray(event); }
+        else if(event instanceof HighlightPlayerStore) { highlightStore(event); }
 
         if (event instanceof EndGame){
             flipLayout(state);
         }
 
         return new Tuple2<>(state, false); //default case to make the eventBus not do anything
+    }
+
+    private void highlightStore(final Event event) {
+        activity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                int player = ((HighlightPlayerStore) event).getPlayer();
+
+                LinearLayout playerStoreLayout;
+                if(player == 0) {
+                    playerStoreLayout = (LinearLayout) activity.findViewById(R.id.playerBStore);
+                }
+                else {
+                    playerStoreLayout = (LinearLayout) activity.findViewById(R.id.playerAStore);
+                }
+                GradientDrawable storeBackground = (GradientDrawable) playerStoreLayout.getBackground().getConstantState().newDrawable().mutate();
+
+                storeBackground.setStroke(8, player == 0 ? Color.parseColor("#C4213C") : Color.parseColor("#2D8BA8"));
+                playerStoreLayout.setBackground(storeBackground);
+            }
+        });
     }
 
     /**
@@ -99,7 +119,7 @@ public class ViewManager extends EventHandler<GameState> {
                 ImageButton imageButton = (ImageButton) linearLayout.findViewById(R.id.button);
                 GradientDrawable drawable = (GradientDrawable) imageButton.getBackground().getConstantState().newDrawable().mutate();
 
-                drawable.setStroke(8, currentPlayersTurn == 0 ? Color.parseColor("#C4213C") : Color.parseColor("#4CACC4"));
+                drawable.setStroke(8, currentPlayersTurn == 0 ? Color.parseColor("#C4213C") : Color.parseColor("#2D8BA8"));
                 imageButton.setBackground(drawable);
                 imageButton.setPadding(35,35,35,35);
             }
