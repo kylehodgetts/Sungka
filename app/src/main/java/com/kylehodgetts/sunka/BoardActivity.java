@@ -87,7 +87,7 @@ public class BoardActivity extends AppCompatActivity {
                 }
                 param.width = GridLayout.LayoutParams.WRAP_CONTENT;
                 param.height = GridLayout.LayoutParams.WRAP_CONTENT;
-                param.setGravity(Gravity.FILL);
+                param.setGravity(Gravity.FILL_HORIZONTAL);
 
                 linearLayout.setLayoutParams(param);
                 gridlayout.addView(linearLayout);
@@ -122,7 +122,7 @@ public class BoardActivity extends AppCompatActivity {
 
             GridLayout gridLayout = (GridLayout) findViewById(R.id.gridLayout);
 
-            for (int i = 1; i < gridLayout.getChildCount(); ++i) {
+            for (int i = 0; i < gridLayout.getChildCount(); ++i) {
                 int width = gridLayout.getChildAt(i).getWidth();
                 gridLayout.getChildAt(i).setMinimumHeight(width);
             }
