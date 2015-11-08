@@ -2,6 +2,7 @@ package com.kylehodgetts.sunka;
 
 import android.app.ActionBar;
 import android.content.Intent;
+import android.graphics.Point;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -62,7 +63,6 @@ public class BoardActivity extends AppCompatActivity {
                 else { linearLayout = (LinearLayout) getLayoutInflater().inflate(R.layout.buttonlayouta, gridlayout, false); }
                 linearLayout.setId(Integer.parseInt(i + "" + j));
 
-
                 ImageButton button = (ImageButton) linearLayout.findViewById(R.id.button);
 
                 GridLayout.LayoutParams param = new GridLayout.LayoutParams();
@@ -71,7 +71,7 @@ public class BoardActivity extends AppCompatActivity {
                     param.rowSpec = GridLayout.spec((i+1)%2, 2f);
 
                 }
-                param.width=GridLayout.LayoutParams.WRAP_CONTENT;
+                param.width= GridLayout.LayoutParams.WRAP_CONTENT;
                 param.height=GridLayout.LayoutParams.WRAP_CONTENT;
                 param.setGravity(Gravity.FILL);
 
@@ -97,8 +97,15 @@ public class BoardActivity extends AppCompatActivity {
                                 | View.SYSTEM_UI_FLAG_FULLSCREEN
                                 | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
             }
-        }
 
+            GridLayout gridLayout = (GridLayout) findViewById(R.id.gridLayout);
+
+            for(int i = 1; i < gridLayout.getChildCount(); ++i) {
+                int width = gridLayout.getChildAt(i).getWidth();
+                gridLayout.getChildAt(i).setMinimumHeight(width);
+                gridLayout.getChildAt(i).setMinimumWidth(width);
+            }
+        }
     }
 
     /**

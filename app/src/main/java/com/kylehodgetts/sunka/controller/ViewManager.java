@@ -133,6 +133,7 @@ public class ViewManager extends EventHandler<GameState> {
                     playerTwoStoreButton.setImageResource(activity.getResources().getIdentifier("s9", "drawable", activity.getPackageName()));
                 }
 
+
                 Board currentBoard = state.getBoard();
                 for (int row = 0; row < 2; ++row) {
                     for (int column = 0; column < 7; ++column) {
