@@ -10,6 +10,7 @@ import android.widget.GridLayout;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 
+import com.kylehodgetts.sunka.controller.AIManager;
 import com.kylehodgetts.sunka.controller.GameManager;
 import com.kylehodgetts.sunka.controller.ViewManager;
 import com.kylehodgetts.sunka.controller.bus.EventBus;
@@ -27,11 +28,17 @@ import com.kylehodgetts.sunka.model.Player;
  * @author Phileas Hocquard
  * @author Charlie Baker
  * @author Jonathan Burton
- * @version 1.5
+ * @version 1.6
  */
 public class BoardActivity extends AppCompatActivity {
 
     //TODO: Implement OnPause, OnResume, OnStop methods. And within all other necessary classes
+
+    public static final int ONEPLAYER = 1;
+    public static final int TWOPLAYER = 2;
+    public static final int ONLINE = 3;
+
+    public static final String EXTRA_INT = "com.kylehodgetts.sunka.boardactivity.gametype";
 
     View decorView;
 
@@ -48,13 +55,25 @@ public class BoardActivity extends AppCompatActivity {
         decorView = getWindow().getDecorView();
 
         this.setContentView(R.layout.activity_board);
+        
+        int gameType = getIntent().getIntExtra(EXTRA_INT, 0);
+
         GameState state = new GameState(new Board(), new Player(), new Player());
         EventBus<GameState> bus = new EventBus<>(state, this);
         bus.registerHandler(new GameManager(bus));
         bus.registerHandler(new ViewManager(bus, this));
-        makeXMLButtons(bus);
-        bus.feedEvent(new NewGame());
+        
+        if (gameType == ONEPLAYER) {
+            bus.registerHandler(new AIManager(bus));
+            makeXMLButtons(bus, false);
+        } else if (gameType == TWOPLAYER) {
+            makeXMLButtons(bus, true);
+        } else if (gameType == ONLINE) {
+            //TODO bus.registerHandler(ONLINEHANDLER)
+            makeXMLButtons(bus, false);
+        }
 
+        bus.feedEvent(new NewGame());
     }
 
     /**
@@ -63,26 +82,26 @@ public class BoardActivity extends AppCompatActivity {
      *
      * @param bus The game Event Bus so the tray can be attached with the onClickListener
      */
-    private void makeXMLButtons(EventBus bus) {
+    private void makeXMLButtons(EventBus bus, boolean bothSetsButtonsClickable) {
         GridLayout gridlayout = (GridLayout) findViewById(R.id.gridLayout);
 
-        for (int i = 0; i < 2; ++i) {
-            for (int j = 0; j < 7; ++j) {
+        for (int player = 0; player < 2; ++player) {
+            for (int tray = 0; tray < 7; ++tray) {
                 final LinearLayout linearLayout;
-                if (i == 0) {
+                if (player == 0) {
                     linearLayout = (LinearLayout) getLayoutInflater().inflate(R.layout.buttonlayoutb, gridlayout, false);
                 } else {
                     linearLayout = (LinearLayout) getLayoutInflater().inflate(R.layout.buttonlayouta, gridlayout, false);
                 }
-                linearLayout.setId(Integer.parseInt(i + "" + j));
+                linearLayout.setId(Integer.parseInt(player + "" + tray));
 
                 ImageButton button = (ImageButton) linearLayout.findViewById(R.id.button);
 
                 // Due to grid layout weights only being available from API 21 onwards to scale the layout
                 GridLayout.LayoutParams param = new GridLayout.LayoutParams();
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    param.columnSpec = GridLayout.spec(i == 1 ? 6 - j : j, 2f);
-                    param.rowSpec = GridLayout.spec((i + 1) % 2, 2f);
+                    param.columnSpec = GridLayout.spec(player == 1 ? 6 - tray : tray, 2f);
+                    param.rowSpec = GridLayout.spec((player + 1) % 2, 2f);
 
                 }
                 param.width = GridLayout.LayoutParams.WRAP_CONTENT;
@@ -91,8 +110,11 @@ public class BoardActivity extends AppCompatActivity {
 
                 linearLayout.setLayoutParams(param);
                 gridlayout.addView(linearLayout);
-
-                button.setOnClickListener(new TrayOnClickListener(j, i, bus));
+                
+                //we don't want the opposite side clickable if there are not two local players
+                if (player == 0 || player == 1 && bothSetsButtonsClickable) {
+                    button.setOnClickListener(new TrayOnClickListener(tray, player, bus));
+                }
             }
         }
     }
