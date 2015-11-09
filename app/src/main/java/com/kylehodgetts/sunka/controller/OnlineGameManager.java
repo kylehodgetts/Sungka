@@ -2,7 +2,7 @@ package com.kylehodgetts.sunka.controller;
 
 import android.app.Activity;
 
-import com.kylehodgetts.sunka.SingletonSocket;
+import com.kylehodgetts.sunka.controller.wifi.SingletonSocket;
 import com.kylehodgetts.sunka.controller.bus.Event;
 import com.kylehodgetts.sunka.controller.bus.EventBus;
 import com.kylehodgetts.sunka.controller.bus.EventHandler;
@@ -10,7 +10,6 @@ import com.kylehodgetts.sunka.event.PlayerChoseTray;
 import com.kylehodgetts.sunka.model.GameState;
 import com.kylehodgetts.sunka.util.Tuple2;
 
-import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;

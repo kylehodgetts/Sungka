@@ -1,4 +1,4 @@
-package com.kylehodgetts.sunka;
+package com.kylehodgetts.sunka.controller.wifi;
 
 import android.content.Context;
 import android.net.nsd.NsdServiceInfo;
@@ -7,6 +7,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
+
+import com.kylehodgetts.sunka.R;
 
 import java.util.List;
 
@@ -25,7 +27,7 @@ public class ServiceAdapter extends ArrayAdapter<NsdServiceInfo> {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 
-        LayoutInflater inflater = LayoutInflater.from(super.getContext());
+        LayoutInflater inflater = LayoutInflater.from(getContext());
 
         View myView = inflater.inflate(R.layout.row_device, parent, false);
 

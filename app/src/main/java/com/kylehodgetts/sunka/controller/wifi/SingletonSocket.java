@@ -1,6 +1,5 @@
-package com.kylehodgetts.sunka;
+package com.kylehodgetts.sunka.controller.wifi;
 
-import java.net.ServerSocket;
 import java.net.Socket;
 
 /**

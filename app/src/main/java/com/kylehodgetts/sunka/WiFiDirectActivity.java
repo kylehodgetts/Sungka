@@ -7,7 +7,6 @@ import android.net.nsd.NsdManager;
 import android.net.nsd.NsdServiceInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -15,9 +14,10 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 
-import java.io.ByteArrayOutputStream;
+import com.kylehodgetts.sunka.controller.wifi.ServiceAdapter;
+import com.kylehodgetts.sunka.controller.wifi.SingletonSocket;
+
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
@@ -71,7 +71,7 @@ public class WiFiDirectActivity extends Activity {
         nsdManager = (NsdManager)getApplicationContext().getSystemService(Context.NSD_SERVICE);
         nsdManager.discoverServices("_http._tcp", NsdManager.PROTOCOL_DNS_SD, discoveryListener);
         foundServices = (ListView) findViewById(R.id.list_found_services);
-        foundServices.setAdapter(new ServiceAdapter(getApplicationContext(),services));
+        foundServices.setAdapter(new ServiceAdapter(getApplicationContext(), services));
         renderList();
         foundServices.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override

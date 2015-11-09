@@ -10,9 +10,9 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.TextView;
 
+import com.kylehodgetts.sunka.controller.wifi.SingletonSocket;
+
 import java.io.IOException;
-import java.io.OutputStream;
-import java.io.PrintStream;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.ServerSocket;
@@ -21,7 +21,9 @@ import java.net.SocketException;
 import java.util.Enumeration;
 
 /**
- * Created by kylehodgetts on 06/11/2015.
+ * @author Kyle Hodgetts
+ * @author Adam Chlupacek
+ * @version 1.0
  */
 public class HostActivity extends Activity {
     private static final int PORT = 8080;
@@ -98,7 +100,6 @@ public class HostActivity extends Activity {
             public void onServiceUnregistered(NsdServiceInfo serviceInfo) {
             }
         };
-
     }
 
     private class SocketServerThread extends Thread {
@@ -123,7 +124,6 @@ public class HostActivity extends Activity {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-
         }
     }
     
