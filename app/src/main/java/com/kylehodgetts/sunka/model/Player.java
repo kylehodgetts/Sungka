@@ -63,4 +63,8 @@ public class Player {
         stonesInPot += x;
     }
 
+    public void resetStonesInPot(){
+        stonesInPot = 0;
+    }
+
 }
