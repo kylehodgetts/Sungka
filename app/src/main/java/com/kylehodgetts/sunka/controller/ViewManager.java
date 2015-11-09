@@ -1,11 +1,16 @@
 package com.kylehodgetts.sunka.controller;
 
 import android.app.Activity;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
+import android.graphics.drawable.ShapeDrawable;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.ViewFlipper;
@@ -20,7 +25,10 @@ import com.kylehodgetts.sunka.event.HighlightPlayerStore;
 import com.kylehodgetts.sunka.event.NewGame;
 import com.kylehodgetts.sunka.model.Board;
 import com.kylehodgetts.sunka.model.GameState;
+import com.kylehodgetts.sunka.uiutil.ShellDrawable;
 import com.kylehodgetts.sunka.util.Tuple2;
+
+import java.util.Random;
 
 
 /**
