@@ -20,16 +20,17 @@
             android:id="@+id/linearLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true">
+            android:layout_centerInParent="true"
+            android:gravity="center_horizontal"
+            android:orientation="horizontal">
 
 
             <LinearLayout
                 android:id="@+id/playerAStore"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_marginBottom="20dp"
                 android:layout_marginTop="20dp"
-                android:layout_weight="0.25"
                 android:background="@drawable/buttonascore">
 
 
@@ -55,20 +56,18 @@
 
             <GridLayout
                 android:id="@+id/gridLayout"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
                 android:columnCount="7"
                 android:rowCount="2" />
 
 
             <LinearLayout
                 android:id="@+id/playerBStore"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_marginBottom="20dp"
                 android:layout_marginTop="20dp"
-                android:layout_weight="0.25"
                 android:background="@drawable/buttonbscore">
 
                 <ImageButton
