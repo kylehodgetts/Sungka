@@ -28,6 +28,11 @@ public class AIManager extends EventHandler<GameState> {
 
     private AI ai;
 
+    /**
+     * Default constructor for event handler, assigns its id that should be unique
+     *
+     * @param bus the event bus that this should feed events into
+     */
     public AIManager(EventBus<GameState> bus) {
         super("ai");
         this.bus = bus;
@@ -36,6 +41,13 @@ public class AIManager extends EventHandler<GameState> {
         ai = new AIStrategy(); //TODO change this based on a difficulty setting once we have multiple AI
     }
 
+    /**
+     * A method that processes events that were send to a event bus
+     *
+     * @param event The incoming event from the bus to this handler
+     * @param state The current state of the bus
+     * @return Returns the modified state together with a flag whether a render is required
+     */
     @Override
     public Tuple2<GameState, Boolean> handleEvent(Event event, final GameState state) {
 

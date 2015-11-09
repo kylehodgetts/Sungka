@@ -163,6 +163,12 @@ public class AIStrategy implements AI {
         return new Tuple2<>(trayToPick != -1, trayToPick);
     }
 
+    /**
+     * Choose a random tray that has a shells in
+     *
+     * @param state the current state of the game
+     * @return the tray index to pick
+     */
     private int getRandomTray(GameState state) {
 
         Random r = new Random();
