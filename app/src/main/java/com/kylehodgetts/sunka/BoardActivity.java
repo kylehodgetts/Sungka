@@ -85,23 +85,23 @@ public class BoardActivity extends AppCompatActivity {
     private void makeXMLButtons(EventBus bus, boolean bothSetsButtonsClickable) {
         GridLayout gridlayout = (GridLayout) findViewById(R.id.gridLayout);
 
-        for (int i = 0; i < 2; ++i) {
-            for (int j = 0; j < 7; ++j) {
+        for (int player = 0; player < 2; ++player) {
+            for (int tray = 0; tray < 7; ++tray) {
                 final LinearLayout linearLayout;
-                if (i == 0) {
+                if (player == 0) {
                     linearLayout = (LinearLayout) getLayoutInflater().inflate(R.layout.buttonlayoutb, gridlayout, false);
                 } else {
                     linearLayout = (LinearLayout) getLayoutInflater().inflate(R.layout.buttonlayouta, gridlayout, false);
                 }
-                linearLayout.setId(Integer.parseInt(i + "" + j));
+                linearLayout.setId(Integer.parseInt(player + "" + tray));
 
                 ImageButton button = (ImageButton) linearLayout.findViewById(R.id.button);
 
                 // Due to grid layout weights only being available from API 21 onwards to scale the layout
                 GridLayout.LayoutParams param = new GridLayout.LayoutParams();
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    param.columnSpec = GridLayout.spec(i == 1 ? 6 - j : j, 2f);
-                    param.rowSpec = GridLayout.spec((i + 1) % 2, 2f);
+                    param.columnSpec = GridLayout.spec(player == 1 ? 6 - tray : tray, 2f);
+                    param.rowSpec = GridLayout.spec((player + 1) % 2, 2f);
 
                 }
                 param.width = GridLayout.LayoutParams.WRAP_CONTENT;
