@@ -54,6 +54,7 @@ public class RequestResponse {
 
     public enum ResponseCode{
         OK(200,"OK"),
+        NO_CONTENT(204,"No Content"),
         BAD_REQUEST(400,"Bad Request"),
         NOT_FOUND(404,"Not Found");
 

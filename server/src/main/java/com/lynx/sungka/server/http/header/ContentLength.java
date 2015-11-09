@@ -23,8 +23,13 @@ public class ContentLength extends Header{
         try{
             length = Integer.parseInt(value);
         }catch (Exception e){
-            throw new MalformedHeader(new RequestResponse(new ArrayList<>(),new byte[]{}, RequestResponse.ResponseCode.BAD_REQUEST));
+            throw new MalformedHeader(new RequestResponse(new ArrayList<Header>(),new byte[]{}, RequestResponse.ResponseCode.BAD_REQUEST));
         }
+    }
+
+    public ContentLength(int value){
+        super("Content-Length",value+"");
+        length = value;
     }
 
     /**

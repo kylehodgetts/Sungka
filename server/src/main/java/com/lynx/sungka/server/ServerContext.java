@@ -1,6 +1,8 @@
 package com.lynx.sungka.server;
 
+import com.mongodb.DB;
 import com.mongodb.DBAddress;
+import com.mongodb.DBCollection;
 import com.mongodb.Mongo;
 
 /**
@@ -26,5 +28,17 @@ public class ServerContext {
      */
     public Mongo getMongo() {
         return mongo;
+    }
+
+    public DB getDatabase(){
+        return mongo.getDB("lynx");
+    }
+
+    public DBCollection getNameCollection(){
+        return getDatabase().getCollection("username");
+    }
+
+    public DBCollection getStatisticsCollection(){
+        return getDatabase().getCollection("stats");
     }
 }

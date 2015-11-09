@@ -21,4 +21,13 @@ public class ContentType extends Header {
     public boolean isJson(){
         return getValue().equals("application/json");
     }
+
+    /**
+     * Convenience function
+     * Creates a content type header and sets its type to json
+     * @return
+     */
+    public static ContentType json(){
+        return new ContentType("application/json");
+    }
 }
