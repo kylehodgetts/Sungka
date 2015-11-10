@@ -59,8 +59,7 @@ public class GameManager extends EventHandler<GameState> {
             return new Tuple2<>(placeShellEvent(state, (ShellMovement) event), true);
         } else if (event instanceof ShellMovementToPot) {
             return new Tuple2<>(placeShellInPotEvent(state, (ShellMovementToPot) event), true);
-        }
-        else if (event instanceof NextTurn) {
+        } else if (event instanceof NextTurn) {
             if (((NextTurn) event).finishInit()) {
                 state.finishInit();
             }
@@ -138,9 +137,11 @@ public class GameManager extends EventHandler<GameState> {
         player.addToPot(1);
 
 
-        scheduleEvent(new HighLightTray(0, event.getNextPlayerIndex(), event.getPlayerIndexOfThisPot()), 0, event.getPlayerIndexOfThisPot());
-        scheduleEvent(new ShellMovement(0, event.getNextPlayerIndex(), event.getShells() - 1, false, event.getPlayerIndexOfThisPot()), delay, event.getPlayerIndexOfThisPot());
-
+        int shells = event.getShells() - 1;
+        if (shells > 0) {
+            scheduleEvent(new HighLightTray(0, event.getNextPlayerIndex(), event.getPlayerIndexOfThisPot()), 0, event.getPlayerIndexOfThisPot());
+            scheduleEvent(new ShellMovement(0, event.getNextPlayerIndex(), shells, false, event.getPlayerIndexOfThisPot()), delay, event.getPlayerIndexOfThisPot());
+        }
         return state;
     }
 
