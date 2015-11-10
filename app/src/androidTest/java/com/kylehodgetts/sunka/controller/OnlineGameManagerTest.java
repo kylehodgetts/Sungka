@@ -1,6 +1,7 @@
 package com.kylehodgetts.sunka.controller;
 
 import android.app.Activity;
+import android.test.suitebuilder.annotation.SmallTest;
 
 import com.kylehodgetts.sunka.controller.bus.EventBus;
 import com.kylehodgetts.sunka.event.PlayerChoseTray;
@@ -28,6 +29,7 @@ public class OnlineGameManagerTest extends TestCase {
 
     }
 
+    @SmallTest
     public void testHandleEvent() throws Exception {
         Tuple2 expected = new Tuple2(gameState, true);
         Tuple2 actual = onlineGameManager.handleEvent(new PlayerChoseTray(1, 1), gameState);

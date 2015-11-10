@@ -21,7 +21,6 @@ import com.kylehodgetts.sunka.model.Board;
 import com.kylehodgetts.sunka.model.GameState;
 import com.kylehodgetts.sunka.model.Player;
 
-
 /**
  * Board Activity Class used to create the game board. Inflate and style the board to the user's
  * device screen. Also to instantiate the logic objects to control and handle the game events.

@@ -31,9 +31,6 @@ import java.util.List;
 public class WiFiDirectActivity extends Activity {
     public static final String TAG = "wifidirectactivity";
 
-    private EditText editAddress;
-    private EditText editPort;
-    private Button btnConnect;
     private Button btnHost;
     private ListView foundServices;
 
@@ -42,6 +39,8 @@ public class WiFiDirectActivity extends Activity {
 
 
     private List<NsdServiceInfo> services;
+
+    private MyClientTask myClientTask;
 
 
     @Override
@@ -77,7 +76,8 @@ public class WiFiDirectActivity extends Activity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 NsdServiceInfo serviceInfo = (NsdServiceInfo) parent.getItemAtPosition(position);
-                new MyClientTask(serviceInfo.getHost().toString(), serviceInfo.getPort()).execute();
+                myClientTask = new MyClientTask(serviceInfo.getHost().toString(), serviceInfo.getPort());
+                myClientTask.execute();
             }
         });
     }
@@ -100,6 +100,10 @@ public class WiFiDirectActivity extends Activity {
         }
         super.onPause();
 
+    }
+
+    public boolean isClientTaskRunning(){
+        return !myClientTask.isCancelled();
     }
 
     public void initialiseDiscoveryListener(){

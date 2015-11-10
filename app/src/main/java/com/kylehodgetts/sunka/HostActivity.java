@@ -58,7 +58,9 @@ public class HostActivity extends Activity {
             registrationListener = null;
         }
         try {
-            serverSocket.close();
+            if(serverSocket != null) {
+                serverSocket.close();
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
