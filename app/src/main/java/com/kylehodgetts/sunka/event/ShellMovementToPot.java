@@ -22,7 +22,7 @@ public class ShellMovementToPot implements Event {
         return shells;
     }
 
-    public int getPlayerPotIndex() {
+    public int getPlayerIndexOfThisPot() {
         return playerPotIndex;
     }
 

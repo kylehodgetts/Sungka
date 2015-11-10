@@ -1,14 +1,7 @@
 package com.kylehodgetts.sunka.controller;
 
 import android.app.Activity;
-import android.graphics.Color;
-import android.widget.GridLayout;
-import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 
-import com.kylehodgetts.sunka.R;
 import com.kylehodgetts.sunka.controller.bus.Event;
 import com.kylehodgetts.sunka.controller.bus.EventBus;
 import com.kylehodgetts.sunka.controller.bus.EventHandler;
@@ -19,8 +12,10 @@ import com.kylehodgetts.sunka.event.NewGame;
 import com.kylehodgetts.sunka.event.NextTurn;
 import com.kylehodgetts.sunka.event.PlayerChoseTray;
 import com.kylehodgetts.sunka.event.ShellMovement;
+import com.kylehodgetts.sunka.event.ShellMovementToPot;
 import com.kylehodgetts.sunka.model.Board;
 import com.kylehodgetts.sunka.model.GameState;
+import com.kylehodgetts.sunka.model.Player;
 import com.kylehodgetts.sunka.util.Tuple2;
 
 import java.util.Timer;
@@ -34,7 +29,7 @@ import java.util.TimerTask;
  */
 public class GameManager extends EventHandler<GameState> {
 
-    private static final int delay = 300;
+    private static final int delay = 1000;
     private Timer timer;
     private EventBus<GameState> bus;
 
@@ -60,8 +55,11 @@ public class GameManager extends EventHandler<GameState> {
 
         if (event instanceof PlayerChoseTray) {
             return new Tuple2<>(playerSelectedTrayEvent(state, (PlayerChoseTray) event), true);
-        } else if (event instanceof ShellMovement)
+        } else if (event instanceof ShellMovement) {
             return new Tuple2<>(placeShellEvent(state, (ShellMovement) event), true);
+        } else if (event instanceof ShellMovementToPot) {
+            return new Tuple2<>(placeShellInPotEvent(state, (ShellMovementToPot) event), true);
+        }
         else if (event instanceof NextTurn) {
             if (((NextTurn) event).finishInit()) {
                 state.finishInit();
@@ -100,14 +98,13 @@ public class GameManager extends EventHandler<GameState> {
             if (state.getCurrentPlayerIndex() == -1)
                 state.setCurrentPlayerIndex(trayChosen.getPlayerIndex());
             if (state.isInitialising()) state.nextInitPhase(trayChosen.getPlayerIndex());
-            scheduleEvent(new ShellMovement(trayIndex == 6 ? 0 : trayIndex + 1, trayIndex == 6 ? (playerIndex + 1) % 2 : playerIndex, state.getBoard().emptyTray(playerIndex, trayIndex), true, trayChosen.getPlayerIndex()), delay, trayChosen.getPlayerIndex());
 
+            shells = state.getBoard().emptyTray(playerIndex, trayIndex);
+            moveShellsToNextPosition(trayIndex, playerIndex, shells, playerIndex);
 
         }
         return state;
     }
-
-    //TODO rename this to remove the 'event' bit
 
     /**
      * Processes one of the move tick of the players move
@@ -120,44 +117,59 @@ public class GameManager extends EventHandler<GameState> {
         int trayIndex = move.getTrayIndex();
         int playerIndex = move.getPlayerIndex();
         int shellsLeft = move.getShellsStillToBePlaced();
-        boolean first = move.isFirstShellMoved();
-        int player = move.getPlayer();
-        boolean repeatTurn = false;
+        int playerWhoTurnItIs = move.getPlayer();
 
-        //we go past the pot and then have to go back, which is why the animation 'skips' when adding to the pots
-        if (first && trayIndex == 0) {
-            //TODO fix disgusting hack for fixing of the moving straight into the store. Schedule same event, but with one less shell?
-            state.getPlayerFor(player).addToPot(1);
-            scheduleEvent(new HighlightPlayerStore(player), 0, player);
-            shellsLeft--;
-            repeatTurn = true;
-            if (shellsLeft > 0) {
-                state.getBoard().incrementTray(playerIndex, trayIndex);
-                shellsLeft--;
-                repeatTurn = false;
-            }
+        state.getBoard().incrementTray(playerIndex, trayIndex);
+        shellsLeft--;
 
+        if (shellsLeft > 0) {
+            moveShellsToNextPosition(trayIndex, playerIndex, shellsLeft, playerWhoTurnItIs);
+            return state;
         } else {
-            state.getBoard().incrementTray(playerIndex, trayIndex);
-            shellsLeft--;
-            if (trayIndex == 6 && player == playerIndex && shellsLeft > 0) {
-                state.getPlayerFor(player).addToPot(1);
-                scheduleEvent(new HighlightPlayerStore(player), 0, player);
-                shellsLeft--;
-                repeatTurn = true;
-            }
+            return endTurn(state, trayIndex, playerIndex, false, playerWhoTurnItIs);
         }
 
-        if (shellsLeft == 0) {
-            return endTurn(state, trayIndex, playerIndex, repeatTurn, player);
+    }
+
+    private GameState placeShellInPotEvent(GameState state, ShellMovementToPot event) {
+
+        int p = event.getPlayerIndexOfThisPot();
+        Player player = (p == 0) ? state.getPlayer1() : state.getPlayer2();
+        player.addToPot(1);
+
+
+        scheduleEvent(new HighLightTray(0, event.getNextPlayerIndex(), event.getPlayerIndexOfThisPot()), 0, event.getPlayerIndexOfThisPot());
+        scheduleEvent(new ShellMovement(0, event.getNextPlayerIndex(), event.getShells() - 1, false, event.getPlayerIndexOfThisPot()), delay, event.getPlayerIndexOfThisPot());
+
+        return state;
+    }
+
+
+    /**
+     * Figures out where we should move next, and schedules all relevant events
+     *
+     * @param trayIndex         the board index of the current tray
+     * @param playerIndex       the board index of current player
+     * @param shellsLeft        the number of shells left to palce
+     * @param playerWhoTurnItIs the player index of who's turn it is
+     */
+    private void moveShellsToNextPosition(int trayIndex, int playerIndex, int shellsLeft, int playerWhoTurnItIs) {
+
+        if (trayIndex == 6) {
+            if (playerWhoTurnItIs == playerIndex) {
+                scheduleEvent(new HighlightPlayerStore(playerWhoTurnItIs), 0, playerWhoTurnItIs);
+                scheduleEvent(new ShellMovementToPot(playerWhoTurnItIs, shellsLeft), delay, playerWhoTurnItIs);
+            } else {
+                int otherPlayer = (playerIndex + 1) % 2;
+                scheduleEvent(new HighLightTray(0, otherPlayer, playerWhoTurnItIs), 0, playerWhoTurnItIs);
+                scheduleEvent(new ShellMovement(0, otherPlayer, shellsLeft, false, playerWhoTurnItIs), delay, playerWhoTurnItIs);
+            }
         } else {
-            scheduleEvent(new HighLightTray(trayIndex == 6 ? 0 : trayIndex + 1, trayIndex == 6 ? (playerIndex + 1) % 2 : playerIndex, player), 0, player);
-            scheduleEvent(new ShellMovement(trayIndex == 6 ? 0 : trayIndex + 1, trayIndex == 6 ? (playerIndex + 1) % 2 : playerIndex, shellsLeft, false, player), delay, player);
-            return state;
+            scheduleEvent(new HighLightTray(trayIndex + 1, playerIndex, playerWhoTurnItIs), 0, playerWhoTurnItIs);
+            scheduleEvent(new ShellMovement(trayIndex + 1, playerIndex, shellsLeft, false, playerWhoTurnItIs), delay, playerWhoTurnItIs);
         }
     }
 
-    //TODO rename this so all individual event handler methods have a consistent naming scheme
 
     /**
      * Processes the end of the turn for current player
@@ -198,6 +210,7 @@ public class GameManager extends EventHandler<GameState> {
 
 
     //TODO potentially move this into the bus class for less code replication
+
     /**
      * Schedules an event to the timer for later dispatching
      *
