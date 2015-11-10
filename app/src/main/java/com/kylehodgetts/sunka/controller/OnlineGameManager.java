@@ -40,17 +40,12 @@ public class OnlineGameManager extends EventHandler<GameState>{
                     gameIsRunning = true;
                     Log.d("OnlineGameManager: ", "Game is running");
                     BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-                    while(!Thread.interrupted()){
-                        if(socket.getInputStream().available() > 0) {
-                            String recieved = bufferedReader.readLine();
-                            Log.d("Being recieved", recieved);
-                            String[] read = bufferedReader.readLine().split("-");
-
-                            int tray, player;
-                            if(read.length == 2) {
-                                tray = Integer.parseInt(read[0]);
-                                player = Integer.parseInt(read[1]);
-                                bus.feedEvent(new PlayerChoseTray(tray, player));
+                    while(gameIsRunning){
+                        if(socket.getInputStream().available() > 0 && socket.getLocalAddress() != socket.getInetAddress()) {
+                            String received = bufferedReader.readLine();
+                            Log.d("Being recieved", received);
+                            if(received != null) {
+                                bus.feedEvent(new PlayerChoseTray(Integer.parseInt(received), 1));
                             }
                         }
                     }
@@ -63,11 +58,11 @@ public class OnlineGameManager extends EventHandler<GameState>{
 
     @Override
     public Tuple2<GameState, Boolean> handleEvent(Event event, GameState state) {
-        if (event instanceof PlayerChoseTray){
+        if (event instanceof PlayerChoseTray && ((PlayerChoseTray) event).getPlayerIndex() == 0){
             try {
                 PrintWriter writer = new PrintWriter(new BufferedWriter(new OutputStreamWriter(socket.getOutputStream())));
-                writer.println(((PlayerChoseTray) event).getTrayIndex() + "-" + ((PlayerChoseTray) event).getPlayerIndex());
-                Log.d("Being sent", ((PlayerChoseTray) event).getTrayIndex() + "-" + ((PlayerChoseTray) event).getPlayerIndex());
+                writer.println(((PlayerChoseTray) event).getTrayIndex());
+                Log.d("Being sent", ((PlayerChoseTray) event).getTrayIndex()+"");
                 writer.flush();
                 return new Tuple2<>(state, true);
             } catch (IOException e) {
@@ -78,7 +73,5 @@ public class OnlineGameManager extends EventHandler<GameState>{
     }
 
     @Override
-    public void updateView(GameState state, Activity activity) {
-        Log.d("OnlineGameManager", "updateView()");
-    }
+    public void updateView(GameState state, Activity activity) {}
 }
