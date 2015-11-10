@@ -7,11 +7,13 @@ import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.ShapeDrawable;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.ViewFlipper;
 
@@ -220,11 +222,15 @@ public class ViewManager extends EventHandler<GameState> {
                         ImageButton button = (ImageButton) linearLayout.findViewById(R.id.button);
                         button.setPadding(35, 35, 35, 35); // In order to make the image scale
                         int currentTrayShellCount = currentBoard.getTray(row, column);
-                        if (currentTrayShellCount < 9) {
-                            button.setImageResource(activity.getResources().getIdentifier("s" + currentTrayShellCount, "drawable", activity.getPackageName()));
-                        } else {
-                            button.setImageResource(activity.getResources().getIdentifier("s9", "drawable", activity.getPackageName()));
-                        }
+
+
+
+
+//                        if (currentTrayShellCount < 9) {
+//                            button.setImageResource(activity.getResources().getIdentifier("s" + currentTrayShellCount, "drawable", activity.getPackageName()));
+//                        } else {
+//                            button.setImageResource(activity.getResources().getIdentifier("s9", "drawable", activity.getPackageName()));
+//                        }
                     }
                 }
 

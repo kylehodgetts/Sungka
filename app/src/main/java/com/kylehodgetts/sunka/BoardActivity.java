@@ -6,12 +6,14 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.GridLayout;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 
 import com.kylehodgetts.sunka.controller.AIManager;
 import com.kylehodgetts.sunka.controller.GameManager;
@@ -23,7 +25,10 @@ import com.kylehodgetts.sunka.event.TrayOnClickListener;
 import com.kylehodgetts.sunka.model.Board;
 import com.kylehodgetts.sunka.model.GameState;
 import com.kylehodgetts.sunka.model.Player;
+import com.kylehodgetts.sunka.uiutil.ShellDrawable;
 import com.kylehodgetts.sunka.util.FileUtility;
+
+import java.util.Random;
 
 /**
  * Board Activity Class used to create the game board. Inflate and style the board to the user's
@@ -38,7 +43,6 @@ import com.kylehodgetts.sunka.util.FileUtility;
 public class BoardActivity extends AppCompatActivity {
 
     private static int gameType;
-    private GameState state;
 
     public static final int ONEPLAYER = 1;
     public static final int TWOPLAYER = 2;
@@ -47,7 +51,8 @@ public class BoardActivity extends AppCompatActivity {
     public static final String EXTRA_INT = "com.kylehodgetts.sunka.boardactivity.gametype";
     private static final String FILE_NAME = "sungkasave";
 
-    View decorView;
+    private View decorView;
+    private GameState state;
 
     /**
      * Creates the board activity, instantiates all necessary objects and sets the content view for
@@ -71,6 +76,7 @@ public class BoardActivity extends AppCompatActivity {
         }
 
         EventBus<GameState> bus = new EventBus<>(state, this);
+        state = new GameState(new Board(), new Player(), new Player());
         bus.registerHandler(new GameManager(bus));
         bus.registerHandler(new ViewManager(bus, this));
         if (gameType == ONEPLAYER) {
@@ -190,6 +196,9 @@ public class BoardActivity extends AppCompatActivity {
             for (int i = 0; i < gridLayout.getChildCount(); ++i) {
                 int width = gridLayout.getChildAt(i).getWidth();
                 gridLayout.getChildAt(i).setMinimumHeight(width);
+                if(state.getInitialising() == -2) {
+                    createShells((ImageButton) gridLayout.getChildAt(i).findViewById(R.id.button));
+                }
             }
         }
     }
@@ -211,5 +220,27 @@ public class BoardActivity extends AppCompatActivity {
      */
     public static int getGameType() {
         return gameType;
+    }
+    public void createShells(ImageButton button) {
+        Random random = new Random();
+
+        for(int shell=0; shell < 7; ++shell) {
+            int[] coordinates = new int[2];
+            button.getLocationOnScreen(coordinates);
+            int xLeft = coordinates[0];
+            int yTop = coordinates[1];
+            int xRight = xLeft + button.getWidth() - button.getPaddingRight() - button.getPaddingLeft();
+            int yBottom = yTop + button.getHeight() + button.getPaddingTop() - button.getPaddingBottom();
+            Log.d("xLeft", xLeft + "");
+            Log.d("yTop", yTop+"");
+            Log.d("xRight", xRight+"");
+            Log.d("yBottom", yBottom+"");
+
+            ShellDrawable shellDrawable = new ShellDrawable(this, (random.nextInt(xRight-xLeft) + xLeft) - 100,
+                    (random.nextInt(yBottom-yTop) + yTop)
+                    , 40, 20);
+            RelativeLayout relativeLayout = (RelativeLayout) this.findViewById(R.id.relativeLayout);
+            relativeLayout.addView(shellDrawable);
+        }
     }
 }

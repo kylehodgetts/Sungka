@@ -249,7 +249,6 @@
                     android:textAppearance="?android:attr/textAppearanceMedium" />
             </LinearLayout>
         </LinearLayout>
-
     </LinearLayout>
 </ViewFlipper>
 

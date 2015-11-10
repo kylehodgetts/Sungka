@@ -3,6 +3,7 @@ package com.kylehodgetts.sunka.uiutil;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.OvalShape;
 import android.view.View;
@@ -78,6 +79,5 @@ public class ShellDrawable extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         shell.draw(canvas);
-        canvas.drawOval(x, y, width, length, shell.getPaint());
     }
 }
