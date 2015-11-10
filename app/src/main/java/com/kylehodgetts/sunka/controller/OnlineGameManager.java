@@ -1,7 +1,6 @@
 package com.kylehodgetts.sunka.controller;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.util.Log;
 
 import com.kylehodgetts.sunka.controller.wifi.SingletonSocket;

@@ -107,6 +107,7 @@ public class HostActivity extends Activity {
 
             @Override
             public void onServiceUnregistered(NsdServiceInfo serviceInfo) {
+
             }
         };
     }
