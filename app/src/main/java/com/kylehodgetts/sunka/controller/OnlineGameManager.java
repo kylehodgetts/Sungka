@@ -13,7 +13,6 @@ import com.kylehodgetts.sunka.util.Tuple2;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
@@ -40,9 +39,9 @@ public class OnlineGameManager extends EventHandler<GameState>{
                 try {
                     gameIsRunning = true;
                     Log.d("OnlineGameManager: ", "Game is running");
+                    BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
                     while(!Thread.interrupted()){
                         if(socket.getInputStream().available() > 0) {
-                            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
                             String recieved = bufferedReader.readLine();
                             Log.d("Being recieved", recieved);
                             String[] read = bufferedReader.readLine().split("-");
