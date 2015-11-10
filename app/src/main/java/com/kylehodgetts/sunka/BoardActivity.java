@@ -33,6 +33,8 @@ import com.kylehodgetts.sunka.model.Player;
  */
 public class BoardActivity extends AppCompatActivity {
 
+    private static int gameType;
+
     //TODO: Implement OnPause, OnResume, OnStop methods. And within all other necessary classes
     public static final int ONEPLAYER = 1;
     public static final int TWOPLAYER = 2;
@@ -56,7 +58,7 @@ public class BoardActivity extends AppCompatActivity {
 
         this.setContentView(R.layout.activity_board);
 
-        int gameType = getIntent().getIntExtra(EXTRA_INT, 0);
+        gameType = getIntent().getIntExtra(EXTRA_INT, 0);
 
         GameState state = new GameState(new Board(), new Player(), new Player());
         EventBus<GameState> bus = new EventBus<>(state, this);
@@ -156,6 +158,10 @@ public class BoardActivity extends AppCompatActivity {
     public void returnToMainMenu(View view) {
         Intent intent = new Intent(BoardActivity.this, MainActivity.class);
         BoardActivity.this.startActivity(intent);
+    }
+
+    public static int getGameType() {
+        return gameType;
     }
 
 }
