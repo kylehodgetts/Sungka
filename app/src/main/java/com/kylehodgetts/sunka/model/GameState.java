@@ -1,6 +1,8 @@
 package com.kylehodgetts.sunka.model;
 
 import com.kylehodgetts.sunka.controller.bus.BusState;
+import com.kylehodgetts.sunka.controller.bus.EventBus;
+import com.kylehodgetts.sunka.event.PlayerChoseTray;
 
 /**
  * @author Adam Chlupacek
@@ -17,7 +19,7 @@ public class GameState implements BusState {
     private int currentPlayerIndex;
     private int initialising; // VALUE -2(noone has pressed anything yet); -1(player1 has pressed); 0(player2 has pressed); 1(All user init action done, waiting for processing); 2(No more init)
     private boolean doingMove;
-
+    private boolean aiInitialised; // If we require to use ai at the very start.
 
     public GameState(Board board, Player player1, Player player2) {
         this.board = board;
@@ -89,7 +91,17 @@ public class GameState implements BusState {
     public boolean playerInitialising(int player) {
         if (initialising > 1) return false;
         else
-            return initialising < -1 || (player == 0 && initialising == 0) || (player == 1 && initialising == -1);
+        return initialising < -1 || (player == 0 && initialising == 0) || (player == 1 && initialising == -1);
+
+    }
+    public void aiInitialisationMove( EventBus<GameState> initialEventGameState,int ai){
+       int xPosition = (int) (Math.random()* 6.0);
+
+       if(!aiInitialised) {
+           initialEventGameState.feedEvent(new PlayerChoseTray(xPosition,ai));
+           nextInitPhase(ai);
+           aiInitialised = true;
+        }
     }
 
     public Player getPlayerFor(int player) {

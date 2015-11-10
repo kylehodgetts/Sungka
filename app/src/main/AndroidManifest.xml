@@ -3,14 +3,14 @@
     package="com.kylehodgetts.sunka">
 
     <uses-permission
-        android:required="true"
-        android:name="android.permission.ACCESS_WIFI_STATE"/>
+        android:name="android.permission.ACCESS_WIFI_STATE"
+        android:required="true" />
     <uses-permission
-        android:required="true"
-        android:name="android.permission.CHANGE_WIFI_STATE"/>
+        android:name="android.permission.CHANGE_WIFI_STATE"
+        android:required="true" />
     <uses-permission
-        android:required="true"
-        android:name="android.permission.INTERNET"/>
+        android:name="android.permission.INTERNET"
+        android:required="true" />
 
     <application
         android:allowBackup="true"
@@ -30,6 +30,7 @@
 
         </activity>
         <activity android:name=".WiFiDirectActivity"></activity>
+        <activity android:name=".HostActivity"></activity>
     </application>
 
 </manifest>
