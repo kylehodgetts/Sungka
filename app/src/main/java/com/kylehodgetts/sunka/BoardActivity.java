@@ -9,11 +9,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.GridLayout;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.Space;
 
 import com.kylehodgetts.sunka.controller.GameManager;
@@ -24,6 +26,9 @@ import com.kylehodgetts.sunka.event.TrayOnClickListener;
 import com.kylehodgetts.sunka.model.Board;
 import com.kylehodgetts.sunka.model.GameState;
 import com.kylehodgetts.sunka.model.Player;
+import com.kylehodgetts.sunka.uiutil.ShellDrawable;
+
+import java.util.Random;
 
 
 /**
@@ -36,7 +41,8 @@ public class BoardActivity extends AppCompatActivity {
 
     //TODO: Implement OnPause, OnResume, OnStop methods. And within all other necessary classes
 
-    View decorView;
+    private View decorView;
+    private GameState state;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,11 +51,12 @@ public class BoardActivity extends AppCompatActivity {
         decorView = getWindow().getDecorView();
 
         this.setContentView(R.layout.activity_board);
-        GameState state = new GameState(new Board(), new Player(), new Player());
+        state = new GameState(new Board(), new Player(), new Player());
         EventBus<GameState> bus = new EventBus<>(state,this);
         bus.registerHandler(new GameManager(bus));
         bus.registerHandler(new ViewManager(bus, this));
         makeXMLButtons(bus); bus.feedEvent(new NewGame());
+
 
 }
 
@@ -103,6 +110,9 @@ public class BoardActivity extends AppCompatActivity {
             for(int i = 0; i < gridLayout.getChildCount(); ++i) {
                 int width = gridLayout.getChildAt(i).getWidth();
                 gridLayout.getChildAt(i).setMinimumHeight(width);
+                if(state.getInitialising() == -2) {
+                    createShells((ImageButton) gridLayout.getChildAt(i).findViewById(R.id.button));
+                }
             }
         }
     }
@@ -113,6 +123,29 @@ public class BoardActivity extends AppCompatActivity {
     public void returnToMainMenu(View view){
         Intent intent = new Intent(BoardActivity.this,MainActivity.class);
         BoardActivity.this.startActivity(intent);
+    }
+
+    public void createShells(ImageButton button) {
+        Random random = new Random();
+
+        for(int shell=0; shell < 7; ++shell) {
+            int[] coordinates = new int[2];
+            button.getLocationOnScreen(coordinates);
+            int xLeft = coordinates[0];
+            int yTop = coordinates[1];
+            int xRight = xLeft + button.getWidth() - button.getPaddingRight() - button.getPaddingLeft();
+            int yBottom = yTop + button.getHeight() + button.getPaddingTop() - button.getPaddingBottom();
+            Log.d("xLeft", xLeft+"");
+            Log.d("yTop", yTop+"");
+            Log.d("xRight", xRight+"");
+            Log.d("yBottom", yBottom+"");
+
+            ShellDrawable shellDrawable = new ShellDrawable(this, (random.nextInt(xRight-xLeft) + xLeft) - 100,
+                    (random.nextInt(yBottom-yTop) + yTop)
+                    , 40, 20);
+            RelativeLayout relativeLayout = (RelativeLayout) this.findViewById(R.id.relativeLayout);
+            relativeLayout.addView(shellDrawable);
+        }
     }
 
 }

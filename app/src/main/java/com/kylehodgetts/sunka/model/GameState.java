@@ -103,4 +103,6 @@ public class GameState implements BusState {
     public void setDoingMove(boolean doingMove) {
         this.doingMove = doingMove;
     }
+
+    public int getInitialising() { return initialising; }
 }
