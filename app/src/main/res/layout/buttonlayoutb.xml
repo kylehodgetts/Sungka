@@ -4,8 +4,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <ImageButton
-        android:id="@+id/button"
+    <RelativeLayout
         style="?android:attr/buttonStyleSmall"
         android:layout_width="match_parent"
         android:layout_height="0dp"

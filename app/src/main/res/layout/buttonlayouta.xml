@@ -12,8 +12,7 @@
         android:textAlignment="center"
         android:textSize="12sp" />
 
-    <ImageButton
-        android:id="@+id/button"
+    <RelativeLayout
         style="?android:attr/buttonStyleSmall"
         android:layout_width="match_parent"
         android:layout_height="0dp"

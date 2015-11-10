@@ -2,6 +2,8 @@ package com.kylehodgetts.sunka;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.Point;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
@@ -145,7 +147,7 @@ public class BoardActivity extends AppCompatActivity {
                 }
                 linearLayout.setId(Integer.parseInt(player + "" + tray));
 
-                ImageButton button = (ImageButton) linearLayout.findViewById(R.id.button);
+                RelativeLayout button = (RelativeLayout) linearLayout.findViewById(R.id.button);
 
                 // Due to grid layout weights only being available from API 21 onwards to scale the layout
                 GridLayout.LayoutParams param = new GridLayout.LayoutParams();
@@ -195,9 +197,12 @@ public class BoardActivity extends AppCompatActivity {
 
             for (int i = 0; i < gridLayout.getChildCount(); ++i) {
                 int width = gridLayout.getChildAt(i).getWidth();
-                gridLayout.getChildAt(i).setMinimumHeight(width);
+                GridLayout.LayoutParams llparams = new GridLayout.LayoutParams();
+                llparams.width = width;
+                llparams.height = width;
+                gridLayout.getChildAt(i).setLayoutParams(llparams);
                 if(state.getInitialising() == -2) {
-                    createShells((ImageButton) gridLayout.getChildAt(i).findViewById(R.id.button));
+                    createShells((RelativeLayout) gridLayout.getChildAt(i).findViewById(R.id.button));
                 }
             }
         }
@@ -221,7 +226,8 @@ public class BoardActivity extends AppCompatActivity {
     public static int getGameType() {
         return gameType;
     }
-    public void createShells(ImageButton button) {
+
+    public void createShells(RelativeLayout button) {
         Random random = new Random();
 
         for(int shell=0; shell < 7; ++shell) {
@@ -236,11 +242,15 @@ public class BoardActivity extends AppCompatActivity {
             Log.d("xRight", xRight+"");
             Log.d("yBottom", yBottom+"");
 
-            ShellDrawable shellDrawable = new ShellDrawable(this, (random.nextInt(xRight-xLeft) + xLeft) - 100,
-                    (random.nextInt(yBottom-yTop) + yTop)
-                    , 40, 20);
-            RelativeLayout relativeLayout = (RelativeLayout) this.findViewById(R.id.relativeLayout);
-            relativeLayout.addView(shellDrawable);
+            ShellDrawable shellDrawable = new ShellDrawable(this, 0, 0, 40, 20);
+            RelativeLayout.LayoutParams shellParams = new RelativeLayout.LayoutParams(40, 20);
+            shellParams.leftMargin = random.nextInt(button.getWidth());
+            shellParams.topMargin = random.nextInt(button.getHeight());
+            shellParams.width = 40;
+            shellParams.height = 40;
+            shellDrawable.setLayoutParams(shellParams);
+            shellDrawable.setBackgroundColor(Color.TRANSPARENT);
+            button.addView(shellDrawable, shellParams);
         }
     }
 }
