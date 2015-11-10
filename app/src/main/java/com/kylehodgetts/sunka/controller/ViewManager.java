@@ -1,17 +1,11 @@
 package com.kylehodgetts.sunka.controller;
 
 import android.app.Activity;
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
-import android.graphics.drawable.ShapeDrawable;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -27,10 +21,7 @@ import com.kylehodgetts.sunka.event.HighlightPlayerStore;
 import com.kylehodgetts.sunka.event.NewGame;
 import com.kylehodgetts.sunka.model.Board;
 import com.kylehodgetts.sunka.model.GameState;
-import com.kylehodgetts.sunka.uiutil.ShellDrawable;
 import com.kylehodgetts.sunka.util.Tuple2;
-
-import java.util.Random;
 
 
 /**
@@ -126,7 +117,7 @@ public class ViewManager extends EventHandler<GameState> {
                 int currentPlayersTurn = ((HighLightTray) event).getCurrentPlayersTurn();
 
                 LinearLayout linearLayout = (LinearLayout) activity.findViewById(Integer.parseInt(player+""+tray));
-                ImageButton imageButton = (ImageButton) linearLayout.findViewById(R.id.button);
+                RelativeLayout imageButton = (RelativeLayout) linearLayout.findViewById(R.id.button);
                 GradientDrawable drawable = (GradientDrawable) imageButton.getBackground().getConstantState().newDrawable().mutate();
 
                 drawable.setStroke(8, currentPlayersTurn == 0 ? Color.parseColor("#C4213C") : Color.parseColor("#2D8BA8"));
@@ -170,7 +161,7 @@ public class ViewManager extends EventHandler<GameState> {
                         LinearLayout linearLayout = (LinearLayout) activity.findViewById(Integer.parseInt(row + "" + column));
                         TextView textView = (TextView) linearLayout.findViewById(R.id.tv);
                         textView.setText(Integer.toString(currentBoard.getTray(row, column)));
-                        ImageButton button = (ImageButton) linearLayout.findViewById(R.id.button);
+                        RelativeLayout button = (RelativeLayout) linearLayout.findViewById(R.id.button);
                         button.setPadding(35, 35, 35, 35); // In order to make the image scale
                         int currentTrayShellCount = currentBoard.getTray(row, column);
 
@@ -209,9 +200,9 @@ public class ViewManager extends EventHandler<GameState> {
         for (int player = 0; player < 2; ++player) {
             for (int tray = 0; tray < 7; ++tray) {
                 LinearLayout linearLayout = (LinearLayout) activity.findViewById(Integer.parseInt(player + "" + tray));
-                ImageButton imageButton = (ImageButton) linearLayout.findViewById(R.id.button);
-                imageButton.setBackgroundResource(player == 0 ? R.drawable.buttonb : R.drawable.buttona);
-                imageButton.setPadding(35, 35, 35, 35);
+                RelativeLayout button = (RelativeLayout) linearLayout.findViewById(R.id.button);
+                button.setBackgroundResource(player == 0 ? R.drawable.buttonb : R.drawable.buttona);
+                button.setPadding(35, 35, 35, 35);
 
                 if (!state.isInitialising()) {
                     TextView tv = (TextView) linearLayout.findViewById(R.id.tv);
@@ -247,9 +238,9 @@ public class ViewManager extends EventHandler<GameState> {
 
         for (int tray = 0; tray < 7; ++tray) {
             LinearLayout linearLayout = (LinearLayout) activity.findViewById(Integer.parseInt((playersTurn == 0 ? "1" : "0") + "" + tray));
-            ImageButton imageButton = (ImageButton) linearLayout.findViewById(R.id.button);
-            imageButton.setBackgroundResource(R.drawable.buttontransparent);
-            imageButton.setPadding(35, 35, 35, 35);
+            RelativeLayout button = (RelativeLayout) linearLayout.findViewById(R.id.button);
+            button.setBackgroundResource(R.drawable.buttontransparent);
+            button.setPadding(35, 35, 35, 35);
         }
     }
 

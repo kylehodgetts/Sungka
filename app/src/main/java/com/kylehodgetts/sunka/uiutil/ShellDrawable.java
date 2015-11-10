@@ -7,6 +7,8 @@ import android.graphics.Paint;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.OvalShape;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.GridLayout;
 
 import java.util.Random;
 
@@ -31,13 +33,14 @@ public class ShellDrawable extends View {
         this.y = y;
         this.width = width;
         this.length = length;
+        setMinimumWidth(width);
+        setMinimumHeight(length);
 
         shell = new ShapeDrawable(new OvalShape());
         shell.setBounds(x, y, x + width, y + length);
 
         Random random = new Random();
         shell.getPaint().setColor(Color.parseColor(colours[random.nextInt(colours.length)]));  //sets colour randomly
-
     }
 
     public int getLength() {
