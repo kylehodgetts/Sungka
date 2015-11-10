@@ -24,6 +24,8 @@ import java.util.Enumeration;
  * @author Kyle Hodgetts
  * @author Adam Chlupacek
  * @version 1.0
+ *
+ * Activity that commences that starts the game server on the hosting device
  */
 public class HostActivity extends Activity {
     private static final int PORT = 8080;
@@ -64,6 +66,10 @@ public class HostActivity extends Activity {
         Log.d("HostActivity: ", "onDestroy");
     }
 
+    /**
+     *
+     * @param port port to register service to.
+     */
     public void registerService(int port) {
         NsdServiceInfo serviceInfo = null;
         serviceInfo = new NsdServiceInfo();
@@ -75,6 +81,9 @@ public class HostActivity extends Activity {
         nsdManager.registerService(serviceInfo, NsdManager.PROTOCOL_DNS_SD, registrationListener);
     }
 
+    /**
+     * Invoked when the registration listener is null
+     */
     public void initialiseRegistrationListener() {
         registrationListener = new NsdManager.RegistrationListener() {
             @Override
@@ -102,6 +111,11 @@ public class HostActivity extends Activity {
         };
     }
 
+    /**
+     * @author Kyle Hodgetts
+     * @version 1.0
+     * Repsonsible for the server connection
+     */
     private class SocketServerThread extends Thread {
         static final int PORT = 8080;
 
@@ -118,7 +132,11 @@ public class HostActivity extends Activity {
 
                 Socket socket = serverSocket.accept();
                 Log.d("HostActivity: ", "Connection accepted");
-                //At this point, the connection has been accepted
+
+                /*
+                 * At this point, the connection has been accepted
+                 * Create intent, set the socket and open the board activity
+                 */
                 Intent i = new Intent(HostActivity.this, BoardActivity.class);
                 SingletonSocket.setSocket(socket);
                 i.putExtra(BoardActivity.EXTRA_INT, BoardActivity.ONLINE);
