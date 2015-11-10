@@ -196,7 +196,7 @@ public class WiFiDirectActivity extends Activity {
         protected Void doInBackground(Void... arg0) {
             Log.d(TAG, "MyClientTask Started");
 
-            Socket socket = null;
+            Socket socket;
 
             try {
                 socket = new Socket(dstAddress, dstPort);

@@ -90,7 +90,7 @@ public class HostActivity extends Activity {
             public void onServiceRegistered(NsdServiceInfo serviceInfo) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
                     serviceName = serviceInfo.getServiceName();
-                    Log.d("HOST ACTIVITY: ", "Something happened");
+                    Log.d("HOST ACTIVITY: ", "Service registered");
                 }
                 Thread serverSocketThread = new Thread(new SocketServerThread());
                 serverSocketThread.start();
@@ -117,6 +117,8 @@ public class HostActivity extends Activity {
                 });
 
                 Socket socket = serverSocket.accept();
+                Log.d("HostActivity: ", "Connection accepted");
+                //At this point, the connection has been accepted
                 Intent i = new Intent(HostActivity.this, BoardActivity.class);
                 SingletonSocket.setSocket(socket);
                 i.putExtra(BoardActivity.EXTRA_INT, BoardActivity.ONLINE);
