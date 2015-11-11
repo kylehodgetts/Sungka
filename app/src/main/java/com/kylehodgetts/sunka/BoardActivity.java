@@ -144,10 +144,10 @@ public class BoardActivity extends AppCompatActivity {
 
             GridLayout gridLayout = (GridLayout) findViewById(R.id.gridLayout);
 
-            for (int i = 0; i < gridLayout.getChildCount(); ++i) {
-                int width = gridLayout.getChildAt(i).getWidth();
-                gridLayout.getChildAt(i).setMinimumHeight(width);
-            }
+//            for (int i = 0; i < gridLayout.getChildCount(); ++i) {
+//                int width = gridLayout.getChildAt(i).getWidth();
+//                gridLayout.getChildAt(i).setMinimumHeight(width);
+//            }
         }
     }
 
