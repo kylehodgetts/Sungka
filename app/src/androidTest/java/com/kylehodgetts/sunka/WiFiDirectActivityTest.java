@@ -36,6 +36,7 @@ public class WiFiDirectActivityTest extends ActivityInstrumentationTestCase2<WiF
     public WiFiDirectActivityTest(){
         super(WiFiDirectActivity.class);
     }
+
     @Override
     public void setUp() throws Exception {
         super.setUp();

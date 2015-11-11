@@ -8,6 +8,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
         <TextView
+            android:id="@+id/labelHostAddress"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/hostAddress"/>
@@ -22,6 +23,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
         <TextView
+            android:id="@+id/labelHostPort"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/hostPort"/>
