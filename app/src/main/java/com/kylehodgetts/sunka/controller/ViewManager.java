@@ -133,27 +133,12 @@ public class ViewManager extends EventHandler<GameState> {
             @Override
             public void run() {
                 LinearLayout storeOne = (LinearLayout) activity.findViewById(R.id.playerBStore);
-                ImageButton playerOneStoreButton = (ImageButton) storeOne.findViewById(R.id.buttonbs);
                 TextView tvPlayerAStoreCount = (TextView) activity.findViewById(R.id.tvPlayerBStoreCount);
                 tvPlayerAStoreCount.setText(Integer.toString(state.getPlayer2().getStonesInPot()));
-                int playerAStoreShellCount = state.getPlayer1().getStonesInPot();
-                if (playerAStoreShellCount < 9) {
-                    playerOneStoreButton.setImageResource(activity.getResources().getIdentifier("s" + playerAStoreShellCount, "drawable", activity.getPackageName()));
-                } else {
-                    playerOneStoreButton.setImageResource(activity.getResources().getIdentifier("s9", "drawable", activity.getPackageName()));
-                }
 
                 LinearLayout storeTwo = (LinearLayout) activity.findViewById(R.id.playerAStore);
-                ImageButton playerTwoStoreButton = (ImageButton) storeTwo.findViewById(R.id.buttonas);
                 TextView tvPlayerBStoreCount = (TextView) activity.findViewById(R.id.tvPlayerAStoreCount);
                 tvPlayerBStoreCount.setText(Integer.toString(state.getPlayer1().getStonesInPot()));
-                int playerBStoreShellCount = state.getPlayer2().getStonesInPot();
-                if (playerBStoreShellCount < 9) {
-                    playerTwoStoreButton.setImageResource(activity.getResources().getIdentifier("s" + playerBStoreShellCount, "drawable", activity.getPackageName()));
-                } else {
-                    playerTwoStoreButton.setImageResource(activity.getResources().getIdentifier("s9", "drawable", activity.getPackageName()));
-                }
-
 
                 Board currentBoard = state.getBoard();
                 for (int row = 0; row < 2; ++row) {
@@ -161,18 +146,6 @@ public class ViewManager extends EventHandler<GameState> {
                         LinearLayout linearLayout = (LinearLayout) activity.findViewById(Integer.parseInt(row + "" + column));
                         TextView textView = (TextView) linearLayout.findViewById(R.id.tv);
                         textView.setText(Integer.toString(currentBoard.getTray(row, column)));
-                        RelativeLayout button = (RelativeLayout) linearLayout.findViewById(R.id.button);
-                        button.setPadding(35, 35, 35, 35); // In order to make the image scale
-                        int currentTrayShellCount = currentBoard.getTray(row, column);
-
-
-
-
-//                        if (currentTrayShellCount < 9) {
-//                            button.setImageResource(activity.getResources().getIdentifier("s" + currentTrayShellCount, "drawable", activity.getPackageName()));
-//                        } else {
-//                            button.setImageResource(activity.getResources().getIdentifier("s9", "drawable", activity.getPackageName()));
-//                        }
                     }
                 }
 

@@ -11,6 +11,8 @@ import com.kylehodgetts.sunka.event.HighlightPlayerStore;
 import com.kylehodgetts.sunka.event.NewGame;
 import com.kylehodgetts.sunka.event.NextTurn;
 import com.kylehodgetts.sunka.event.PlayerChoseTray;
+import com.kylehodgetts.sunka.event.ShellStoreAnimation;
+import com.kylehodgetts.sunka.event.ShellTrayAnimation;
 import com.kylehodgetts.sunka.event.ShellMovement;
 import com.kylehodgetts.sunka.model.Board;
 import com.kylehodgetts.sunka.model.GameState;
@@ -92,7 +94,7 @@ public class GameManager extends EventHandler<GameState> {
                 state.setCurrentPlayerIndex(trayChosen.getPlayerIndex());
             if (state.isInitialising()) state.nextInitPhase(trayChosen.getPlayerIndex());
             scheduleEvent(new ShellMovement(trayIndex == 6 ? 0 : trayIndex + 1, trayIndex == 6 ? (playerIndex + 1) % 2 : playerIndex, state.getBoard().emptyTray(playerIndex, trayIndex), true, trayChosen.getPlayerIndex()), delay, trayChosen.getPlayerIndex());
-
+            scheduleEvent(new ShellTrayAnimation(trayIndex == 6 ? 0: trayIndex + 1, trayIndex ,trayIndex == 6? (playerIndex + 1) % 2 : playerIndex, shells), delay, trayChosen.getPlayerIndex());
         
         }
         return state;
@@ -119,6 +121,7 @@ public class GameManager extends EventHandler<GameState> {
             //TODO fix disgusting hack for fixing of the moving straight into the store. Schedule same event, but with one less shell?
             state.getPlayerFor(player).addToPot(1);
             scheduleEvent(new HighlightPlayerStore(player), 0, player);
+            scheduleEvent(new ShellStoreAnimation(trayIndex, player), delay, playerIndex);
             shellsLeft--;
             repeatTurn = true;
             if (shellsLeft > 0) {
@@ -133,6 +136,7 @@ public class GameManager extends EventHandler<GameState> {
             if (trayIndex == 6 && player == playerIndex && shellsLeft > 0) {
                 state.getPlayerFor(player).addToPot(1);
                 scheduleEvent(new HighlightPlayerStore(player), 0, player);
+                scheduleEvent(new ShellStoreAnimation(trayIndex, player), delay, playerIndex);
                 shellsLeft--;
                 repeatTurn = true;
             }
@@ -143,6 +147,7 @@ public class GameManager extends EventHandler<GameState> {
         } else {
             scheduleEvent(new HighLightTray(trayIndex == 6 ? 0 : trayIndex + 1, trayIndex == 6 ? (playerIndex + 1) % 2 : playerIndex, player), 0, player);
             scheduleEvent(new ShellMovement(trayIndex == 6 ? 0 : trayIndex + 1, trayIndex == 6 ? (playerIndex + 1) % 2 : playerIndex, shellsLeft, false, player), delay, player);
+            scheduleEvent(new ShellTrayAnimation(trayIndex == 6? 0 : trayIndex + 1, trayIndex, trayIndex == 6? (playerIndex + 1) % 2 : playerIndex, shellsLeft), delay, trayIndex);
             return state;
         }
     }

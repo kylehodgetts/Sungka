@@ -19,6 +19,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Space;
 
+import com.kylehodgetts.sunka.controller.AnimationManager;
 import com.kylehodgetts.sunka.controller.GameManager;
 import com.kylehodgetts.sunka.controller.ViewManager;
 import com.kylehodgetts.sunka.controller.bus.EventBus;
@@ -43,19 +44,21 @@ public class BoardActivity extends AppCompatActivity {
     //TODO: Implement OnPause, OnResume, OnStop methods. And within all other necessary classes
 
     private View decorView;
-    private GameState state;
+    private boolean areShellsCreated;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         decorView = getWindow().getDecorView();
+        areShellsCreated = false;
 
         this.setContentView(R.layout.activity_board);
-        state = new GameState(new Board(), new Player(), new Player());
+        GameState state = new GameState(new Board(), new Player(), new Player());
         EventBus<GameState> bus = new EventBus<>(state,this);
         bus.registerHandler(new GameManager(bus));
         bus.registerHandler(new ViewManager(bus, this));
+        bus.registerHandler(new AnimationManager(bus, this));
         makeXMLButtons(bus); bus.feedEvent(new NewGame());
 
 
@@ -64,8 +67,8 @@ public class BoardActivity extends AppCompatActivity {
     private void makeXMLButtons(EventBus bus) {
         GridLayout gridlayout = (GridLayout) findViewById(R.id.gridLayout);
 
-        for(int i=0; i < 2; ++i) {
-            for(int j=0; j < 7; ++j) {
+        for(int i=1; i >= 0; --i) {
+            for(int j=6; j >= 0; --j) {
                 final LinearLayout linearLayout;
                 if(i==0) { linearLayout = (LinearLayout) getLayoutInflater().inflate(R.layout.buttonlayoutb, gridlayout, false); }
                 else { linearLayout = (LinearLayout) getLayoutInflater().inflate(R.layout.buttonlayouta, gridlayout, false); }
@@ -75,8 +78,8 @@ public class BoardActivity extends AppCompatActivity {
 
                 GridLayout.LayoutParams param = new GridLayout.LayoutParams();
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    param.columnSpec = GridLayout.spec(i == 1?6-j:j,2f);
-                    param.rowSpec = GridLayout.spec((i+1)%2, 2f);
+                    param.columnSpec = GridLayout.spec(i == 1?6-j:j,1f);
+                    param.rowSpec = GridLayout.spec((i+1)%2, 1f);
 
                 }
                 param.width= GridLayout.LayoutParams.WRAP_CONTENT;
@@ -109,15 +112,17 @@ public class BoardActivity extends AppCompatActivity {
             GridLayout gridLayout = (GridLayout) findViewById(R.id.gridLayout);
 
             for(int i = 0; i < gridLayout.getChildCount(); ++i) {
+                LinearLayout child = (LinearLayout) gridLayout.getChildAt(i);
                 int width = gridLayout.getChildAt(i).getWidth();
-                GridLayout.LayoutParams llparams = new GridLayout.LayoutParams();
+                GridLayout.LayoutParams llparams = (GridLayout.LayoutParams) child.getLayoutParams();
                 llparams.width = width;
-                llparams.height = width;
+                llparams.height = width + child.findViewById(R.id.tv).getHeight();
                 gridLayout.getChildAt(i).setLayoutParams(llparams);
-                if(state.getInitialising() == -2) {
-//                    createShells((RelativeLayout) gridLayout.getChildAt(i).findViewById(R.id.button));
+                if(!areShellsCreated) {
+                    createShells((RelativeLayout) gridLayout.getChildAt(i).findViewById(R.id.button));
                 }
             }
+            areShellsCreated = true;
         }
     }
 
@@ -133,25 +138,18 @@ public class BoardActivity extends AppCompatActivity {
         Random random = new Random();
 
         for(int shell=0; shell < 7; ++shell) {
-            int[] coordinates = new int[2];
-            button.getLocationOnScreen(coordinates);
-            int xLeft = coordinates[0];
-            int yTop = coordinates[1];
-            int xRight = xLeft + button.getWidth() - button.getPaddingRight() - button.getPaddingLeft();
-            int yBottom = yTop + button.getHeight() + button.getPaddingTop() - button.getPaddingBottom();
-            Log.d("xLeft", xLeft+"");
-            Log.d("yTop", yTop+"");
-            Log.d("xRight", xRight+"");
-            Log.d("yBottom", yBottom+"");
+            ShellDrawable shellDrawable = new ShellDrawable(this, random.nextInt(button.getWidth()/2),
+                    random.nextInt(button.getHeight()/2), 40, 20);
+            RelativeLayout.LayoutParams shellParams = new RelativeLayout.LayoutParams(
+                    RelativeLayout.LayoutParams.WRAP_CONTENT,
+                    RelativeLayout.LayoutParams.WRAP_CONTENT);
+            shellParams.leftMargin = 0;
+            shellParams.topMargin = 0;
+            shellParams.rightMargin = 0;
+            shellParams.bottomMargin = 0;
 
-            ShellDrawable shellDrawable = new ShellDrawable(this, 0, 0, 40, 20);
-            RelativeLayout.LayoutParams shellParams = new RelativeLayout.LayoutParams(40, 20);
-            shellParams.leftMargin = random.nextInt(button.getWidth());
-            shellParams.topMargin = random.nextInt(button.getHeight());
-            shellParams.width = 40;
-            shellParams.height = 40;
             shellDrawable.setLayoutParams(shellParams);
-            shellDrawable.setBackgroundColor(Color.TRANSPARENT);
+            shellDrawable.setRotation(new Random().nextInt(360));
             button.addView(shellDrawable, shellParams);
         }
     }

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Path;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.OvalShape;
 import android.view.View;
@@ -20,17 +21,16 @@ public class ShellDrawable extends View {
     public static String[] colours = {"#00FF33", "#0066CC", "#00FF99", "#660099", "#CCFF00", "#FF6600", "#FF0099"};
 
     private ShapeDrawable shell;
-    private int x;
-    private int y;
+    private int shellX;
+    private int shellY;
     private int width;
     private int length;
 
 
     public ShellDrawable(Context context, int x, int y, int width, int length) {
         super(context);
-
-        this.x = x;
-        this.y = y;
+        this.shellX = x;
+        this.shellY = y;
         this.width = width;
         this.length = length;
         setMinimumWidth(width);
@@ -38,7 +38,6 @@ public class ShellDrawable extends View {
 
         shell = new ShapeDrawable(new OvalShape());
         shell.setBounds(x, y, x + width, y + length);
-
         Random random = new Random();
         shell.getPaint().setColor(Color.parseColor(colours[random.nextInt(colours.length)]));  //sets colour randomly
     }
@@ -52,11 +51,11 @@ public class ShellDrawable extends View {
     }
 
     public int getShellX() {
-        return x;
+        return shellX;
     }
 
     public void setShellX(int x) {
-        this.x = x;
+        this.shellX = x;
     }
 
     public int getShellWidth() {
@@ -68,11 +67,11 @@ public class ShellDrawable extends View {
     }
 
     public int getShellY() {
-        return y;
+        return shellY;
     }
 
     public void setShellY(int y) {
-        this.y = y;
+        this.shellY = y;
     }
 
     public void setColour(String newColour) {
