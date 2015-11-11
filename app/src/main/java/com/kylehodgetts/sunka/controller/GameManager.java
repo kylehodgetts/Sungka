@@ -11,6 +11,8 @@ import com.kylehodgetts.sunka.event.HighlightPlayerStore;
 import com.kylehodgetts.sunka.event.NewGame;
 import com.kylehodgetts.sunka.event.NextTurn;
 import com.kylehodgetts.sunka.event.PlayerChoseTray;
+import com.kylehodgetts.sunka.event.ShellStoreAnimation;
+import com.kylehodgetts.sunka.event.ShellTrayAnimation;
 import com.kylehodgetts.sunka.event.ShellMovement;
 import com.kylehodgetts.sunka.event.ShellMovementToPot;
 import com.kylehodgetts.sunka.model.Board;
@@ -114,7 +116,6 @@ public class GameManager extends EventHandler<GameState> {
      * @return new GameState
      */
     private GameState placeShellEvent(GameState state, ShellMovement event) {
-
         int trayIndex = event.getTrayIndex();
         int playerIndex = event.getPlayerIndex();
         int shellsLeft = event.getShellsStillToBePlaced();
@@ -127,7 +128,6 @@ public class GameManager extends EventHandler<GameState> {
             moveShellsToNextPosition(trayIndex, playerIndex, shellsLeft, playerWhoTurnItIs);
             return state;
         } else {
-
             //capture rule
             Board board = state.getBoard();
             if (board.getTray(playerIndex, trayIndex) == 1 && playerIndex == playerWhoTurnItIs) {
