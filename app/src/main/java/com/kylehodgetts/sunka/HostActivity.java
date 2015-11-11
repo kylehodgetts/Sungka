@@ -40,6 +40,10 @@ public class HostActivity extends Activity {
     private NsdManager nsdManager;
     private NsdServiceInfo serviceInfo;
 
+    /**
+     * Instantiates view and registers service
+     * @param savedInstanceState infomation when restoring view
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,6 +57,9 @@ public class HostActivity extends Activity {
         registerService(PORT);
     }
 
+    /**
+     * Uninitialises registration listener and server socket
+     */
     @Override
     protected void onPause(){
         if(registrationListener != null){
@@ -115,16 +122,28 @@ public class HostActivity extends Activity {
         };
     }
 
+    /**
+     *
+     * @return true if registration listener is initialised, false otherwise
+     */
     public boolean isRegistrationListenerInitialised() {
         return registrationListener != null;
     }
 
+    /**
+     *
+     * @return true if service info is set, false otherwise
+     */
     public boolean isServiceInfoSet() {
         return  serviceInfo.getServiceName() != null
                 && serviceInfo.getServiceType().equals("_http._tcp.")
                 && serviceInfo.getPort() == PORT;
     }
 
+    /**
+     *
+     * @return true if server socket is initialised, false otherwise
+     */
     public boolean isServerSocketInitialised() {
         return serverSocket != null;
     }
@@ -165,8 +184,12 @@ public class HostActivity extends Activity {
             }
         }
     }
-    
-    private String getIpAddress() {
+
+    /**
+     *
+     * @return IP Address for the device
+     */
+    public String getIpAddress() {
         String ip = "";
         try{
             Enumeration<NetworkInterface> enumeration = NetworkInterface.getNetworkInterfaces();

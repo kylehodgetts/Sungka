@@ -58,12 +58,20 @@ public class WiFiDirectActivityTest extends ActivityInstrumentationTestCase2<WiF
         });
     }
 
+    /**
+     * Assert that view components are not null post onCreate execution
+     * @throws Exception e
+     */
     public void testPreConditions() throws Exception {
         assertNotNull(wiFiDirectActivity);
         assertNotNull(listView);
         assertNotNull(button);
     }
 
+    /**
+     * Assert that the button layout constraints hold
+     * @throws Exception
+     */
     public void testHostButton_Layout() throws Exception {
         final View decorView = wiFiDirectActivity.getWindow().getDecorView();
         ViewAsserts.assertOnScreen(decorView, button);
@@ -75,7 +83,11 @@ public class WiFiDirectActivityTest extends ActivityInstrumentationTestCase2<WiF
         assertEquals(button.getText().toString(), "Host");
     }
 
-    public void testHostButton_onClick() throws Exception{
+    /**
+     * Assert that, upon press of the host game button, it launches the host activity
+     * @throws Exception
+     */
+    public void testHostButton_onClick() throws Exception {
         activityMonitor = new Instrumentation.ActivityMonitor(HostActivity.class.getName(), null, false);
         getInstrumentation().addMonitor(activityMonitor);
         getInstrumentation().runOnMainSync(new Runnable() {
@@ -90,6 +102,10 @@ public class WiFiDirectActivityTest extends ActivityInstrumentationTestCase2<WiF
         hostActivity.finish();
     }
 
+    /**
+     * Assert that the found services list layout constraints hold
+     * @throws Exception
+     */
     public void testFoundServicesList_Layout() throws Exception {
         final View decorView = wiFiDirectActivity.getWindow().getDecorView();
         ViewAsserts.assertOnScreen(decorView, listView);
@@ -101,11 +117,19 @@ public class WiFiDirectActivityTest extends ActivityInstrumentationTestCase2<WiF
         assertEquals(layoutParams.height, WindowManager.LayoutParams.WRAP_CONTENT);
     }
 
+    /**
+     * Assert that found services appear in the found services list
+     * @throws Exception
+     */
     public void testFoundServicesList_FoundServicesAppear() throws Exception {
         assertEquals(listView.getAdapter().getCount(), list.size());
         assertEquals(((NsdServiceInfo)listView.getItemAtPosition(0)).getServiceName(), nsdServiceInfo.getServiceName());
     }
 
+    /**
+     * Assert that, upon click of a found service, the client connection task is running.
+     * @throws Exception
+     */
     public void testFoundServicesList_ClickService() throws Exception{
         getInstrumentation().runOnMainSync(new Runnable() {
             @Override
@@ -119,16 +143,26 @@ public class WiFiDirectActivityTest extends ActivityInstrumentationTestCase2<WiF
         assertTrue(wiFiDirectActivity.isClientTaskRunning());
     }
 
+    /**
+     * Assert that the discovery listener has been initialised in order to discover services
+     * @throws Exception
+     */
     public void testInitialiseDiscoveryListener() throws Exception {
         assertTrue(wiFiDirectActivity.isDiscoveryListenerInitialised());
     }
 
+    /**
+     * Assert that, on pause, the discovery listener is unititialised to conserve resources
+     */
     public void testOnPause() {
         getInstrumentation().callActivityOnPause(wiFiDirectActivity);
         getInstrumentation().waitForIdleSync();
         assertFalse(wiFiDirectActivity.isDiscoveryListenerInitialised());
     }
 
+    /**
+     * Assert that, on resume of the application, the discovery listener is reinitialised
+     */
     public void testOnResume() {
         getInstrumentation().callActivityOnResume(wiFiDirectActivity);
         getInstrumentation().waitForIdleSync();

@@ -82,8 +82,9 @@ public class WiFiDirectActivity extends Activity {
         });
     }
 
-    /** register the BroadcastReceiver with the intent values to be matched */
-
+    /**
+     * Initialises discovery listener upon resume of the application
+     */
     @Override
     protected void onResume() {
         super.onResume();
@@ -92,6 +93,10 @@ public class WiFiDirectActivity extends Activity {
         }
     }
 
+    /**
+     * On Pause stops any further service discovery.
+     * Uninitialises discovery listener
+     */
     @Override
     protected void onPause() {
         if(discoveryListener != null){
@@ -102,6 +107,9 @@ public class WiFiDirectActivity extends Activity {
 
     }
 
+    /**
+     * Initialises discovery listener to find devices hosting games
+     */
     public void initialiseDiscoveryListener(){
         discoveryListener = new NsdManager.DiscoveryListener() {
             @Override
