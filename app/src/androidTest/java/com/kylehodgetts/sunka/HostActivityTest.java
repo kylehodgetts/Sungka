@@ -13,7 +13,7 @@ import junit.framework.TestCase;
  */
 public class HostActivityTest extends ActivityInstrumentationTestCase2<HostActivity> {
 
-    private Activity hostActivity;
+    private HostActivity hostActivity;
     private TextView labelHostAddress;
     private TextView txtHostAddress;
     private TextView labelHostPort;
@@ -44,11 +44,18 @@ public class HostActivityTest extends ActivityInstrumentationTestCase2<HostActiv
         assertNotNull(txtStatus);
     }
 
-//    public void testRegisterService() throws Exception {
-//
-//    }
-//
-//    public void testInitialiseRegistrationListener() throws Exception {
-//
-//    }
+    public void testRegisterService() throws Exception {
+        assertTrue(hostActivity.isServiceInfoSet());
+    }
+
+    public void testInitialiseRegistrationListener() throws Exception {
+        assertTrue(hostActivity.isRegistrationListenerInitialised());
+    }
+
+    public void testOnPause() throws Exception {
+        getInstrumentation().callActivityOnPause(hostActivity);
+        getInstrumentation().waitForIdleSync();
+        assertFalse(hostActivity.isRegistrationListenerInitialised());
+        assertFalse(hostActivity.isServerSocketInitialised());
+    }
 }

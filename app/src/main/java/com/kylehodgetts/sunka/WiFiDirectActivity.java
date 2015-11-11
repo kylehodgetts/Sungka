@@ -102,10 +102,6 @@ public class WiFiDirectActivity extends Activity {
 
     }
 
-    public boolean isClientTaskRunning(){
-        return !myClientTask.isCancelled();
-    }
-
     public void initialiseDiscoveryListener(){
         discoveryListener = new NsdManager.DiscoveryListener() {
             @Override
@@ -184,6 +180,22 @@ public class WiFiDirectActivity extends Activity {
                 foundServices.setAdapter(new ServiceAdapter(getApplicationContext(), services));
             }
         });
+    }
+
+    /**
+     *
+     * @return true if the client task is running on another thread, false otherwise
+     */
+    public boolean isClientTaskRunning(){
+        return !myClientTask.isCancelled();
+    }
+
+    /**
+     *
+     * @return true if discovery listener, false otherwise
+     */
+    public boolean isDiscoveryListenerInitialised() {
+        return discoveryListener != null;
     }
 
     public class MyClientTask extends AsyncTask<Void, Void, Void> {

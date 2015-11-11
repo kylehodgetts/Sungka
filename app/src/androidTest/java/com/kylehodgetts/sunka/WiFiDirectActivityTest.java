@@ -64,7 +64,7 @@ public class WiFiDirectActivityTest extends ActivityInstrumentationTestCase2<WiF
         assertNotNull(button);
     }
 
-    public void testHostButton_Layout() {
+    public void testHostButton_Layout() throws Exception {
         final View decorView = wiFiDirectActivity.getWindow().getDecorView();
         ViewAsserts.assertOnScreen(decorView, button);
 
@@ -75,7 +75,7 @@ public class WiFiDirectActivityTest extends ActivityInstrumentationTestCase2<WiF
         assertEquals(button.getText().toString(), "Host");
     }
 
-    public void testHostButton_onClick() {
+    public void testHostButton_onClick() throws Exception{
         activityMonitor = new Instrumentation.ActivityMonitor(HostActivity.class.getName(), null, false);
         getInstrumentation().addMonitor(activityMonitor);
         getInstrumentation().runOnMainSync(new Runnable() {
@@ -90,7 +90,7 @@ public class WiFiDirectActivityTest extends ActivityInstrumentationTestCase2<WiF
         hostActivity.finish();
     }
 
-    public void testFoundServicesList_Layout() {
+    public void testFoundServicesList_Layout() throws Exception {
         final View decorView = wiFiDirectActivity.getWindow().getDecorView();
         ViewAsserts.assertOnScreen(decorView, listView);
 
@@ -101,12 +101,12 @@ public class WiFiDirectActivityTest extends ActivityInstrumentationTestCase2<WiF
         assertEquals(layoutParams.height, WindowManager.LayoutParams.WRAP_CONTENT);
     }
 
-    public void testFoundServicesList_FoundServicesAppear() {
+    public void testFoundServicesList_FoundServicesAppear() throws Exception {
         assertEquals(listView.getAdapter().getCount(), list.size());
         assertEquals(((NsdServiceInfo)listView.getItemAtPosition(0)).getServiceName(), nsdServiceInfo.getServiceName());
     }
 
-    public void testFoundServicesList_ClickService() {
+    public void testFoundServicesList_ClickService() throws Exception{
         getInstrumentation().runOnMainSync(new Runnable() {
             @Override
             public void run() {
@@ -119,4 +119,19 @@ public class WiFiDirectActivityTest extends ActivityInstrumentationTestCase2<WiF
         assertTrue(wiFiDirectActivity.isClientTaskRunning());
     }
 
+    public void testInitialiseDiscoveryListener() throws Exception {
+        assertTrue(wiFiDirectActivity.isDiscoveryListenerInitialised());
+    }
+
+    public void testOnPause() {
+        getInstrumentation().callActivityOnPause(wiFiDirectActivity);
+        getInstrumentation().waitForIdleSync();
+        assertFalse(wiFiDirectActivity.isDiscoveryListenerInitialised());
+    }
+
+    public void testOnResume() {
+        getInstrumentation().callActivityOnResume(wiFiDirectActivity);
+        getInstrumentation().waitForIdleSync();
+        assertTrue(wiFiDirectActivity.isDiscoveryListenerInitialised());
+    }
 }

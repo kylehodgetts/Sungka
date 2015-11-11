@@ -33,10 +33,12 @@ public class HostActivity extends Activity {
     private TextView txtPort;
     private TextView txtStatus;
 
+    private Thread serverSocketThread;
     private ServerSocket serverSocket;
     private NsdManager.RegistrationListener registrationListener;
     public static String serviceName = "";
     private NsdManager nsdManager;
+    private NsdServiceInfo serviceInfo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,7 +54,7 @@ public class HostActivity extends Activity {
     }
 
     @Override
-    protected void onDestroy(){
+    protected void onPause(){
         if(registrationListener != null){
             nsdManager.unregisterService(registrationListener);
             registrationListener = null;
@@ -64,7 +66,7 @@ public class HostActivity extends Activity {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        super.onDestroy();
+        super.onPause();
         Log.d("HostActivity: ", "onDestroy");
     }
 
@@ -73,7 +75,6 @@ public class HostActivity extends Activity {
      * @param port port to register service to.
      */
     public void registerService(int port) {
-        NsdServiceInfo serviceInfo = null;
         serviceInfo = new NsdServiceInfo();
         serviceInfo.setServiceName("Sunka-lynx-" + "TESTNAME");
         serviceInfo.setServiceType("_http._tcp.");
@@ -103,7 +104,7 @@ public class HostActivity extends Activity {
                     serviceName = serviceInfo.getServiceName();
                     Log.d("HOST ACTIVITY: ", "Service registered");
                 }
-                Thread serverSocketThread = new Thread(new SocketServerThread());
+                serverSocketThread = new Thread(new SocketServerThread());
                 serverSocketThread.start();
             }
 
@@ -114,10 +115,25 @@ public class HostActivity extends Activity {
         };
     }
 
+    public boolean isRegistrationListenerInitialised() {
+        return registrationListener != null;
+    }
+
+    public boolean isServiceInfoSet() {
+        return  serviceInfo.getServiceName() != null
+                && serviceInfo.getServiceType().equals("_http._tcp.")
+                && serviceInfo.getPort() == PORT;
+    }
+
+    public boolean isServerSocketInitialised() {
+        return serverSocket != null;
+    }
+
+
     /**
      * @author Kyle Hodgetts
      * @version 1.0
-     * Repsonsible for the server connection
+     * Responsible for the server connection
      */
     private class SocketServerThread extends Thread {
         static final int PORT = 8080;
