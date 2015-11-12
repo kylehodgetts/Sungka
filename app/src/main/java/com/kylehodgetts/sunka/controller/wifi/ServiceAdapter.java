@@ -13,16 +13,22 @@ import com.kylehodgetts.sunka.R;
 import java.util.List;
 
 /**
+ * @author Kyle Hodgetts
  * @author Adam Chlupacek
  * @version 1.0
- *          <-INPUT DESC->
+ *
+ * Adapter that returns data view of a found service.
  */
 public class ServiceAdapter extends ArrayAdapter<NsdServiceInfo> {
 
+    /**
+     *
+     * @param context Current Application Context
+     * @param objects List of <code>FoundService</code>s
+     */
     public ServiceAdapter(Context context, List<NsdServiceInfo> objects) {
         super(context, R.layout.row_device, objects);
     }
-
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
