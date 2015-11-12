@@ -247,7 +247,7 @@ public class ViewManager extends EventHandler<GameState> {
                 imageButton.setBackgroundResource(player == 0 ? R.drawable.buttonb : R.drawable.buttona);
                 imageButton.setPadding(35, 35, 35, 35);
 
-                if (state.isRaceStateOver()) {
+                if (!state.isRaceState()) {
                     TextView tv = (TextView) linearLayout.findViewById(R.id.tv);
                     int angle = playersTurn == 1 ? 180 : 0;
                     tv.setRotation(angle);
@@ -257,7 +257,7 @@ public class ViewManager extends EventHandler<GameState> {
             }
         }
 
-        if (!state.isRaceStateOver()) {
+        if (state.isRaceState()) {
             tvPlayerB.setBackgroundColor(Color.parseColor("#2D8BA8"));
             tvPlayerA.setBackgroundColor(Color.parseColor("#A84136"));
             tvPlayerB.setTextColor(Color.WHITE);

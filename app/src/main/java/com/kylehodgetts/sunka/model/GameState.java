@@ -18,7 +18,7 @@ public class GameState implements BusState {
     private boolean doingMove;
 
     private int whoWentFirst;
-    private boolean raceStateOver;
+    private boolean raceState;
     private boolean player1HasMoved;
     private boolean player2HasMoved;
     private boolean player1FirstMoveEnded;
@@ -34,7 +34,7 @@ public class GameState implements BusState {
         this.doingMove = false;
 
         this.whoWentFirst = -1;
-        this.raceStateOver = false;
+        this.raceState = true;
         this.player1HasMoved = false;
         this.player2HasMoved = false;
         this.player1FirstMoveEnded = false;
@@ -96,10 +96,6 @@ public class GameState implements BusState {
         return whoWentFirst;
     }
 
-    public void setWhoWentFirst(int to) {
-        whoWentFirst = to;
-    }
-
     public boolean isDoingMove() {
         return doingMove;
     }
@@ -108,28 +104,31 @@ public class GameState implements BusState {
         this.doingMove = doingMove;
     }
 
-    public boolean isRaceStateOver() {
-        return raceStateOver;
+    public boolean isRaceState() {
+        return raceState;
     }
 
     public void setRaceStateOver() {
-        raceStateOver = true;
+        raceState = false;
     }
 
     public boolean playerHasMoved(int player) {
         return player == 0 ? player1HasMoved : player2HasMoved;
     }
 
-    public void setPlayerHasMoved(boolean moved, int player) {
+    public void setPlayerHasMoved(int player) {
         if (player == 0) {
-            player1HasMoved = moved;
+            player1HasMoved = true;
         } else if (player == 1) {
-            player2HasMoved = moved;
+            player2HasMoved = true;
         }
+
+        if (playerWhoWentFirst() == -1)
+            whoWentFirst = player;
 
     }
 
-    public void setPlayerFirstMoveEnded(int player) {
+    public void setPlayerFirstMoveOver(int player) {
         if (player == 0) {
             player1FirstMoveEnded = true;
         } else if (player == 1) {
@@ -138,7 +137,7 @@ public class GameState implements BusState {
     }
 
     public boolean isFirstMoveOverForPlayer(int player) {
-        return player == 0 ? player1HasMoved : player2FirstMoveEnded;
+        return player == 0 ? player1FirstMoveEnded : player2FirstMoveEnded;
     }
 
 }
