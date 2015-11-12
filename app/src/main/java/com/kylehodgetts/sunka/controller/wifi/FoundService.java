@@ -24,7 +24,7 @@ public class FoundService {
         this.address = address;
         this.port = port;
     }
-    
+
     /**
      *
      * @return The service name

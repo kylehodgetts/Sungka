@@ -14,12 +14,18 @@ import junit.framework.TestCase;
 
 /**
  * @author Kyle Hodgetts
+ * @version 1.0
+ * Responsible for testing the Online Game Manager class.
  */
 public class OnlineGameManagerTest extends TestCase {
     private OnlineGameManager onlineGameManager;
     private GameState gameState;
     private EventBus<GameState> bus;
 
+    /**
+     * Initialises the game state, bus and online game manager
+     * @throws Exception
+     */
     @Override
     public void setUp() throws Exception {
         super.setUp();
@@ -29,6 +35,10 @@ public class OnlineGameManagerTest extends TestCase {
 
     }
 
+    /**
+     * Assert that the player chose tray event is handled and returned properly
+     * @throws Exception
+     */
     @SmallTest
     public void testHandleEvent() throws Exception {
         Tuple2 expected = new Tuple2(gameState, true);
