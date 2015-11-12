@@ -22,7 +22,7 @@ public class SingletonSocketTest extends TestCase {
 
     public void testSetSocket() throws Exception {
         singletonSocket.setSocket(null);
-        assertNull(singletonSocket.getSocket());
+        assertNotNull(singletonSocket.getSocket());
         singletonSocket.setSocket(new Socket());
         assertNotNull(singletonSocket.getSocket());
     }

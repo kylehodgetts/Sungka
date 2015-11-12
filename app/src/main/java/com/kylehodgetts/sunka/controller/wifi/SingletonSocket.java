@@ -11,11 +11,17 @@ import java.net.Socket;
 public class SingletonSocket {
     private static Socket socket;
 
+
+    private SingletonSocket() {}
+
     /**
      *
      * @return the game socket
      */
     public static synchronized Socket getSocket(){
+        if(socket == null) {
+            setSocket(new Socket());
+        }
         return socket;
     }
 
