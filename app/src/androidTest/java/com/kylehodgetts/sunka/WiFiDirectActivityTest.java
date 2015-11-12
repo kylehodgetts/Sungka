@@ -12,6 +12,9 @@ import android.widget.ListView;
 
 import com.kylehodgetts.sunka.controller.wifi.ServiceAdapter;
 
+import org.junit.BeforeClass;
+import org.junit.Test;
+
 import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.List;
@@ -37,6 +40,7 @@ public class WiFiDirectActivityTest extends ActivityInstrumentationTestCase2<WiF
         super(WiFiDirectActivity.class);
     }
 
+    @BeforeClass
     @Override
     public void setUp() throws Exception {
         super.setUp();
@@ -62,6 +66,7 @@ public class WiFiDirectActivityTest extends ActivityInstrumentationTestCase2<WiF
      * Assert that view components are not null post onCreate execution
      * @throws Exception e
      */
+    @Test
     public void testPreConditions() throws Exception {
         assertNotNull(wiFiDirectActivity);
         assertNotNull(listView);
@@ -72,6 +77,7 @@ public class WiFiDirectActivityTest extends ActivityInstrumentationTestCase2<WiF
      * Assert that the button layout constraints hold
      * @throws Exception
      */
+    @Test
     public void testHostButton_Layout() throws Exception {
         final View decorView = wiFiDirectActivity.getWindow().getDecorView();
         ViewAsserts.assertOnScreen(decorView, button);
@@ -87,6 +93,7 @@ public class WiFiDirectActivityTest extends ActivityInstrumentationTestCase2<WiF
      * Assert that, upon press of the host game button, it launches the host activity
      * @throws Exception
      */
+    @Test
     public void testHostButton_onClick() throws Exception {
         activityMonitor = new Instrumentation.ActivityMonitor(HostActivity.class.getName(), null, false);
         getInstrumentation().addMonitor(activityMonitor);
@@ -106,6 +113,7 @@ public class WiFiDirectActivityTest extends ActivityInstrumentationTestCase2<WiF
      * Assert that the found services list layout constraints hold
      * @throws Exception
      */
+    @Test
     public void testFoundServicesList_Layout() throws Exception {
         final View decorView = wiFiDirectActivity.getWindow().getDecorView();
         ViewAsserts.assertOnScreen(decorView, listView);
@@ -121,6 +129,7 @@ public class WiFiDirectActivityTest extends ActivityInstrumentationTestCase2<WiF
      * Assert that found services appear in the found services list
      * @throws Exception
      */
+    @Test
     public void testFoundServicesList_FoundServicesAppear() throws Exception {
         assertEquals(listView.getAdapter().getCount(), list.size());
         assertEquals(((NsdServiceInfo)listView.getItemAtPosition(0)).getServiceName(), nsdServiceInfo.getServiceName());
@@ -130,6 +139,7 @@ public class WiFiDirectActivityTest extends ActivityInstrumentationTestCase2<WiF
      * Assert that, upon click of a found service, the client connection task is running.
      * @throws Exception
      */
+    @Test
     public void testFoundServicesList_ClickService() throws Exception{
         getInstrumentation().runOnMainSync(new Runnable() {
             @Override
@@ -147,6 +157,7 @@ public class WiFiDirectActivityTest extends ActivityInstrumentationTestCase2<WiF
      * Assert that the discovery listener has been initialised in order to discover services
      * @throws Exception
      */
+    @Test
     public void testInitialiseDiscoveryListener() throws Exception {
         assertTrue(wiFiDirectActivity.isDiscoveryListenerInitialised());
     }
@@ -154,6 +165,7 @@ public class WiFiDirectActivityTest extends ActivityInstrumentationTestCase2<WiF
     /**
      * Assert that, on pause, the discovery listener is unititialised to conserve resources
      */
+    @Test
     public void testOnPause() {
         getInstrumentation().callActivityOnPause(wiFiDirectActivity);
         getInstrumentation().waitForIdleSync();
@@ -163,6 +175,7 @@ public class WiFiDirectActivityTest extends ActivityInstrumentationTestCase2<WiF
     /**
      * Assert that, on resume of the application, the discovery listener is reinitialised
      */
+    @Test
     public void testOnResume() {
         getInstrumentation().callActivityOnResume(wiFiDirectActivity);
         getInstrumentation().waitForIdleSync();

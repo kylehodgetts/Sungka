@@ -12,6 +12,9 @@ import com.kylehodgetts.sunka.util.Tuple2;
 
 import junit.framework.TestCase;
 
+import org.junit.BeforeClass;
+import org.junit.Test;
+
 /**
  * @author Kyle Hodgetts
  * @version 1.0
@@ -26,6 +29,7 @@ public class OnlineGameManagerTest extends TestCase {
      * Initialises the game state, bus and online game manager
      * @throws Exception
      */
+    @BeforeClass
     @Override
     public void setUp() throws Exception {
         super.setUp();
@@ -39,7 +43,7 @@ public class OnlineGameManagerTest extends TestCase {
      * Assert that the player chose tray event is handled and returned properly
      * @throws Exception
      */
-    @SmallTest
+    @Test
     public void testHandleEvent() throws Exception {
         Tuple2 expected = new Tuple2(gameState, true);
         Tuple2 actual = onlineGameManager.handleEvent(new PlayerChoseTray(1, 1), gameState);

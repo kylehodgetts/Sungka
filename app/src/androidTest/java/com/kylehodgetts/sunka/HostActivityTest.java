@@ -9,6 +9,9 @@ import com.kylehodgetts.sunka.controller.wifi.SingletonSocket;
 
 import junit.framework.TestCase;
 
+import org.junit.BeforeClass;
+import org.junit.Test;
+
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 
@@ -34,6 +37,7 @@ public class HostActivityTest extends ActivityInstrumentationTestCase2<HostActiv
      * Set up references to components
      * @throws Exception
      */
+    @BeforeClass
     @Override
     public void setUp() throws Exception {
         super.setUp();
@@ -49,6 +53,7 @@ public class HostActivityTest extends ActivityInstrumentationTestCase2<HostActiv
      * Assert that view components are not null post onCreate execution
      * @throws Exception
      */
+    @Test
     public void testPreconditions() throws Exception {
         assertNotNull(hostActivity);
         assertNotNull(labelHostAddress);
@@ -63,6 +68,7 @@ public class HostActivityTest extends ActivityInstrumentationTestCase2<HostActiv
      * so an online game can be published as a service
      * @throws Exception
      */
+    @Test
     public void testInitialiseRegistrationListener() throws Exception {
         assertTrue(hostActivity.isRegistrationListenerInitialised());
     }
@@ -72,6 +78,7 @@ public class HostActivityTest extends ActivityInstrumentationTestCase2<HostActiv
      * so a client can connect
      * @throws Exception
      */
+    @Test
     public void testRegisterService() throws Exception {
         assertTrue(hostActivity.isServiceInfoSet());
         assertTrue(txtHostAddress.getText().toString().equals(hostActivity.getIpAddress()));
@@ -82,8 +89,9 @@ public class HostActivityTest extends ActivityInstrumentationTestCase2<HostActiv
      * and the registration listener has been uninitialised to conserve resources.
      * @throws Exception
      */
-    public void testOnPause() throws Exception {
-        getInstrumentation().callActivityOnPause(hostActivity);
+    @Test
+    public void testOnStop() throws Exception {
+        getInstrumentation().callActivityOnStop(hostActivity);
         getInstrumentation().waitForIdleSync();
         assertFalse(hostActivity.isRegistrationListenerInitialised());
         assertFalse(hostActivity.isServerSocketInitialised());

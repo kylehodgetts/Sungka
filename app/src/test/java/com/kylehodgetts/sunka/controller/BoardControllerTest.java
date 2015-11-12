@@ -65,7 +65,7 @@ public class BoardControllerTest extends TestCase {
         for (int i = 0; i < 2; ++i) {
             for (int j = 0; j < 7; ++j) {
                 bus.feedEvent(new PlayerChoseTray(j, i));
-                Thread.sleep(10000);
+                Thread.sleep(5000);
                 System.out.println(printBoardState());
 
                 int currentRow = i;
@@ -95,9 +95,9 @@ public class BoardControllerTest extends TestCase {
         for(int i = 0; i < 2; ++i) {
             for(int j = 0; j < 7; ++j) {
                 bus.feedEvent(new PlayerChoseTray(j, i));
-                Thread.sleep(10000);
+                Thread.sleep(5000);
                 bus.feedEvent(new PlayerChoseTray(j, (i + 1) % 2));
-                Thread.sleep(10000);
+                Thread.sleep(5000);
                 System.out.println(printBoardState());
 
                 int currentRow = i;

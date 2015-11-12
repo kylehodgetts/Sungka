@@ -7,6 +7,9 @@ import android.widget.TextView;
 
 import com.kylehodgetts.sunka.R;
 
+import org.junit.BeforeClass;
+import org.junit.Test;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,6 +29,7 @@ public class ServiceAdapterTest extends AndroidTestCase {
      * Initialises components
      * @throws Exception
      */
+    @BeforeClass
     public void setUp() throws Exception {
         super.setUp();
         nsdServiceInfo = new NsdServiceInfo();
@@ -40,6 +44,7 @@ public class ServiceAdapterTest extends AndroidTestCase {
      * constitutes a row in the list view
      * @throws Exception
      */
+    @Test
     public void testGetView() throws Exception {
         View v = serviceAdapter.getView(0, null, null);
         assertNotNull(v);
