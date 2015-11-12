@@ -1,42 +1,25 @@
-/*
- * Copyright (C) 2011 The Android Open Source Project
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package com.kylehodgetts.sunka;
 
 import android.app.Activity;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
-import android.net.wifi.p2p.WifiP2pConfig;
-import android.net.wifi.p2p.WifiP2pDevice;
-import android.net.wifi.p2p.WifiP2pDeviceList;
-import android.net.wifi.p2p.WifiP2pManager;
-import android.net.wifi.p2p.WifiP2pManager.ActionListener;
-import android.net.wifi.p2p.WifiP2pManager.Channel;
-import android.net.wifi.p2p.WifiP2pManager.ChannelListener;
+import android.net.nsd.NsdManager;
+import android.net.nsd.NsdServiceInfo;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.kylehodgetts.sunka.controller.wifi.PeerListAdapter;
+import com.kylehodgetts.sunka.controller.wifi.ServiceAdapter;
+import com.kylehodgetts.sunka.controller.wifi.SingletonSocket;
 
+import java.io.IOException;
+import java.net.Socket;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -45,171 +28,223 @@ import java.util.List;
  * @version 1.0
  * @see {@link "developer.android.com/training/connect-devices-wirelessly/wifi-direct.html"}
  */
-public class WiFiDirectActivity extends Activity implements ChannelListener {
-
+public class WiFiDirectActivity extends Activity {
     public static final String TAG = "wifidirectactivity";
-    private ListView peerList;
-    private ArrayList<WifiP2pDevice> arrayListPeers;
-    private PeerListAdapter peerListAdapter;
 
-    private WifiP2pManager manager;
-    private boolean isWifiP2pEnabled = false;
-    private boolean retryChannel = false;
+    private Button btnHost;
+    private ListView foundServices;
 
-    private final IntentFilter intentFilter = new IntentFilter();
-    private Channel channel;
-    private BroadcastReceiver receiver = null;
+    private NsdManager.DiscoveryListener discoveryListener;
+    private NsdManager nsdManager;
 
-    /**
-     * @param isWifiP2pEnabled the isWifiP2pEnabled to set
-     */
-    public void setIsWifiP2pEnabled(boolean isWifiP2pEnabled) {
-        this.isWifiP2pEnabled = isWifiP2pEnabled;
-    }
+
+    private List<NsdServiceInfo> services;
+
+    private MyClientTask myClientTask;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_wifidirect);
-        arrayListPeers = new ArrayList<>();
-        peerListAdapter = new PeerListAdapter(this, arrayListPeers);
-        peerList = (ListView) findViewById(R.id.peerList);
-        peerList.setAdapter(peerListAdapter);
-        peerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        services = new ArrayList<>();
+        btnHost = (Button) findViewById(R.id.btnHost);
+        btnHost.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(nsdManager != null) {
+                    try{
+                        nsdManager.stopServiceDiscovery(discoveryListener);
+                        discoveryListener = null;
+                    }
+                    catch(IllegalArgumentException e) {
+                        discoveryListener = null;
+                    }
+                }
+                startActivity(new Intent(WiFiDirectActivity.this, HostActivity.class));
+            }
+        });
+        initialiseDiscoveryListener();
+        nsdManager = (NsdManager)getApplicationContext().getSystemService(Context.NSD_SERVICE);
+        nsdManager.discoverServices("_http._tcp", NsdManager.PROTOCOL_DNS_SD, discoveryListener);
+        foundServices = (ListView) findViewById(R.id.list_found_services);
+        foundServices.setAdapter(new ServiceAdapter(getApplicationContext(), services));
+        renderList();
+        foundServices.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                //Initiate connections
-                Toast.makeText(WiFiDirectActivity.this, parent.getItemAtPosition(position).toString(), Toast.LENGTH_LONG).show();
-            }
-        });
-
-        intentFilter.addAction(WifiP2pManager.WIFI_P2P_STATE_CHANGED_ACTION);
-        intentFilter.addAction(WifiP2pManager.WIFI_P2P_PEERS_CHANGED_ACTION);
-        intentFilter.addAction(WifiP2pManager.WIFI_P2P_CONNECTION_CHANGED_ACTION);
-        intentFilter.addAction(WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION);
-
-        manager = (WifiP2pManager) getSystemService(Context.WIFI_P2P_SERVICE);
-        channel = manager.initialize(this, getMainLooper(), null);
-        manager.discoverPeers(channel, new WifiP2pManager.ActionListener() {
-
-            @Override
-            public void onSuccess() {
-
-            }
-
-            @Override
-            public void onFailure(int reason) {
-
+                NsdServiceInfo serviceInfo = (NsdServiceInfo) parent.getItemAtPosition(position);
+                myClientTask = new MyClientTask(serviceInfo.getHost().toString(), serviceInfo.getPort());
+                myClientTask.execute();
             }
         });
     }
 
-    /** register the BroadcastReceiver with the intent values to be matched */
+    /**
+     * Initialises discovery listener upon resume of the application
+     */
     @Override
-    public void onResume() {
+    protected void onResume() {
         super.onResume();
-        receiver = new WiFiDirectBroadcastReceiver(manager, channel, this);
-        registerReceiver(receiver, intentFilter);
+        if(discoveryListener == null) {
+            initialiseDiscoveryListener();
+        }
     }
 
+    /**
+     * On Pause stops any further service discovery.
+     * Uninitialises discovery listener
+     */
     @Override
-    public void onPause() {
+    protected void onPause() {
+        if(discoveryListener != null) {
+            try {
+                nsdManager.stopServiceDiscovery(discoveryListener);
+                discoveryListener = null;
+            }
+            catch(Exception e){
+                discoveryListener = null;
+            }
+
+        }
         super.onPause();
-        unregisterReceiver(receiver);
     }
 
-    public void connect(WifiP2pConfig config) {
-        manager.connect(channel, config, new ActionListener() {
-
+    /**
+     * Initialises discovery listener to find devices hosting games
+     */
+    public void initialiseDiscoveryListener(){
+        discoveryListener = new NsdManager.DiscoveryListener() {
             @Override
-            public void onSuccess() {
-                // WiFiDirectBroadcastReceiver will notify us. Ignore for now.
+            public void onStartDiscoveryFailed(String serviceType, int errorCode) {
+                Log.d("DISCOVERY SERVICE", " onStartDiscoveryFailed()");
             }
 
             @Override
-            public void onFailure(int reason) {
-                Toast.makeText(WiFiDirectActivity.this, "Connect failed. Retry.",
-                        Toast.LENGTH_SHORT).show();
+            public void onStopDiscoveryFailed(String serviceType, int errorCode) {
+                Log.d("DISCOVERY SERVICE", " onStopDiscoveryFailed()");
             }
-        });
-    }
 
-    @Override
-    public void onChannelDisconnected() {}
-
-    public void resetData() {}
-
-    public class WiFiDirectBroadcastReceiver extends BroadcastReceiver {
-
-        private WifiP2pManager manager;
-        private Channel channel;
-        private WiFiDirectActivity activity;
-
-        private List listPeers = new ArrayList();
-        private WifiP2pManager.PeerListListener peerListListener = new WifiP2pManager.PeerListListener() {
             @Override
-            public void onPeersAvailable(WifiP2pDeviceList peers) {
-                arrayListPeers.clear();
-                arrayListPeers.addAll(peers.getDeviceList());
-                peerListAdapter.notifyDataSetChanged();
-                if (arrayListPeers.size() == 0) {
-                    Log.d(WiFiDirectActivity.TAG, "No devices found");
-                    return;
+            public void onDiscoveryStarted(String serviceType) {
+                Log.d("DISCOVERY_SERVICE","Discovery started");
+            }
+
+            @Override
+            public void onDiscoveryStopped(String serviceType) {
+                Log.d("DISCOVERY SERVICE", " onDiscoveryStopped()");
+            }
+
+            @Override
+            public void onServiceFound(NsdServiceInfo serviceInfo) {
+                Log.d("DISCOVERY SERVICE", " onServiceFound()");
+                if (serviceInfo.getServiceName().matches("Sunka-lynx-.*")){
+                    nsdManager.resolveService(serviceInfo, new NsdManager.ResolveListener() {
+                        @Override
+                        public void onResolveFailed(NsdServiceInfo serviceInfo, int errorCode) {
+                            Toast.makeText(WiFiDirectActivity.this, "Service Resolved Failed", Toast.LENGTH_LONG);
+                        }
+
+                        @Override
+                        public void onServiceResolved(NsdServiceInfo serviceInfo) {
+                            Log.d("RESOLVING","DID resolve" + serviceInfo);
+                            if (serviceInfo.getServiceName().equals("")){
+                                Log.d("RESOLVING","FOUND ourselves");
+                                return;
+                            }
+                            services.add(serviceInfo);
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    renderList();
+                                }
+                            });
+                        }
+                    });
                 }
+            }
+
+            @Override
+            public void onServiceLost(NsdServiceInfo serviceInfo) {
+                Log.d("DISCOVERY SERVICE", " onServiceLost()");
+                Log.d("onServiceLost ", serviceInfo.getServiceName());
+                for(NsdServiceInfo service : services) {
+                    Log.d("onServiceLost ", service.getServiceName());
+                    if(service.getServiceName().equals(serviceInfo.getServiceName())){
+                        services.remove(service);
+                        break;
+                    }
+                }
+                Log.d("onServiceLost: ", "Will render list");
+                renderList();
             }
         };
 
 
-        /**
-         * @param manager WifiP2pManager system service
-         * @param channel Wifi p2p channel
-         * @param activity activity associated with the receiver
-         */
-        public WiFiDirectBroadcastReceiver(WifiP2pManager manager, Channel channel,
-                                           WiFiDirectActivity activity) {
-            super();
-            this.manager = manager;
-            this.channel = channel;
-            this.activity = activity;
+    }
+
+    private void renderList(){
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                foundServices = (ListView) findViewById(R.id.list_found_services);
+                foundServices.setAdapter(new ServiceAdapter(getApplicationContext(), services));
+            }
+        });
+    }
+
+    /**
+     *
+     * @return true if the client task is running on another thread, false otherwise
+     */
+    public boolean isClientTaskRunning(){
+        return !myClientTask.isCancelled();
+    }
+
+    /**
+     *
+     * @return true if discovery listener, false otherwise
+     */
+    public boolean isDiscoveryListenerInitialised() {
+        return discoveryListener != null;
+    }
+
+    public class MyClientTask extends AsyncTask<Void, Void, Void> {
+
+        String dstAddress;
+        int dstPort;
+
+        MyClientTask(String addr, int port){
+            dstAddress = addr.replaceAll("/", "");
+            dstPort = port;
         }
 
-        /*
-         * (non-Javadoc)
-         * @see android.content.BroadcastReceiver#onReceive(android.content.Context,
-         * android.content.Intent)
-         */
         @Override
-        public void onReceive(Context context, Intent intent) {
-            String action = intent.getAction();
-            if (WifiP2pManager.WIFI_P2P_STATE_CHANGED_ACTION.equals(action)) {
+        protected Void doInBackground(Void... arg0) {
+            Log.d(TAG, "MyClientTask Started");
 
-                int state = intent.getIntExtra(WifiP2pManager.EXTRA_WIFI_STATE, -1);
-                if (state == WifiP2pManager.WIFI_P2P_STATE_ENABLED) {
-                    activity.setIsWifiP2pEnabled(true);
-                } else {
-                    activity.setIsWifiP2pEnabled(false);
-                    activity.resetData();
+            Socket socket;
 
-                }
-                Log.d(WiFiDirectActivity.TAG, "P2P state changed - " + state);
-            }
-            else if (WifiP2pManager.WIFI_P2P_PEERS_CHANGED_ACTION.equals(action)) {
-                if (manager != null) {
-                    manager.requestPeers(channel, peerListListener);
-                }
-                Log.d(WiFiDirectActivity.TAG, "P2P peers changed");
-            }
-            else if (WifiP2pManager.WIFI_P2P_CONNECTION_CHANGED_ACTION.equals(action)) {
+            try {
+                socket = new Socket(dstAddress, dstPort);
+                Intent i = new Intent(WiFiDirectActivity.this, BoardActivity.class);
+                SingletonSocket.setSocket(socket);
+                i.putExtra(BoardActivity.EXTRA_INT, BoardActivity.ONLINE);
+                startActivity(i);
 
+            } catch (UnknownHostException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            } catch (IOException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
             }
-            else if (WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION.equals(action)) {
-//            DeviceListFragment fragment = (DeviceListFragment) activity.getFragmentManager()
-//                    .findFragmentById(R.id.frag_list);
-//            fragment.updateThisDevice((WifiP2pDevice) intent.getParcelableExtra(
-//                    WifiP2pManager.EXTRA_WIFI_P2P_DEVICE));
-
-            }
+            return null;
         }
 
+        @Override
+        protected void onPostExecute(Void result) {
+            super.onPostExecute(result);
+        }
     }
 }

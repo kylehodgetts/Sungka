@@ -132,7 +132,6 @@
             android:layout_alignEnd="@id/tvPlayerA"
             android:layout_alignRight="@id/tvPlayerA" />
 
-
     </RelativeLayout>
 
     <!-- Game Over Layout -->
@@ -253,3 +252,4 @@
 
     </LinearLayout>
 </ViewFlipper>
+
