@@ -85,7 +85,6 @@ public class GameManager extends EventHandler<GameState> {
         int playerIndexOfTrayChosen = trayChosen.getPlayerIndex();
         int shells = state.getBoard().getTray(playerIndexOfTrayChosen, trayIndexOfTrayChosen);
 
-
         if (shells != 0) { //because we don't want to register a move if they have nothing to move
 
             //   normal turn                                                                       || raceState
@@ -148,7 +147,6 @@ public class GameManager extends EventHandler<GameState> {
         int playerWhoTurnItIs = event.getPlayerIndexOfThisPot();
         Player p = (playerWhoTurnItIs == 0) ? state.getPlayer1() : state.getPlayer2();
         p.addToPot(1);
-
 
         int shells = event.getShells() - 1;
         if (shells > 0) {
@@ -215,7 +213,7 @@ public class GameManager extends EventHandler<GameState> {
             state.switchCurrentPlayerIndex();
         }
 
-        //if race state if over but we haven't chosen the next players turn yet,
+        //if race state is over but we haven't chosen the next players turn yet,
         //then we need to specify it before the NextTurn event is scheduled
         if (!state.isRaceState() && state.getCurrentPlayerIndex() == -1) {
             state.setCurrentPlayerIndex(state.playerWhoWentFirst());
