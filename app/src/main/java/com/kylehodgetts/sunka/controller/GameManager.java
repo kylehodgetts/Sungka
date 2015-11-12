@@ -29,7 +29,7 @@ import java.util.TimerTask;
  */
 public class GameManager extends EventHandler<GameState> {
 
-    private static final int delay = 1000;
+    private static final int DELAY = 300;
     private Timer timer;
     private EventBus<GameState> bus;
 
@@ -60,10 +60,13 @@ public class GameManager extends EventHandler<GameState> {
         } else if (event instanceof ShellMovementToPot) {
             return new Tuple2<>(placeShellInPotEvent(state, (ShellMovementToPot) event), true);
         } else if (event instanceof NextTurn) {
-            if (((NextTurn) event).finishInit()) {
+            if (!((NextTurn) event).finishInit()) {
                 state.finishInit();
+                if (!state.isInitialising()) {
+                    state.setCurrentPlayerIndex(state.getWhoWentFirst());
+                    state.setDoingMove(false);
+                }
             }
-            state.setDoingMove(false);
             return new Tuple2<>(state, true);
         } else if (event instanceof NewGame) {
             state.getPlayer1().resetStonesInPot();
@@ -92,15 +95,22 @@ public class GameManager extends EventHandler<GameState> {
         int shells = state.getBoard().getTray(playerIndex, trayIndex);
 
         //horrific thing that determines if this move is valid, or just a player pressing random buttons
-        if (shells != 0 && ((state.getCurrentPlayerIndex() == playerIndex && !state.isDoingMove() && !state.isInitialising()) || state.playerInitialising(playerIndex))) {
-            state.setDoingMove(true);
-            if (state.getCurrentPlayerIndex() == -1)
-                state.setCurrentPlayerIndex(trayChosen.getPlayerIndex());
-            if (state.isInitialising()) state.nextInitPhase(trayChosen.getPlayerIndex());
+        if (shells != 0) {
 
-            shells = state.getBoard().emptyTray(playerIndex, trayIndex);
-            moveShellsToNextPosition(trayIndex, playerIndex, shells, playerIndex);
+            if ((state.getCurrentPlayerIndex() == playerIndex && !state.isDoingMove() && !state.isInitialising()) //normal move
+                    || state.playerInitialising(playerIndex)) { //beginning of game
 
+                state.setDoingMove(true);
+
+                if (state.getWhoWentFirst() == -1) {
+                    state.setWhoWentFirst(playerIndex);
+                }
+                if (state.isInitialising()) state.nextInitPhase(playerIndex);
+
+                shells = state.getBoard().emptyTray(playerIndex, trayIndex);
+                moveShellsToNextPosition(trayIndex, playerIndex, shells, playerIndex);
+
+            }
         }
         return state;
     }
@@ -111,12 +121,12 @@ public class GameManager extends EventHandler<GameState> {
      *
      * @return new GameState
      */
-    private GameState placeShellEvent(GameState state, ShellMovement move) {
+    private GameState placeShellEvent(GameState state, ShellMovement event) {
 
-        int trayIndex = move.getTrayIndex();
-        int playerIndex = move.getPlayerIndex();
-        int shellsLeft = move.getShellsStillToBePlaced();
-        int playerWhoTurnItIs = move.getPlayer();
+        int trayIndex = event.getTrayIndex();
+        int playerIndex = event.getPlayerIndex();
+        int shellsLeft = event.getShellsStillToBePlaced();
+        int playerWhoTurnItIs = event.getPlayer();
 
         state.getBoard().incrementTray(playerIndex, trayIndex);
         shellsLeft--;
@@ -125,23 +135,72 @@ public class GameManager extends EventHandler<GameState> {
             moveShellsToNextPosition(trayIndex, playerIndex, shellsLeft, playerWhoTurnItIs);
             return state;
         } else {
-            return endTurn(state, trayIndex, playerIndex, false, playerWhoTurnItIs);
+
+            //capture rule
+            Board board = state.getBoard();
+            if (board.getTray(playerIndex, trayIndex) == 1 && playerIndex == playerWhoTurnItIs) {
+                int otherPlayer = (playerIndex + 1) % 2;
+                int shellsFromOtherSide = board.emptyTray(otherPlayer, 6 - trayIndex);
+                board.emptyTray(playerIndex, trayIndex);
+                state.getCurrentPlayer().addToPot(shellsFromOtherSide + 1);
+            }
+
+            return endTurn(state, false, playerWhoTurnItIs);
         }
 
     }
 
+
+    /**
+     * Processes placing a shell into the next tray
+     *
+     * @param state current gameState
+     * @param event the ShellMovement event
+     * @return the updated gameState
+     */
     private GameState placeShellInPotEvent(GameState state, ShellMovementToPot event) {
 
-        int p = event.getPlayerIndexOfThisPot();
-        Player player = (p == 0) ? state.getPlayer1() : state.getPlayer2();
-        player.addToPot(1);
+        int playerWhoTurnItIs = event.getPlayerIndexOfThisPot();
+        Player p = (playerWhoTurnItIs == 0) ? state.getPlayer1() : state.getPlayer2();
+        p.addToPot(1);
 
 
         int shells = event.getShells() - 1;
         if (shells > 0) {
-            scheduleEvent(new HighLightTray(0, event.getNextPlayerIndex(), event.getPlayerIndexOfThisPot()), 0, event.getPlayerIndexOfThisPot());
-            scheduleEvent(new ShellMovement(0, event.getNextPlayerIndex(), shells, false, event.getPlayerIndexOfThisPot()), delay, event.getPlayerIndexOfThisPot());
+            scheduleEvent(new HighLightTray(0, event.getNextPlayerIndex(), playerWhoTurnItIs), 0);
+            scheduleEvent(new ShellMovement(0, event.getNextPlayerIndex(), shells, false, playerWhoTurnItIs), DELAY);
+            return state;
+
+        } else return endTurn(state, true, playerWhoTurnItIs);
+    }
+
+
+    /**
+     * Processes the end of the turn for current player
+     *
+     * @return new GameState
+     */
+    private GameState endTurn(GameState state, boolean playerHasAnotherTurn, int currentPlayer) {
+
+        //end game
+        Board board = state.getBoard();
+        if (board.isEmptyRow(0) && board.isEmptyRow(1)) {
+            if (state.getPlayer1().getStonesInPot() > state.getPlayer2().getStonesInPot()) {
+                state.getPlayer1().addWonGames();
+            } else {
+                state.getPlayer2().addWonGames();
+            }
+            scheduleEvent(new EndGame(), 0);
+            return state;
         }
+
+        //if not in race to start, they don't have another turn and the other side has shells
+        if (!state.isInitialising() && !playerHasAnotherTurn && board.isEmptyRow((currentPlayer + 1) % 2)) {
+            state.switchCurrentPlayerIndex();
+        }
+
+        scheduleEvent(new NextTurn(!state.isInitialising()), 0);
+
         return state;
     }
 
@@ -158,57 +217,18 @@ public class GameManager extends EventHandler<GameState> {
 
         if (trayIndex == 6) {
             if (playerWhoTurnItIs == playerIndex) {
-                scheduleEvent(new HighlightPlayerStore(playerWhoTurnItIs), 0, playerWhoTurnItIs);
-                scheduleEvent(new ShellMovementToPot(playerWhoTurnItIs, shellsLeft), delay, playerWhoTurnItIs);
+                scheduleEvent(new HighlightPlayerStore(playerWhoTurnItIs), 20);
+                scheduleEvent(new ShellMovementToPot(playerWhoTurnItIs, shellsLeft), DELAY);
             } else {
                 int otherPlayer = (playerIndex + 1) % 2;
-                scheduleEvent(new HighLightTray(0, otherPlayer, playerWhoTurnItIs), 0, playerWhoTurnItIs);
-                scheduleEvent(new ShellMovement(0, otherPlayer, shellsLeft, false, playerWhoTurnItIs), delay, playerWhoTurnItIs);
+                scheduleEvent(new HighLightTray(0, otherPlayer, playerWhoTurnItIs), 20);
+                scheduleEvent(new ShellMovement(0, otherPlayer, shellsLeft, false, playerWhoTurnItIs), DELAY);
             }
         } else {
-            scheduleEvent(new HighLightTray(trayIndex + 1, playerIndex, playerWhoTurnItIs), 0, playerWhoTurnItIs);
-            scheduleEvent(new ShellMovement(trayIndex + 1, playerIndex, shellsLeft, false, playerWhoTurnItIs), delay, playerWhoTurnItIs);
+            scheduleEvent(new HighLightTray(trayIndex + 1, playerIndex, playerWhoTurnItIs), 50);
+            scheduleEvent(new ShellMovement(trayIndex + 1, playerIndex, shellsLeft, false, playerWhoTurnItIs), DELAY);
         }
     }
-
-
-    /**
-     * Processes the end of the turn for current player
-     *
-     * @param trayIndex   the column of the last tray we putted beads into
-     * @param playerIndex the row of the last tray we putted beads into
-     * @param repeat      whether the last bead ended in the store
-     * @return new GameState
-     */
-    private GameState endTurn(GameState state, int trayIndex, int playerIndex, boolean repeat, int player) {
-        Board b = state.getBoard();
-        if (!repeat) {
-            if (b.getTray(playerIndex, trayIndex) == 1 && playerIndex == player) {
-                int oppositeTray = b.emptyTray((playerIndex + 1) % 2, 6 - trayIndex);
-                state.getPlayerFor(player).addToPot(oppositeTray + 1);
-                b.emptyTray(playerIndex, trayIndex);
-            }
-            if (!state.isInitialising()) {
-                state.setCurrentPlayerIndex((state.getCurrentPlayerIndex() + 1) % 2);
-            }
-        }
-        if (b.isEmptyRow(0) && b.isEmptyRow(1)) {
-            if (state.getPlayer1().getStonesInPot() > state.getPlayer2().getStonesInPot()) {
-                state.getPlayer1().addWonGames();
-            } else {
-                state.getPlayer2().addWonGames();
-            }
-            bus.feedEvent(new EndGame());
-            return state;
-        }
-
-        if (!state.isInitialising() && b.isEmptyRow(state.currentPlayerRow()))
-            state.setCurrentPlayerIndex((state.getCurrentPlayerIndex() + 1) % 2);
-
-        scheduleEvent(new NextTurn(state.isInitialising() && state.getCurrentPlayerIndex() != player), delay, player);
-        return state;
-    }
-
 
     //TODO potentially move this into the bus class for less code replication
 
@@ -218,13 +238,16 @@ public class GameManager extends EventHandler<GameState> {
      * @param event  the event to be dispatched to the bus
      * @param millis the amount in millis by which the execution is delayed
      */
-    private void scheduleEvent(final Event event, long millis, int player) {
-        timer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                bus.feedEvent(event);
-            }
-        }, millis);
+    private void scheduleEvent(final Event event, long millis) {
+        if (millis == 0) bus.feedEvent(event);
+        else {
+            timer.schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    bus.feedEvent(event);
+                }
+            }, millis);
+        }
     }
 
 

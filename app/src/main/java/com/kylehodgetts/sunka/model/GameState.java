@@ -9,6 +9,12 @@ import com.kylehodgetts.sunka.controller.bus.BusState;
  */
 public class GameState implements BusState {
 
+    public final static int NO_ONE_DONE = -2;
+    public final static int PLAYER1_DONE = -1;
+    public final static int PLAYER2_DONE = 0;
+    public final static int BOTH_DONE = 1;
+    public final static int INIT_DONE = 2;
+
     //TODO comment everything in this class
 
     private Board board;
@@ -16,6 +22,7 @@ public class GameState implements BusState {
     private Player player2;
     private int currentPlayerIndex;
     private int initialising; // VALUE -2(noone has pressed anything yet); -1(player1 has pressed); 0(player2 has pressed); 1(All user init action done, waiting for processing); 2(No more init)
+    private int whoWentFirst;
     private boolean doingMove;
 
 
@@ -25,6 +32,7 @@ public class GameState implements BusState {
         this.player2 = player2;
         this.currentPlayerIndex = -1;
         this.initialising = -2;
+        this.whoWentFirst = -1;
         this.doingMove = false;
     }
 
@@ -61,6 +69,12 @@ public class GameState implements BusState {
         this.currentPlayerIndex = currentPlayerIndex;
     }
 
+    public void switchCurrentPlayerIndex() {
+        if (currentPlayerIndex != -1) {
+            this.currentPlayerIndex = (currentPlayerIndex + 1) % 2;
+        }
+    }
+
     public int currentPlayerRow() {
         return currentPlayerIndex;
     }
@@ -70,21 +84,23 @@ public class GameState implements BusState {
     }
 
     public boolean isInitialising() {
-        return initialising < 2;
+        return initialising < INIT_DONE;
     }
 
     public void nextInitPhase(int player) {
-        if (initialising == -2) {
+        if (initialising == NO_ONE_DONE) {
             initialising += 1 + player;
-        } else if ((initialising == -1 && player == 1) || (initialising == 0 && player == 0)) {
-            initialising = 1;
+        } else if ((initialising == PLAYER1_DONE && player == 1) || (initialising == PLAYER2_DONE && player == 0)) {
+            initialising = BOTH_DONE;
         }
     }
 
     public void finishInit() {
-        if (initialising == 1)
-            ++initialising;
+        if (initialising == 1) {
+            initialising++;
+        }
     }
+
 
     public boolean playerInitialising(int player) {
         if (initialising > 1) return false;
@@ -94,6 +110,14 @@ public class GameState implements BusState {
 
     public Player getPlayerFor(int player) {
         return player == 0 ? player1 : player2;
+    }
+
+    public int getWhoWentFirst() {
+        return whoWentFirst;
+    }
+
+    public void setWhoWentFirst(int to) {
+        whoWentFirst = to;
     }
 
     public boolean isDoingMove() {
