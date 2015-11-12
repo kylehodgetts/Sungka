@@ -43,7 +43,6 @@ public class HostActivityTest extends ActivityInstrumentationTestCase2<HostActiv
         labelHostPort = (TextView) hostActivity.findViewById(R.id.labelHostPort);
         txtHostPort = (TextView) hostActivity.findViewById(R.id.txtHostPort);
         txtStatus = (TextView) hostActivity.findViewById(R.id.txtStatus);
-
     }
 
     /**

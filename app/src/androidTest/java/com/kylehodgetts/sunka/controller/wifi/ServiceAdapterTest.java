@@ -13,7 +13,7 @@ import java.util.List;
 /**
  * @author Kyle Hodgetts
  * @version 1.0
- * Reponsible for testing the service array adapter
+ * Responsible for testing the service array adapter
  */
 public class ServiceAdapterTest extends AndroidTestCase {
 
@@ -22,6 +22,10 @@ public class ServiceAdapterTest extends AndroidTestCase {
     private NsdServiceInfo nsdServiceInfo;
     private List<NsdServiceInfo> list;
 
+    /**
+     * Initialises components
+     * @throws Exception
+     */
     public void setUp() throws Exception {
         super.setUp();
         nsdServiceInfo = new NsdServiceInfo();
@@ -31,6 +35,11 @@ public class ServiceAdapterTest extends AndroidTestCase {
         serviceAdapter = new ServiceAdapter(getContext(), list);
     }
 
+    /**
+     * Asserts that the service name is displayed in the text view which
+     * constitutes a row in the list view
+     * @throws Exception
+     */
     public void testGetView() throws Exception {
         View v = serviceAdapter.getView(0, null, null);
         assertNotNull(v);
