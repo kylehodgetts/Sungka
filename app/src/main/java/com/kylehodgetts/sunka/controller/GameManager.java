@@ -60,13 +60,7 @@ public class GameManager extends EventHandler<GameState> {
         } else if (event instanceof ShellMovementToPot) {
             return new Tuple2<>(placeShellInPotEvent(state, (ShellMovementToPot) event), true);
         } else if (event instanceof NextTurn) {
-            if (!((NextTurn) event).finishInit()) {
-                state.finishInit();
-                if (!state.isInitialising()) {
-                    state.setCurrentPlayerIndex(state.getWhoWentFirst());
-                    state.setDoingMove(false);
-                }
-            }
+            //TODO something here or remove the event
             return new Tuple2<>(state, true);
         } else if (event instanceof NewGame) {
             state.getPlayer1().resetStonesInPot();
@@ -75,6 +69,47 @@ public class GameManager extends EventHandler<GameState> {
             return new Tuple2<>(state, true);
         } else return new Tuple2<>(state, false);
     }
+
+
+    /**
+     * Processes the end of the turn for current player
+     *
+     * @return new GameState
+     */
+    private GameState endTurn(GameState state, boolean playerHasAnotherTurn, int currentPlayer) {
+
+        //end game
+        Board board = state.getBoard();
+        if (board.isEmptyRow(0) && board.isEmptyRow(1)) {
+            if (state.getPlayer1().getStonesInPot() > state.getPlayer2().getStonesInPot()) {
+                state.getPlayer1().addWonGames();
+            } else {
+                state.getPlayer2().addWonGames();
+            }
+            scheduleEvent(new EndGame(), 0);
+            return state;
+        }
+
+        if (!state.isRaceStateOver()) {
+            state.setPlayerFirstMoveEnded(currentPlayer);
+            if (state.isFirstMoveOverForPlayer(0) && state.isFirstMoveOverForPlayer(1))
+                state.setRaceStateOver();
+        }
+
+        //if not in race to start, they don't have another turn and the other side has shells
+        if (state.isRaceStateOver() && !playerHasAnotherTurn && board.isEmptyRow((currentPlayer + 1) % 2)) {
+            state.switchCurrentPlayerIndex();
+        }
+
+        if (state.isRaceStateOver()) {
+            state.setCurrentPlayerIndex(state.playerWhoWentFirst());
+            state.setDoingMove(false);
+        }
+
+
+        return state;
+    }
+
 
     @Override
     public void updateView(GameState state, Activity activity) {
@@ -90,25 +125,24 @@ public class GameManager extends EventHandler<GameState> {
      * @return new gameState
      */
     private GameState playerSelectedTrayEvent(GameState state, PlayerChoseTray trayChosen) {
-        int trayIndex = trayChosen.getTrayIndex();
-        int playerIndex = trayChosen.getPlayerIndex();
-        int shells = state.getBoard().getTray(playerIndex, trayIndex);
+        int trayIndexOfTrayChosen = trayChosen.getTrayIndex();
+        int playerIndexOfTrayChosen = trayChosen.getPlayerIndex();
+        int shells = state.getBoard().getTray(playerIndexOfTrayChosen, trayIndexOfTrayChosen);
 
-        //horrific thing that determines if this move is valid, or just a player pressing random buttons
+
         if (shells != 0) {
 
-            if ((state.getCurrentPlayerIndex() == playerIndex && !state.isDoingMove() && !state.isInitialising()) //normal move
-                    || state.playerInitialising(playerIndex)) { //beginning of game
+            //horrific thing that determines if this move is valid, or just a player pressing random buttons
+            if ((state.getCurrentPlayerIndex() == playerIndexOfTrayChosen && !state.isDoingMove()) //normal move
+                    || !state.playerHasMoved(playerIndexOfTrayChosen)) { //beginning of game
 
                 state.setDoingMove(true);
+                state.setPlayerHasMoved(true, playerIndexOfTrayChosen);
+                if (state.playerWhoWentFirst() == -1)
+                    state.setWhoWentFirst(playerIndexOfTrayChosen);
 
-                if (state.getWhoWentFirst() == -1) {
-                    state.setWhoWentFirst(playerIndex);
-                }
-                if (state.isInitialising()) state.nextInitPhase(playerIndex);
-
-                shells = state.getBoard().emptyTray(playerIndex, trayIndex);
-                moveShellsToNextPosition(trayIndex, playerIndex, shells, playerIndex);
+                shells = state.getBoard().emptyTray(playerIndexOfTrayChosen, trayIndexOfTrayChosen);
+                moveShellsToNextPosition(trayIndexOfTrayChosen, playerIndexOfTrayChosen, shells, playerIndexOfTrayChosen);
 
             }
         }
@@ -172,36 +206,6 @@ public class GameManager extends EventHandler<GameState> {
             return state;
 
         } else return endTurn(state, true, playerWhoTurnItIs);
-    }
-
-
-    /**
-     * Processes the end of the turn for current player
-     *
-     * @return new GameState
-     */
-    private GameState endTurn(GameState state, boolean playerHasAnotherTurn, int currentPlayer) {
-
-        //end game
-        Board board = state.getBoard();
-        if (board.isEmptyRow(0) && board.isEmptyRow(1)) {
-            if (state.getPlayer1().getStonesInPot() > state.getPlayer2().getStonesInPot()) {
-                state.getPlayer1().addWonGames();
-            } else {
-                state.getPlayer2().addWonGames();
-            }
-            scheduleEvent(new EndGame(), 0);
-            return state;
-        }
-
-        //if not in race to start, they don't have another turn and the other side has shells
-        if (!state.isInitialising() && !playerHasAnotherTurn && board.isEmptyRow((currentPlayer + 1) % 2)) {
-            state.switchCurrentPlayerIndex();
-        }
-
-        scheduleEvent(new NextTurn(!state.isInitialising()), 0);
-
-        return state;
     }
 
 
