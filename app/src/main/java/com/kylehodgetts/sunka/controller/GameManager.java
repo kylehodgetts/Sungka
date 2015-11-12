@@ -22,14 +22,13 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 /**
- * @author Adam Chlupacek. V2 By Jonathan Burton
- *         ,2.1 Phileas Hocquard
- * @version 2.1
+ * @author Adam Chlupacek, Jonathan Burton
+ * @version 3.0
  *          The controller for the main game logic
  */
 public class GameManager extends EventHandler<GameState> {
 
-    private static final int DELAY = 100;
+    private static final int DELAY = 300;
     private Timer timer;
     private EventBus<GameState> bus;
 
@@ -52,7 +51,6 @@ public class GameManager extends EventHandler<GameState> {
     @Override
     public Tuple2<GameState, Boolean> handleEvent(Event event, GameState state) {
 
-
         if (event instanceof PlayerChoseTray) {
             return new Tuple2<>(playerSelectedTrayEvent(state, (PlayerChoseTray) event), true);
         } else if (event instanceof ShellMovement) {
@@ -68,10 +66,12 @@ public class GameManager extends EventHandler<GameState> {
             state = new GameState(new Board(), state.getPlayer1(), state.getPlayer2());
             return new Tuple2<>(state, true);
         } else return new Tuple2<>(state, false);
+
     }
 
     @Override
     public void updateView(GameState state, Activity activity) {
+
     }
 
     /**
@@ -136,7 +136,6 @@ public class GameManager extends EventHandler<GameState> {
 
     }
 
-
     /**
      * Processes placing a shell into the next tray
      *
@@ -159,7 +158,6 @@ public class GameManager extends EventHandler<GameState> {
 
         } else return endTurn(state, true, playerWhoTurnItIs);
     }
-
 
     /**
      * Figures out where we should move next, and schedules all relevant events
