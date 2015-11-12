@@ -25,7 +25,7 @@ public class GameState implements BusState {
     /**
      * Default constructor for a GameState
      *
-     * @param board   the game {@Link Board}
+     * @param board   the game Board
      * @param player1 the object that represents player 1
      * @param player2 the object that represents player 2
      */
@@ -44,9 +44,9 @@ public class GameState implements BusState {
         this.player2FirstMoveEnded = false;
     }
 
-
     /**
      * Get the Board
+     *
      * @return the board object
      */
     public Board getBoard() {
@@ -55,6 +55,7 @@ public class GameState implements BusState {
 
     /**
      * Set the board object
+     *
      * @param board the object to set as the Board
      */
     public void setBoard(Board board) {
@@ -63,6 +64,7 @@ public class GameState implements BusState {
 
     /**
      * Get the object representing the first player
+     *
      * @return Get the object representing the first player
      */
     public Player getPlayer1() {
@@ -71,6 +73,7 @@ public class GameState implements BusState {
 
     /**
      * Set the object representing the first player
+     *
      * @param player1 Set the object representing the first player
      */
     public void setPlayer1(Player player1) {
@@ -79,6 +82,7 @@ public class GameState implements BusState {
 
     /**
      * Get the object representing the second player
+     *
      * @return Get the object representing the second player
      */
     public Player getPlayer2() {
@@ -87,6 +91,7 @@ public class GameState implements BusState {
 
     /**
      * Set the Object of the second player
+     *
      * @param player2 Object to represents player 2
      */
     public void setPlayer2(Player player2) {
@@ -95,6 +100,7 @@ public class GameState implements BusState {
 
     /**
      * Get the index of the current player
+     *
      * @return Get the index of the current player
      */
     public int getCurrentPlayerIndex() {
@@ -103,6 +109,7 @@ public class GameState implements BusState {
 
     /**
      * Set the index of the player who's turn it is
+     *
      * @param currentPlayerIndex the player to set the current player to
      */
     public void setCurrentPlayerIndex(int currentPlayerIndex) {
@@ -120,6 +127,7 @@ public class GameState implements BusState {
 
     /**
      * The board index of the current player
+     *
      * @return The board index of the current player
      */
     public int currentPlayerRow() {
@@ -128,6 +136,7 @@ public class GameState implements BusState {
 
     /**
      * Get the Object of the current player
+     *
      * @return the Object representation of the current player
      */
     public Player getCurrentPlayer() {
@@ -136,6 +145,7 @@ public class GameState implements BusState {
 
     /**
      * Get the player object that has the player index specified
+     *
      * @param player the index of the player to get
      * @return the Object of the player
      */
@@ -145,6 +155,7 @@ public class GameState implements BusState {
 
     /**
      * Player who took the first move of the game
+     *
      * @return the player index of the player who took the first turn
      */
     public int playerWhoWentFirst() {
@@ -153,6 +164,7 @@ public class GameState implements BusState {
 
     /**
      * Are we in the middle of a turn, with shells being moved?
+     *
      * @return true if shells are being moved, false if we are waiting for player input
      */
     public boolean isDoingMove() {
@@ -161,6 +173,7 @@ public class GameState implements BusState {
 
     /**
      * Specify that we are in the middle of a turn, with shells being move around the board or not
+     *
      * @param doingMove true if shells are being moved, false if no move is being processed
      */
     public void setDoingMove(boolean doingMove) {
@@ -169,6 +182,7 @@ public class GameState implements BusState {
 
     /**
      * Are we waiting for players first moves to finish?
+     *
      * @return true if moves have not been started or have not finished, false if we are both initial moves are over
      */
     public boolean isRaceState() {
@@ -184,7 +198,8 @@ public class GameState implements BusState {
 
     /**
      * Has the player chosen a tray this game?
-     * @param player
+     *
+     * @param player the player to check
      * @return true if they have chosen a tray, false if they haven't chosen one yet
      */
     public boolean playerHasMoved(int player) {
@@ -193,6 +208,7 @@ public class GameState implements BusState {
 
     /**
      * Specify that the player has chosen a tray to move for the first time
+     *
      * @param player the player in question
      */
     public void setPlayerHasMoved(int player) {
@@ -204,11 +220,11 @@ public class GameState implements BusState {
 
         if (playerWhoWentFirst() == -1)
             whoWentFirst = player;
-
     }
 
     /**
      * Specify that the players first move is over
+     *
      * @param player the player in question
      */
     public void setPlayerFirstMoveOver(int player) {
@@ -221,6 +237,7 @@ public class GameState implements BusState {
 
     /**
      * Has the first move of the player finished
+     *
      * @param player player to check
      * @return true if the move is over, false if the first move has not started or has not finished yet
      */

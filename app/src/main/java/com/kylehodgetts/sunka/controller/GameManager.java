@@ -203,7 +203,6 @@ public class GameManager extends EventHandler<GameState> {
             return state;
         }
 
-
         if (state.isRaceState()) {
             state.setPlayerFirstMoveOver(currentPlayer);
             if (state.isFirstMoveOverForPlayer(0) && state.isFirstMoveOverForPlayer(1)) {
@@ -211,17 +210,16 @@ public class GameManager extends EventHandler<GameState> {
             }
         }
 
-
         //if not in race to start, they don't have another turn and the other side has shells then the other player can go
         if (!state.isRaceState() && !playerHasAnotherTurn && !board.isEmptyRow((currentPlayer + 1) % 2)) {
             state.switchCurrentPlayerIndex();
         }
 
-
+        //if race state if over but we haven't chosen the next players turn yet,
+        //then we need to specify it before the NextTurn event is scheduled
         if (!state.isRaceState() && state.getCurrentPlayerIndex() == -1) {
             state.setCurrentPlayerIndex(state.playerWhoWentFirst());
         }
-
 
         scheduleEvent(new NextTurn(), 0);
 
