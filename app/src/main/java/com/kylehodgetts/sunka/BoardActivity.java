@@ -1,10 +1,13 @@
 package com.kylehodgetts.sunka;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.GridLayout;
 import android.widget.ImageButton;
@@ -88,6 +91,33 @@ public class BoardActivity extends AppCompatActivity {
         else {
             bus.feedEvent(new NewGame());
         }
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        /*
+         * TODO Implement back button for game modes
+         * TODO For AI and local play, allow option to save game
+         * TODO For multi player, assert quit confirmation and close
+         */
+        if (keyCode == event.KEYCODE_BACK) {
+            new AlertDialog.Builder(this)
+                    .setMessage("Do you want to quit?")
+                    .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+
+                        public void onClick(DialogInterface arg0, int arg1) {
+                            finish();
+                        }
+                    })
+                    .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface arg0, int arg1) {
+                            return;
+                        }
+                    })
+                    .show();
+
+        }
+        return super.onKeyDown(keyCode, event);
     }
 
     @Override
