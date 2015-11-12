@@ -54,14 +54,21 @@ public class HostActivity extends Activity {
         txtStatus = (TextView) findViewById(R.id.txtStatus);
         txtAddress.setText(getIpAddress());
 
-        registerService(PORT);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if(registrationListener == null) {
+            registerService(PORT);
+        }
     }
 
     /**
      * Uninitialises registration listener and server socket
      */
     @Override
-    protected void onPause(){
+    protected void onStop(){
         if(registrationListener != null){
             nsdManager.unregisterService(registrationListener);
             registrationListener = null;
@@ -73,7 +80,7 @@ public class HostActivity extends Activity {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        super.onPause();
+        super.onStop();
         Log.d("HostActivity: ", "onDestroy");
     }
 

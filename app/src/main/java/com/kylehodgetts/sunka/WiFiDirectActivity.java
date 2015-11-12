@@ -11,8 +11,8 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.kylehodgetts.sunka.controller.wifi.ServiceAdapter;
 import com.kylehodgetts.sunka.controller.wifi.SingletonSocket;
@@ -64,9 +64,7 @@ public class WiFiDirectActivity extends Activity {
                 startActivity(new Intent(WiFiDirectActivity.this, HostActivity.class));
             }
         });
-        if(discoveryListener == null) {
-            initialiseDiscoveryListener();
-        }
+        initialiseDiscoveryListener();
         nsdManager = (NsdManager)getApplicationContext().getSystemService(Context.NSD_SERVICE);
         nsdManager.discoverServices("_http._tcp", NsdManager.PROTOCOL_DNS_SD, discoveryListener);
         foundServices = (ListView) findViewById(R.id.list_found_services);
@@ -99,12 +97,17 @@ public class WiFiDirectActivity extends Activity {
      */
     @Override
     protected void onPause() {
-        if(discoveryListener != null){
-            nsdManager.stopServiceDiscovery(discoveryListener);
-            discoveryListener = null;
+        if(discoveryListener != null) {
+            try {
+                nsdManager.stopServiceDiscovery(discoveryListener);
+                discoveryListener = null;
+            }
+            catch(Exception e){
+                discoveryListener = null;
+            }
+
         }
         super.onPause();
-
     }
 
     /**
@@ -139,7 +142,7 @@ public class WiFiDirectActivity extends Activity {
                     nsdManager.resolveService(serviceInfo, new NsdManager.ResolveListener() {
                         @Override
                         public void onResolveFailed(NsdServiceInfo serviceInfo, int errorCode) {
-
+                            Toast.makeText(WiFiDirectActivity.this, "Service Resolved Failed", Toast.LENGTH_LONG);
                         }
 
                         @Override
