@@ -63,6 +63,7 @@ public class AIManager extends EventHandler<GameState> {
                 }
             }, AI_DELAY);
             //Log.i(AI.TAG, "AI scheduled an event at tray position " + aiMove.getTrayIndex());
+
         }
 
         return new Tuple2<>(state, false);
@@ -72,6 +73,4 @@ public class AIManager extends EventHandler<GameState> {
     public void updateView(GameState state, Activity activity) {
 
     }
-
-
 }

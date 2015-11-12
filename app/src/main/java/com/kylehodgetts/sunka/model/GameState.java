@@ -24,8 +24,6 @@ public class GameState implements BusState {
     private boolean player1FirstMoveEnded;
     private boolean player2FirstMoveEnded;
 
-
-
     public GameState(Board board, Player player1, Player player2) {
         this.board = board;
         this.player1 = player1;

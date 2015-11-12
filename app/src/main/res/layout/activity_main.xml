@@ -30,8 +30,7 @@
             android:id="@+id/main_menu_button_two"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="@string/main_menu_two_player"
-            android:onClick="gameOption"/>
+            android:text="@string/main_menu_two_player" />
 
         <Button
             android:id="@+id/main_menu_button_online"

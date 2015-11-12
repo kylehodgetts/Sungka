@@ -12,6 +12,7 @@ import android.widget.LinearLayout;
 
 import com.kylehodgetts.sunka.controller.AIManager;
 import com.kylehodgetts.sunka.controller.GameManager;
+import com.kylehodgetts.sunka.controller.OnlineGameManager;
 import com.kylehodgetts.sunka.controller.ViewManager;
 import com.kylehodgetts.sunka.controller.bus.EventBus;
 import com.kylehodgetts.sunka.event.NewGame;
@@ -19,7 +20,6 @@ import com.kylehodgetts.sunka.event.TrayOnClickListener;
 import com.kylehodgetts.sunka.model.Board;
 import com.kylehodgetts.sunka.model.GameState;
 import com.kylehodgetts.sunka.model.Player;
-
 
 /**
  * Board Activity Class used to create the game board. Inflate and style the board to the user's
@@ -32,8 +32,9 @@ import com.kylehodgetts.sunka.model.Player;
  */
 public class BoardActivity extends AppCompatActivity {
 
-    //TODO: Implement OnPause, OnResume, OnStop methods. And within all other necessary classes
+    private static int gameType;
 
+    //TODO: Implement OnPause, OnResume, OnStop methods. And within all other necessary classes
     public static final int ONEPLAYER = 1;
     public static final int TWOPLAYER = 2;
     public static final int ONLINE = 3;
@@ -55,14 +56,13 @@ public class BoardActivity extends AppCompatActivity {
         decorView = getWindow().getDecorView();
 
         this.setContentView(R.layout.activity_board);
-        
-        int gameType = getIntent().getIntExtra(EXTRA_INT, 0);
+
+        gameType = getIntent().getIntExtra(EXTRA_INT, 0);
 
         GameState state = new GameState(new Board(), new Player(), new Player());
         EventBus<GameState> bus = new EventBus<>(state, this);
         bus.registerHandler(new GameManager(bus));
         bus.registerHandler(new ViewManager(bus, this));
-        
         if (gameType == ONEPLAYER) {
             bus.registerHandler(new AIManager(bus));
             makeXMLButtons(bus, false);
@@ -70,6 +70,7 @@ public class BoardActivity extends AppCompatActivity {
             makeXMLButtons(bus, true);
         } else if (gameType == ONLINE) {
             //TODO bus.registerHandler(ONLINEHANDLER)
+            bus.registerHandler(new OnlineGameManager(bus));
             makeXMLButtons(bus, false);
         }
 
@@ -107,7 +108,6 @@ public class BoardActivity extends AppCompatActivity {
                 param.width = GridLayout.LayoutParams.WRAP_CONTENT;
                 param.height = GridLayout.LayoutParams.WRAP_CONTENT;
                 param.setGravity(Gravity.FILL_HORIZONTAL);
-
                 linearLayout.setLayoutParams(param);
                 gridlayout.addView(linearLayout);
                 
@@ -157,6 +157,10 @@ public class BoardActivity extends AppCompatActivity {
     public void returnToMainMenu(View view) {
         Intent intent = new Intent(BoardActivity.this, MainActivity.class);
         BoardActivity.this.startActivity(intent);
+    }
+
+    public static int getGameType() {
+        return gameType;
     }
 
 }

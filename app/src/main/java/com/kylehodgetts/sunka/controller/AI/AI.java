@@ -20,5 +20,4 @@ public interface AI {
      * @return the index of the tray to click
      */
     int chooseTray(GameState state);
-
 }

@@ -64,6 +64,7 @@ public class AIStrategy implements AI {
                 return new Tuple2<>(true, tray);
             }
         }
+
         return new Tuple2<>(false, -1);
     }
 
@@ -170,7 +171,6 @@ public class AIStrategy implements AI {
      * @return the tray index to pick
      */
     private int getRandomTray(GameState state) {
-
         Random r = new Random();
         int i = r.nextInt(7);
         Board b = state.getBoard();

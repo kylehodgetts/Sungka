@@ -10,6 +10,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.ViewFlipper;
 
+import com.kylehodgetts.sunka.BoardActivity;
 import com.kylehodgetts.sunka.R;
 import com.kylehodgetts.sunka.controller.bus.Event;
 import com.kylehodgetts.sunka.controller.bus.EventBus;
@@ -249,7 +250,10 @@ public class ViewManager extends EventHandler<GameState> {
 
                 if (!state.isRaceState()) {
                     TextView tv = (TextView) linearLayout.findViewById(R.id.tv);
-                    int angle = playersTurn == 1 ? 180 : 0;
+                    int angle = 0;
+                    if(playersTurn == 1 && BoardActivity.getGameType() != BoardActivity.ONLINE){
+                        angle = 180;
+                    }
                     tv.setRotation(angle);
                     tvPlayerA.setRotation(angle);
                     tvPlayerB.setRotation(angle);
