@@ -11,6 +11,8 @@ import static org.junit.Assert.assertEquals;
 
 
 /**
+ * @author Adam Chlupacek
+ * @version 1.0
  * Test Class for the the event bus
  */
 public class BusTest{
