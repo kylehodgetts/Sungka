@@ -2,12 +2,14 @@ package com.kylehodgetts.sunka.model;
 
 import com.kylehodgetts.sunka.controller.bus.BusState;
 
+import java.io.Serializable;
+
 /**
  * @author Adam Chlupacek
  * @version 1.0
  *          The current state of the game, contains all of the models for the game
  */
-public class GameState implements BusState {
+public class GameState implements BusState, Serializable {
 
     private Board board;
     private Player player1;
@@ -216,6 +218,7 @@ public class GameState implements BusState {
             player1HasMoved = true;
         } else if (player == 1) {
             player2HasMoved = true;
+
         }
 
         if (playerWhoWentFirst() == -1)
@@ -244,5 +247,4 @@ public class GameState implements BusState {
     public boolean isFirstMoveOverForPlayer(int player) {
         return player == 0 ? player1FirstMoveEnded : player2FirstMoveEnded;
     }
-
 }

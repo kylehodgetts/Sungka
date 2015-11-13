@@ -1,10 +1,13 @@
 package com.kylehodgetts.sunka;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.GridLayout;
 import android.widget.ImageButton;
@@ -20,6 +23,7 @@ import com.kylehodgetts.sunka.event.TrayOnClickListener;
 import com.kylehodgetts.sunka.model.Board;
 import com.kylehodgetts.sunka.model.GameState;
 import com.kylehodgetts.sunka.model.Player;
+import com.kylehodgetts.sunka.util.FileUtility;
 
 /**
  * Board Activity Class used to create the game board. Inflate and style the board to the user's
@@ -28,11 +32,13 @@ import com.kylehodgetts.sunka.model.Player;
  * @author Phileas Hocquard
  * @author Charlie Baker
  * @author Jonathan Burton
- * @version 1.6
+ * @author Kyle Hodgetts
+ * @version 1.7
  */
 public class BoardActivity extends AppCompatActivity {
 
     private static int gameType;
+    private GameState state;
 
     //TODO: Implement OnPause, OnResume, OnStop methods. And within all other necessary classes
     public static final int ONEPLAYER = 1;
@@ -40,6 +46,8 @@ public class BoardActivity extends AppCompatActivity {
     public static final int ONLINE = 3;
 
     public static final String EXTRA_INT = "com.kylehodgetts.sunka.boardactivity.gametype";
+    public static final String PARCELABLE_GAME_STATE = "com.kylehodgetts.sunka.boardactivity.gamestate";
+    private static final String FILE_NAME = "sungkasave";
 
     View decorView;
 
@@ -59,7 +67,11 @@ public class BoardActivity extends AppCompatActivity {
 
         gameType = getIntent().getIntExtra(EXTRA_INT, 0);
 
-        GameState state = new GameState(new Board(), new Player(), new Player());
+        state = (GameState) FileUtility.readFromSaveFile(this, FILE_NAME);
+        if(state == null) {
+            state = new GameState(new Board(), new Player(), new Player());
+        }
+
         EventBus<GameState> bus = new EventBus<>(state, this);
         bus.registerHandler(new GameManager(bus));
         bus.registerHandler(new ViewManager(bus, this));
@@ -69,12 +81,39 @@ public class BoardActivity extends AppCompatActivity {
         } else if (gameType == TWOPLAYER) {
             makeXMLButtons(bus, true);
         } else if (gameType == ONLINE) {
-            //TODO bus.registerHandler(ONLINEHANDLER)
             bus.registerHandler(new OnlineGameManager(bus));
             makeXMLButtons(bus, false);
         }
 
         bus.feedEvent(new NewGame());
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == event.KEYCODE_BACK) {
+            new AlertDialog.Builder(this)
+                    .setMessage("Will you want to return to this game?")
+                    .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+
+                        public void onClick(DialogInterface arg0, int arg1) {
+                            FileUtility.saveGame(BoardActivity.this, FILE_NAME, state);
+                            returnToMainMenu();
+                        }
+                    })
+                    .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface arg0, int arg1) {
+                            returnToMainMenu();
+                        }
+                    })
+                    .setNeutralButton("Cancel", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            return;
+                        }
+                    })
+                    .show();
+        }
+        return super.onKeyDown(keyCode, event);
     }
 
     /**
@@ -110,7 +149,7 @@ public class BoardActivity extends AppCompatActivity {
                 param.setGravity(Gravity.FILL_HORIZONTAL);
                 linearLayout.setLayoutParams(param);
                 gridlayout.addView(linearLayout);
-                
+
                 //we don't want the opposite side clickable if there are not two local players
                 if (player == 0 || player == 1 && bothSetsButtonsClickable) {
                     button.setOnClickListener(new TrayOnClickListener(tray, player, bus));
@@ -154,13 +193,19 @@ public class BoardActivity extends AppCompatActivity {
     /**
      * Method that allows us to return to the main menu .
      */
-    public void returnToMainMenu(View view) {
+    public void returnToMainMenu() {
         Intent intent = new Intent(BoardActivity.this, MainActivity.class);
-        BoardActivity.this.startActivity(intent);
+        startActivity(intent);
     }
 
+    /**
+     *
+     * @return
+     *          1: Player is playing against an AI player,
+     *          2: Player is playing head to head with another player
+     *          3: Player is playing with another player over WiFi
+     */
     public static int getGameType() {
         return gameType;
     }
-
 }

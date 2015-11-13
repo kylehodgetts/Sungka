@@ -8,11 +8,11 @@ import android.widget.Button;
 
 public class MainActivity extends AppCompatActivity {
 
-    Button mmbone;
-    Button mmbtwo;
-    Button mmbonline;
-    Button mmbus;
-    Button mmbexit;
+    private Button mmbone;
+    private Button mmbtwo;
+    private Button mmbonline;
+    private Button mmbus;
+    private Button mmbexit;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -1,11 +1,13 @@
 package com.kylehodgetts.sunka.model;
 
+import java.io.Serializable;
+
 /**
  * @author Kyle Hodgetts
  * @version 1.0
  * Models the player in the game
  */
-public class Player {
+public class Player implements Serializable {
     private int stonesInPot;
     private int wonGames;
     private int side;
@@ -55,6 +57,10 @@ public class Player {
         return stonesInPot;
     }
 
+    public void setStonesInPot(int stones) {
+        stonesInPot = stones;
+    }
+
     /**
      * Adds <code>x</code> amount of stones to pot
      * @param x number to collected stones
@@ -66,5 +72,4 @@ public class Player {
     public void resetStonesInPot(){
         stonesInPot = 0;
     }
-
 }

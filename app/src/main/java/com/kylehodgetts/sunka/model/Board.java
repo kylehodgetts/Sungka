@@ -1,13 +1,13 @@
 package com.kylehodgetts.sunka.model;
 
+import java.io.Serializable;
+
 /**
  * @author Charlie Baker
  * @version 1.1
  * Class created to represent the data model of the game board.
  */
-public class Board {
-
-    //TODO rename these player, tray rather than row, column
+public class Board implements Serializable {
 
     /*
      * board is represented by 2D integer array
@@ -19,7 +19,7 @@ public class Board {
      */
     public Board() {
         board = new int[2][7];
-        for(int i=0; i < board.length; ++i)
+        for(int i=0; i < 2; ++i)
         {
             for(int j=0; j < 7; ++j)
             {

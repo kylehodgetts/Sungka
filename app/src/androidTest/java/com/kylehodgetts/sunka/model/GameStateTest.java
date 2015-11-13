@@ -136,44 +136,6 @@ public class GameStateTest extends TestCase {
     }
 
     /**
-     * Assert, based on the game phase, whether or not the game is initialising
-     * @throws Exception
-     */
-    @Test
-    public void testIsInitialising() throws Exception {
-        assertTrue(gameState.isInitialising());
-        gameState.nextInitPhase(5);
-        assertFalse(gameState.isInitialising());
-    }
-
-    /**
-     * Assert that, when updating the game phase, the game state is updated
-     * @throws Exception
-     */
-    @Test
-    public void testNextInitPhase() throws Exception {
-        assertTrue(gameState.isInitialising());
-        gameState.nextInitPhase(5);
-        assertFalse(gameState.isInitialising());
-    }
-
-    /**
-     * Assert, based on the game phase, whether or not a player is initialising
-     * @throws Exception
-     */
-    @Test
-    public void testPlayerInitialising() throws Exception {
-        assertTrue(gameState.playerInitialising(0));
-        assertTrue(gameState.playerInitialising(1));
-        gameState.nextInitPhase(0); // Player 0 no longer initialising
-        assertFalse(gameState.playerInitialising(0));
-        assertTrue(gameState.playerInitialising(1));
-        gameState.nextInitPhase(1); // Player 1 no longer initialising
-        assertFalse(gameState.playerInitialising(0));
-        assertFalse(gameState.playerInitialising(1));
-    }
-
-    /**
      * Assert that, when a player index is given, the correct <code>Player</code> is returned
      * @throws Exception
      */
