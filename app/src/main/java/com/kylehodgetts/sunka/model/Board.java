@@ -121,11 +121,20 @@ public class Board implements Parcelable, Serializable{
         return s;
     }
 
+    /**
+     *
+     * @return 0
+     */
     @Override
     public int describeContents() {
         return 0;
     }
 
+    /**
+     *
+     * @param dest  Parcel being written to
+     * @param flags Flags
+     */
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         final int n = board.length;
@@ -134,6 +143,10 @@ public class Board implements Parcelable, Serializable{
         }
     }
 
+    /**
+     * Parcel constructor
+     * @param in Parcel containing information about the board
+     */
     protected Board(Parcel in) {
         board = new int[2][7];
         for(int i = 0; i < 2; i++) {
@@ -143,6 +156,7 @@ public class Board implements Parcelable, Serializable{
         }
     }
 
+    @SuppressWarnings("unused")
     public static final Creator<Board> CREATOR = new Creator<Board>() {
         @Override
         public Board createFromParcel(Parcel in) {

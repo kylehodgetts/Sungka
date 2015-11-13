@@ -76,18 +76,30 @@ public class Player implements Parcelable, Serializable {
         stonesInPot = 0;
     }
 
-
+    /**
+     * Parcel constructor
+     * @param in Parcel containing information about a player
+     */
     protected Player(Parcel in) {
         stonesInPot = in.readInt();
         wonGames = in.readInt();
         side = in.readInt();
     }
 
+    /**
+     *
+     * @return 0
+     */
     @Override
     public int describeContents() {
         return 0;
     }
 
+    /**
+     *
+     * @param dest  Parcel being written to
+     * @param flags Flags
+     */
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(stonesInPot);

@@ -3,20 +3,16 @@ package com.kylehodgetts.sunka;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
-import com.kylehodgetts.sunka.model.GameState;
-
 public class MainActivity extends AppCompatActivity {
-    public static final String TAG = "Main Activity: ";
 
-    Button mmbone;
-    Button mmbtwo;
-    Button mmbonline;
-    Button mmbus;
-    Button mmbexit;
+    private Button mmbone;
+    private Button mmbtwo;
+    private Button mmbonline;
+    private Button mmbus;
+    private Button mmbexit;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

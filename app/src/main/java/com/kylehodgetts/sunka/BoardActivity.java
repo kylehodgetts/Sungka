@@ -1,6 +1,5 @@
 package com.kylehodgetts.sunka;
 
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
@@ -22,18 +21,8 @@ import com.kylehodgetts.sunka.controller.bus.EventBus;
 import com.kylehodgetts.sunka.event.NewGame;
 import com.kylehodgetts.sunka.event.RestoredGame;
 import com.kylehodgetts.sunka.event.TrayOnClickListener;
-import com.kylehodgetts.sunka.model.Board;
 import com.kylehodgetts.sunka.model.GameState;
-import com.kylehodgetts.sunka.model.Player;
-
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import com.kylehodgetts.sunka.util.FileUtility;
 
 /**
  * Board Activity Class used to create the game board. Inflate and style the board to the user's
@@ -43,7 +32,7 @@ import java.io.ObjectOutputStream;
  * @author Charlie Baker
  * @author Jonathan Burton
  * @author Kyle Hodgetts
- * @version 1.6
+ * @version 1.7
  */
 public class BoardActivity extends AppCompatActivity {
 
@@ -83,7 +72,7 @@ public class BoardActivity extends AppCompatActivity {
             state = savedInstanceState.getParcelable(PARCEABLE_GAME_STATE);
         }
         else {
-            state = readFromSaveFile();
+            state = FileUtility.readFromSaveFile(this, FILE_NAME);
         }
 
 
@@ -117,11 +106,11 @@ public class BoardActivity extends AppCompatActivity {
          */
         if (keyCode == event.KEYCODE_BACK) {
             new AlertDialog.Builder(this)
-                    .setMessage("Do you want to save your game?")
+                    .setMessage("Do you want to return to this game?")
                     .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
 
                         public void onClick(DialogInterface arg0, int arg1) {
-                            saveGame();
+                            FileUtility.saveGame(BoardActivity.this, FILE_NAME, state);
                             returnToMainMenu();
                         }
                     })
@@ -137,7 +126,6 @@ public class BoardActivity extends AppCompatActivity {
                         }
                     })
                     .show();
-
         }
         return super.onKeyDown(keyCode, event);
     }
@@ -232,44 +220,14 @@ public class BoardActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    /**
+     *
+     * @return
+     *          1: Player is playing against an AI player,
+     *          2: Player is playing head to head with another player
+     *          3: Player is playing with another player over WiFi
+     */
     public static int getGameType() {
         return gameType;
-    }
-
-    private void saveGame() {
-        File file = new File(getApplicationContext().getFilesDir(), FILE_NAME);
-        try {
-            if(!file.exists()) {
-                file.createNewFile();
-            }
-            FileOutputStream fileOutputStream = new FileOutputStream(file);
-            ObjectOutputStream outputStream = new ObjectOutputStream(fileOutputStream);
-            outputStream.writeObject(state);
-            outputStream.flush();
-            outputStream.close();
-            fileOutputStream.close();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private GameState readFromSaveFile() {
-        GameState gameState = new GameState(new Board(), new Player(), new Player());
-        File file = new File(getApplicationContext().getFilesDir(), FILE_NAME);
-        FileInputStream inputStream;
-        try {
-            inputStream = new FileInputStream(file);
-            ObjectInputStream objectInputStream = new ObjectInputStream(inputStream);
-            gameState = (GameState) objectInputStream.readObject();
-            file.delete();
-            inputStream.close();
-            objectInputStream.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-            return gameState;
-        }
-        return gameState;
     }
 }
