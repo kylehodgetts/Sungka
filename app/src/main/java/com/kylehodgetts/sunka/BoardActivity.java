@@ -21,7 +21,9 @@ import com.kylehodgetts.sunka.controller.bus.EventBus;
 import com.kylehodgetts.sunka.event.NewGame;
 import com.kylehodgetts.sunka.event.RestoredGame;
 import com.kylehodgetts.sunka.event.TrayOnClickListener;
+import com.kylehodgetts.sunka.model.Board;
 import com.kylehodgetts.sunka.model.GameState;
+import com.kylehodgetts.sunka.model.Player;
 import com.kylehodgetts.sunka.util.FileUtility;
 
 /**
@@ -45,7 +47,7 @@ public class BoardActivity extends AppCompatActivity {
     public static final int ONLINE = 3;
 
     public static final String EXTRA_INT = "com.kylehodgetts.sunka.boardactivity.gametype";
-    public static final String PARCEABLE_GAME_STATE = "com.kylehodgetts.sunka.boardactivity.gamestate";
+    public static final String PARCELABLE_GAME_STATE = "com.kylehodgetts.sunka.boardactivity.gamestate";
     private static final String FILE_NAME = "sungkasave";
 
 
@@ -68,13 +70,13 @@ public class BoardActivity extends AppCompatActivity {
 
         gameType = getIntent().getIntExtra(EXTRA_INT, 0);
 
-        if(savedInstanceState != null) {
-            state = savedInstanceState.getParcelable(PARCEABLE_GAME_STATE);
+        state = (GameState) FileUtility.readFromSaveFile(this, FILE_NAME);
+        if(state == null) {
+            state = new GameState(new Board(), new Player(), new Player());
         }
-        else {
-            state = FileUtility.readFromSaveFile(this, FILE_NAME);
+        else if(savedInstanceState != null) {
+            state = savedInstanceState.getParcelable(PARCELABLE_GAME_STATE);
         }
-
 
         EventBus<GameState> bus = new EventBus<>(state, this);
         bus.registerHandler(new GameManager(bus));
@@ -106,7 +108,7 @@ public class BoardActivity extends AppCompatActivity {
          */
         if (keyCode == event.KEYCODE_BACK) {
             new AlertDialog.Builder(this)
-                    .setMessage("Do you want to return to this game?")
+                    .setMessage("Will you want to return to this game?")
                     .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
 
                         public void onClick(DialogInterface arg0, int arg1) {
@@ -130,13 +132,15 @@ public class BoardActivity extends AppCompatActivity {
         return super.onKeyDown(keyCode, event);
     }
 
+    /**
+     * 
+     * @param outState the bundle to save the parcelable
+     */
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putParcelable(PARCEABLE_GAME_STATE, state);
+        outState.putParcelable(PARCELABLE_GAME_STATE, state);
     }
-
-
 
     /**
      * Method used to inflate the relevant trays in the correct place on the game activity board.

@@ -53,21 +53,21 @@ public class FileUtility {
      * @return          <code>GameState</code> found in file or new <code>GameState</code>
      *                  if one isn't found
      */
-    public static GameState readFromSaveFile(Context context, String fileName) {
-        GameState gameState = new GameState(new Board(), new Player(), new Player());
+    public static Object readFromSaveFile(Context context, String fileName) {
+        Object object = null;
         File file = new File(context.getFilesDir(), fileName);
         FileInputStream inputStream;
         try {
             inputStream = new FileInputStream(file);
             ObjectInputStream objectInputStream = new ObjectInputStream(inputStream);
-            gameState = (GameState) objectInputStream.readObject();
+            object = objectInputStream.readObject();
             file.delete();
             inputStream.close();
             objectInputStream.close();
         } catch (Exception e) {
             e.printStackTrace();
-            return gameState;
+            return object;
         }
-        return gameState;
+        return object;
     }
 }

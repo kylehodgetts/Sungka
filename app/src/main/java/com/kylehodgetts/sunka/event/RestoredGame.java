@@ -3,6 +3,9 @@ package com.kylehodgetts.sunka.event;
 import com.kylehodgetts.sunka.controller.bus.Event;
 
 /**
- * Created by kylehodgetts on 12/11/2015.
+ * @author Kyle Hodgetts
+ * @version 1.0
+ * Event denoting a game is being returned to.
+ * @see <code>EventBus</code>
  */
 public class RestoredGame implements Event {}
