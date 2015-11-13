@@ -5,13 +5,14 @@ import android.os.Parcelable;
 
 import com.kylehodgetts.sunka.controller.bus.BusState;
 
+import java.io.Serializable;
+
 /**
  * @author Adam Chlupacek
  * @version 1.0
  *          The current state of the game, contains all of the models for the game
  */
-
-public class GameState implements BusState, Parcelable {
+public class GameState implements BusState, Parcelable, Serializable {
 
     private Board board;
     private Player player1;

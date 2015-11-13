@@ -3,12 +3,14 @@ package com.kylehodgetts.sunka.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.io.Serializable;
+
 /**
  * @author Kyle Hodgetts
  * @version 1.0
  * Models the player in the game
  */
-public class Player implements Parcelable {
+public class Player implements Parcelable, Serializable {
     private int stonesInPot;
     private int wonGames;
     private int side;

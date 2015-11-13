@@ -3,12 +3,14 @@ package com.kylehodgetts.sunka.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.io.Serializable;
+
 /**
  * @author Charlie Baker
  * @version 1.1
  * Class created to represent the data model of the game board.
  */
-public class Board implements Parcelable{
+public class Board implements Parcelable, Serializable{
 
     //TODO rename these player, tray rather than row, column
 
@@ -22,7 +24,7 @@ public class Board implements Parcelable{
      */
     public Board() {
         board = new int[2][7];
-        for(int i=0; i < board.length; ++i)
+        for(int i=0; i < 2; ++i)
         {
             for(int j=0; j < 7; ++j)
             {
@@ -127,7 +129,6 @@ public class Board implements Parcelable{
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         final int n = board.length;
-        dest.writeInt(n);
         for (int i = 0; i < n; i++) {
             dest.writeIntArray(board[i]);
         }

@@ -61,9 +61,8 @@ public class GameManager extends EventHandler<GameState> {
             if (!state.isRaceState()) state.setDoingMove(false);
             return new Tuple2<>(state, true);
         } else if (event instanceof NewGame) {
-            state.getPlayer1().resetStonesInPot();
-            state.getPlayer2().resetStonesInPot();
-            state = new GameState(new Board(), state.getPlayer1(), state.getPlayer2());
+            state.getPlayer1().getStonesInPot();
+            state.getPlayer2().getStonesInPot();
             return new Tuple2<>(state, true);
         } else return new Tuple2<>(state, false);
 

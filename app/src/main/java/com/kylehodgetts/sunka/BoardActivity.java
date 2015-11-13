@@ -1,5 +1,6 @@
 package com.kylehodgetts.sunka;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
@@ -25,6 +26,15 @@ import com.kylehodgetts.sunka.model.Board;
 import com.kylehodgetts.sunka.model.GameState;
 import com.kylehodgetts.sunka.model.Player;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+
 /**
  * Board Activity Class used to create the game board. Inflate and style the board to the user's
  * device screen. Also to instantiate the logic objects to control and handle the game events.
@@ -32,6 +42,7 @@ import com.kylehodgetts.sunka.model.Player;
  * @author Phileas Hocquard
  * @author Charlie Baker
  * @author Jonathan Burton
+ * @author Kyle Hodgetts
  * @version 1.6
  */
 public class BoardActivity extends AppCompatActivity {
@@ -46,6 +57,8 @@ public class BoardActivity extends AppCompatActivity {
 
     public static final String EXTRA_INT = "com.kylehodgetts.sunka.boardactivity.gametype";
     public static final String PARCEABLE_GAME_STATE = "com.kylehodgetts.sunka.boardactivity.gamestate";
+    private static final String FILE_NAME = "sungkasave";
+
 
 
     View decorView;
@@ -70,8 +83,10 @@ public class BoardActivity extends AppCompatActivity {
             state = savedInstanceState.getParcelable(PARCEABLE_GAME_STATE);
         }
         else {
-            state = new GameState(new Board(), new Player(), new Player());
+            state = readFromSaveFile();
         }
+
+
         EventBus<GameState> bus = new EventBus<>(state, this);
         bus.registerHandler(new GameManager(bus));
         bus.registerHandler(new ViewManager(bus, this));
@@ -102,15 +117,22 @@ public class BoardActivity extends AppCompatActivity {
          */
         if (keyCode == event.KEYCODE_BACK) {
             new AlertDialog.Builder(this)
-                    .setMessage("Do you want to quit?")
+                    .setMessage("Do you want to save your game?")
                     .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
 
                         public void onClick(DialogInterface arg0, int arg1) {
-                            finish();
+                            saveGame();
+                            returnToMainMenu();
                         }
                     })
                     .setNegativeButton("No", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface arg0, int arg1) {
+                            returnToMainMenu();
+                        }
+                    })
+                    .setNeutralButton("Cancel", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
                             return;
                         }
                     })
@@ -125,6 +147,8 @@ public class BoardActivity extends AppCompatActivity {
         super.onSaveInstanceState(outState);
         outState.putParcelable(PARCEABLE_GAME_STATE, state);
     }
+
+
 
     /**
      * Method used to inflate the relevant trays in the correct place on the game activity board.
@@ -203,13 +227,49 @@ public class BoardActivity extends AppCompatActivity {
     /**
      * Method that allows us to return to the main menu .
      */
-    public void returnToMainMenu(View view) {
+    public void returnToMainMenu() {
         Intent intent = new Intent(BoardActivity.this, MainActivity.class);
-        BoardActivity.this.startActivity(intent);
+        startActivity(intent);
     }
 
     public static int getGameType() {
         return gameType;
     }
 
+    private void saveGame() {
+        File file = new File(getApplicationContext().getFilesDir(), FILE_NAME);
+        try {
+            if(!file.exists()) {
+                file.createNewFile();
+            }
+            FileOutputStream fileOutputStream = new FileOutputStream(file);
+            ObjectOutputStream outputStream = new ObjectOutputStream(fileOutputStream);
+            outputStream.writeObject(state);
+            outputStream.flush();
+            outputStream.close();
+            fileOutputStream.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private GameState readFromSaveFile() {
+        //GameState gameState = new GameState(new Board(), new Player(), new Player());
+        GameState gameState = null;
+        File file = new File(getApplicationContext().getFilesDir(), FILE_NAME);
+        FileInputStream inputStream;
+        try {
+            inputStream = new FileInputStream(file);
+            ObjectInputStream objectInputStream = new ObjectInputStream(inputStream);
+            gameState = (GameState) objectInputStream.readObject();
+            inputStream.close();
+            objectInputStream.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return gameState;
+        }
+        return gameState;
+    }
 }
