@@ -22,7 +22,10 @@ import com.kylehodgetts.sunka.event.HighlightPlayerStore;
 import com.kylehodgetts.sunka.event.NewGame;
 import com.kylehodgetts.sunka.model.Board;
 import com.kylehodgetts.sunka.model.GameState;
+import com.kylehodgetts.sunka.uiutil.ShellDrawable;
 import com.kylehodgetts.sunka.util.Tuple2;
+
+import java.util.Random;
 
 
 /**
@@ -181,6 +184,7 @@ public class ViewManager extends EventHandler<GameState> {
         activity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
+
                 LinearLayout storeOne = (LinearLayout) activity.findViewById(R.id.playerBStore);
                 TextView tvPlayerAStoreCount = (TextView) activity.findViewById(R.id.tvPlayerBStoreCount);
                 tvPlayerAStoreCount.setText(Integer.toString(state.getPlayer2().getStonesInPot()));

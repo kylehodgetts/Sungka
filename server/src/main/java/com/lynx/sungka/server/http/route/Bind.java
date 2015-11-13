@@ -4,19 +4,13 @@ import com.lynx.sungka.server.ServerContext;
 import com.lynx.sungka.server.http.RequestResponse;
 import com.lynx.sungka.server.http.header.ContentLength;
 import com.lynx.sungka.server.http.header.ContentType;
-import com.lynx.sungka.server.http.header.Header;
 import com.lynx.sungka.server.util.Tuple2;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 import com.mongodb.util.JSON;
-import com.oracle.javafx.jmx.json.JSONReader;
 
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
-
-import jdk.nashorn.internal.parser.JSONParser;
 
 /**
  * @author Adam Chlupacek

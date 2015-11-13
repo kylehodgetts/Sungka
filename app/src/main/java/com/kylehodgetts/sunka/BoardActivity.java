@@ -80,6 +80,8 @@ public class BoardActivity extends AppCompatActivity {
         state = new GameState(new Board(), new Player(), new Player());
         bus.registerHandler(new GameManager(bus));
         bus.registerHandler(new ViewManager(bus, this));
+        bus.registerHandler(new AnimationManager(bus, this));
+
         if (gameType == ONEPLAYER) {
             bus.registerHandler(new AIManager(bus));
             makeXMLButtons(bus, false);
@@ -192,7 +194,9 @@ public class BoardActivity extends AppCompatActivity {
                                 | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
                                 | View.SYSTEM_UI_FLAG_FULLSCREEN
                                 | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
+
             }
+
 
             GridLayout gridLayout = (GridLayout) findViewById(R.id.gridLayout);
 
@@ -204,7 +208,7 @@ public class BoardActivity extends AppCompatActivity {
                 llparams.height = width + child.findViewById(R.id.tv).getHeight();
                 gridLayout.getChildAt(i).setLayoutParams(llparams);
                 if(!areShellsCreated) {
-                    createShells((RelativeLayout) gridLayout.getChildAt(i).findViewById(R.id.button));
+                    createShells((RelativeLayout) gridLayout.getChildAt(i).findViewById(R.id.button), 7);
                 }
             }
             areShellsCreated = true;
@@ -230,10 +234,10 @@ public class BoardActivity extends AppCompatActivity {
         return gameType;
     }
 
-    public void createShells(RelativeLayout button) {
+    public void createShells(RelativeLayout button, int numberOfShells) {
         Random random = new Random();
 
-        for(int shell=0; shell < 7; ++shell) {
+        for(int shell=0; shell < numberOfShells; ++shell) {
             ShellDrawable shellDrawable = new ShellDrawable(this, random.nextInt(button.getWidth()/2),
                     random.nextInt(button.getHeight()/2), 40, 20);
             RelativeLayout.LayoutParams shellParams = new RelativeLayout.LayoutParams(
@@ -247,6 +251,7 @@ public class BoardActivity extends AppCompatActivity {
             shellDrawable.setLayoutParams(shellParams);
             shellDrawable.setRotation(new Random().nextInt(360));
             button.addView(shellDrawable, shellParams);
+
         }
     }
 }
