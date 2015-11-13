@@ -1,11 +1,14 @@
 package com.kylehodgetts.sunka.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 /**
  * @author Charlie Baker
  * @version 1.1
  * Class created to represent the data model of the game board.
  */
-public class Board {
+public class Board implements Parcelable{
 
     //TODO rename these player, tray rather than row, column
 
@@ -115,4 +118,39 @@ public class Board {
 
         return s;
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        final int n = board.length;
+        dest.writeInt(n);
+        for (int i = 0; i < n; i++) {
+            dest.writeIntArray(board[i]);
+        }
+    }
+
+    protected Board(Parcel in) {
+        board = new int[2][7];
+        for(int i = 0; i < 2; i++) {
+            for (int j = 0; i < 7; j++) {
+                board[i][j] = in.readInt();
+            }
+        }
+    }
+
+    public static final Creator<Board> CREATOR = new Creator<Board>() {
+        @Override
+        public Board createFromParcel(Parcel in) {
+            return new Board(in);
+        }
+
+        @Override
+        public Board[] newArray(int size) {
+            return new Board[size];
+        }
+    };
 }

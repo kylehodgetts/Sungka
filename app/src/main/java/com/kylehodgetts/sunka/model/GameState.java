@@ -1,5 +1,8 @@
 package com.kylehodgetts.sunka.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.kylehodgetts.sunka.controller.bus.BusState;
 
 /**
@@ -7,7 +10,8 @@ import com.kylehodgetts.sunka.controller.bus.BusState;
  * @version 1.0
  *          The current state of the game, contains all of the models for the game
  */
-public class GameState implements BusState {
+
+public class GameState implements BusState, Parcelable {
 
     private Board board;
     private Player player1;
@@ -216,6 +220,7 @@ public class GameState implements BusState {
             player1HasMoved = true;
         } else if (player == 1) {
             player2HasMoved = true;
+
         }
 
         if (playerWhoWentFirst() == -1)
@@ -245,4 +250,36 @@ public class GameState implements BusState {
         return player == 0 ? player1FirstMoveEnded : player2FirstMoveEnded;
     }
 
+    protected GameState(Parcel in) {
+        board = (Board) in.readValue(Board.class.getClassLoader());
+        player1 = (Player) in.readValue(Player.class.getClassLoader());
+        player2 = (Player) in.readValue(Player.class.getClassLoader());
+        currentPlayerIndex = in.readInt();
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeValue(board);
+        dest.writeValue(player1);
+        dest.writeValue(player2);
+        dest.writeInt(currentPlayerIndex);
+    }
+
+    @SuppressWarnings("unused")
+    public final Parcelable.Creator<GameState> CREATOR = new Parcelable.Creator<GameState>() {
+        @Override
+        public GameState createFromParcel(Parcel in) {
+            return new GameState(in);
+        }
+
+        @Override
+        public GameState[] newArray(int size) {
+            return new GameState[size];
+        }
+    };
 }
