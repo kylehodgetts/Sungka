@@ -33,6 +33,8 @@
         <activity android:name=".HostActivity"
             android:theme="@style/NoActionBar"
             android:screenOrientation="portrait"></activity>
+        <activity android:name=".StatisticsActivity"
+            android:theme="@style/NoActionBar"/>
     </application>
 
 </manifest>

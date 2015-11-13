@@ -4,6 +4,7 @@
     <string name="main_menu_one_player">1 Player</string>
     <string name="main_menu_two_player">2 Player</string>
     <string name="main_menu_online">Online</string>
+    <string name="main_menu_statistics">Statistics</string>
     <string name="main_menu_about_us">About us</string>
     <string name="main_menu_exit">Exit</string>
 
@@ -27,4 +28,12 @@
     <string name="zero">0</string>
     <string name="your_name">Your name:</string>
     <string name="done">Done</string>
+
+    <string name="max_score">Max score:</string>
+    <string name="won_games">Games won:</string>
+    <string name="lost_games">Games lost:</string>
+    <string name="avg_time">Average time:</string>
+    <string name="name">Name</string>
+    <string name="next_stat">Next</string>
+    <string name="prev_stat">Previous</string>
 </resources>

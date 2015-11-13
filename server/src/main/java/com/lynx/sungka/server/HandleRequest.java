@@ -167,6 +167,7 @@ public class HandleRequest implements Runnable {
 
     private Tuple2<RequestResponse,ParseState> parseOne(ParseState orig){
         Tuple2<Integer,Route> popped = orig.pop();
+        System.out.println("Handlig: " + popped.getY().toString());
         return popped.getY().matchRequest(orig,context,popped.getX());
     }
 

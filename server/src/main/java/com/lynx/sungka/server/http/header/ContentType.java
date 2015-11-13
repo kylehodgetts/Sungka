@@ -19,7 +19,7 @@ public class ContentType extends Header {
      * @return boolean whether the content is json
      */
     public boolean isJson(){
-        return getValue().equals("application/json");
+        return getValue().trim().startsWith("application/json");
     }
 
     /**

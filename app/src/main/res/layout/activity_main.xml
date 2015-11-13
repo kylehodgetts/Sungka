@@ -60,6 +60,15 @@
             style="@style/btnStyleBeige"/>
 
         <Button
+            android:id="@+id/main_menu_button_statistics"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="@string/main_menu_statistics"
+            style="@style/btnStyleBeige"
+            android:layout_marginBottom="10dp"/>
+
+        <Button
             android:id="@+id/main_menu_button_exit"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"

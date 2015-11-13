@@ -39,8 +39,7 @@
             android:layout_height="wrap_content"
             android:text="@string/done"
             android:id="@+id/done_button"
-            android:layout_weight="0.3"
-            android:onClick="setName" />
+            android:layout_weight="0.3" />
     </LinearLayout>
 
     <Space
