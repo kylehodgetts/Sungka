@@ -19,7 +19,6 @@ import com.kylehodgetts.sunka.controller.OnlineGameManager;
 import com.kylehodgetts.sunka.controller.ViewManager;
 import com.kylehodgetts.sunka.controller.bus.EventBus;
 import com.kylehodgetts.sunka.event.NewGame;
-import com.kylehodgetts.sunka.event.RestoredGame;
 import com.kylehodgetts.sunka.event.TrayOnClickListener;
 import com.kylehodgetts.sunka.model.Board;
 import com.kylehodgetts.sunka.model.GameState;
@@ -50,8 +49,6 @@ public class BoardActivity extends AppCompatActivity {
     public static final String PARCELABLE_GAME_STATE = "com.kylehodgetts.sunka.boardactivity.gamestate";
     private static final String FILE_NAME = "sungkasave";
 
-
-
     View decorView;
 
     /**
@@ -74,9 +71,6 @@ public class BoardActivity extends AppCompatActivity {
         if(state == null) {
             state = new GameState(new Board(), new Player(), new Player());
         }
-        else if(savedInstanceState != null) {
-            state = savedInstanceState.getParcelable(PARCELABLE_GAME_STATE);
-        }
 
         EventBus<GameState> bus = new EventBus<>(state, this);
         bus.registerHandler(new GameManager(bus));
@@ -91,12 +85,7 @@ public class BoardActivity extends AppCompatActivity {
             makeXMLButtons(bus, false);
         }
 
-        if(savedInstanceState != null) {
-            bus.feedEvent(new RestoredGame());
-        }
-        else {
-            bus.feedEvent(new NewGame());
-        }
+        bus.feedEvent(new NewGame());
     }
 
     @Override
@@ -125,16 +114,6 @@ public class BoardActivity extends AppCompatActivity {
                     .show();
         }
         return super.onKeyDown(keyCode, event);
-    }
-
-    /**
-     * Save the current gamestate to the bundle
-     * @param outState the bundle to save the parcelable
-     */
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putParcelable(PARCELABLE_GAME_STATE, state);
     }
 
     /**

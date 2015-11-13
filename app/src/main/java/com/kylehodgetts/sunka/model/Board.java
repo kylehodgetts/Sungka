@@ -1,8 +1,5 @@
 package com.kylehodgetts.sunka.model;
 
-import android.os.Parcel;
-import android.os.Parcelable;
-
 import java.io.Serializable;
 
 /**
@@ -10,9 +7,7 @@ import java.io.Serializable;
  * @version 1.1
  * Class created to represent the data model of the game board.
  */
-public class Board implements Parcelable, Serializable{
-
-    //TODO rename these player, tray rather than row, column
+public class Board implements Serializable {
 
     /*
      * board is represented by 2D integer array
@@ -120,52 +115,4 @@ public class Board implements Parcelable, Serializable{
 
         return s;
     }
-
-    /**
-     *
-     * @return 0
-     */
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    /**
-     *
-     * @param dest  Parcel being written to
-     * @param flags Flags
-     */
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        final int n = board.length;
-        for (int i = 0; i < n; i++) {
-            dest.writeIntArray(board[i]);
-        }
-    }
-
-    /**
-     * Parcel constructor
-     * @param in Parcel containing information about the board
-     */
-    protected Board(Parcel in) {
-        board = new int[2][7];
-        for(int i = 0; i < 2; i++) {
-            for (int j = 0; i < 7; j++) {
-                board[i][j] = in.readInt();
-            }
-        }
-    }
-
-    @SuppressWarnings("unused")
-    public static final Creator<Board> CREATOR = new Creator<Board>() {
-        @Override
-        public Board createFromParcel(Parcel in) {
-            return new Board(in);
-        }
-
-        @Override
-        public Board[] newArray(int size) {
-            return new Board[size];
-        }
-    };
 }

@@ -1,8 +1,5 @@
 package com.kylehodgetts.sunka.model;
 
-import android.os.Parcel;
-import android.os.Parcelable;
-
 import java.io.Serializable;
 
 /**
@@ -10,7 +7,7 @@ import java.io.Serializable;
  * @version 1.0
  * Models the player in the game
  */
-public class Player implements Parcelable, Serializable {
+public class Player implements Serializable {
     private int stonesInPot;
     private int wonGames;
     private int side;
@@ -75,48 +72,4 @@ public class Player implements Parcelable, Serializable {
     public void resetStonesInPot(){
         stonesInPot = 0;
     }
-
-    /**
-     * Parcel constructor
-     * @param in Parcel containing information about a player
-     */
-    protected Player(Parcel in) {
-        stonesInPot = in.readInt();
-        wonGames = in.readInt();
-        side = in.readInt();
-    }
-
-    /**
-     *
-     * @return 0
-     */
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    /**
-     *
-     * @param dest  Parcel being written to
-     * @param flags Flags
-     */
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(stonesInPot);
-        dest.writeInt(wonGames);
-        dest.writeInt(side);
-    }
-
-    @SuppressWarnings("unused")
-    public static final Parcelable.Creator<Player> CREATOR = new Parcelable.Creator<Player>() {
-        @Override
-        public Player createFromParcel(Parcel in) {
-            return new Player(in);
-        }
-
-        @Override
-        public Player[] newArray(int size) {
-            return new Player[size];
-        }
-    };
 }
