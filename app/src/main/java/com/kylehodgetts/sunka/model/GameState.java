@@ -193,7 +193,7 @@ public class GameState implements BusState, Parcelable, Serializable {
     public boolean isRaceState() {
         return raceState;
     }
-
+g
     /**
      * Set that both players first moves have finished
      */

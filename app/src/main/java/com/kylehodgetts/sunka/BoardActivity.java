@@ -101,11 +101,6 @@ public class BoardActivity extends AppCompatActivity {
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        /*
-         * TODO Implement back button for game modes
-         * TODO For AI and local play, allow option to save game
-         * TODO For multi player, assert quit confirmation and close
-         */
         if (keyCode == event.KEYCODE_BACK) {
             new AlertDialog.Builder(this)
                     .setMessage("Will you want to return to this game?")
@@ -133,7 +128,7 @@ public class BoardActivity extends AppCompatActivity {
     }
 
     /**
-     * 
+     * Save the current gamestate to the bundle
      * @param outState the bundle to save the parcelable
      */
     @Override
