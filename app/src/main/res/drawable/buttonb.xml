@@ -1,20 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <shape xmlns:android="http://schemas.android.com/apk/res/android"
-    android:shape="oval" >
-    <corners
-        android:radius="25dp" />
+    android:shape="oval">
+    <corners android:radius="25dp" />
     <gradient
         android:angle="45"
-        android:centerX="35%"
         android:centerColor="#A84136"
-        android:startColor="#C4213C"
+        android:centerX="35%"
         android:endColor="#FF5757"
+        android:startColor="#C4213C"
         android:type="linear" />
     <padding
+        android:bottom="0dp"
         android:left="0dp"
-        android:top="0dp"
         android:right="0dp"
-        android:bottom="0dp" />
-
+        android:top="0dp" />
 
 </shape>

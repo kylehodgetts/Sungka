@@ -11,11 +11,7 @@ public class NextTurn implements Event {
 
     private boolean finishInit;
 
-    public NextTurn(boolean finishInit) {
-        this.finishInit = finishInit;
-    }
+    public NextTurn() {
 
-    public boolean finishInit() {
-        return finishInit;
     }
 }

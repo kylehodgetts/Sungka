@@ -3,8 +3,13 @@ package com.kylehodgetts.sunka.event;
 import android.view.View;
 
 import com.kylehodgetts.sunka.controller.bus.EventBus;
+import com.kylehodgetts.sunka.controller.wifi.SingletonSocket;
 import com.kylehodgetts.sunka.event.PlayerChoseTray;
 import com.kylehodgetts.sunka.model.GameState;
+
+import java.io.OutputStream;
+import java.io.PrintStream;
+import java.net.Socket;
 
 /**
  * @author Adam Chlupacek
