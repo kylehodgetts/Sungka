@@ -256,14 +256,14 @@ public class BoardActivity extends AppCompatActivity {
     }
 
     private GameState readFromSaveFile() {
-        //GameState gameState = new GameState(new Board(), new Player(), new Player());
-        GameState gameState = null;
+        GameState gameState = new GameState(new Board(), new Player(), new Player());
         File file = new File(getApplicationContext().getFilesDir(), FILE_NAME);
         FileInputStream inputStream;
         try {
             inputStream = new FileInputStream(file);
             ObjectInputStream objectInputStream = new ObjectInputStream(inputStream);
             gameState = (GameState) objectInputStream.readObject();
+            file.delete();
             inputStream.close();
             objectInputStream.close();
         } catch (Exception e) {
