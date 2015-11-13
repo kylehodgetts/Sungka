@@ -78,6 +78,14 @@ public class ShellDrawable extends View {
         this.shell.getPaint().setColor(Color.parseColor(newColour));
     }
 
+    public void setColour(int newColourInt) {
+        this.shell.getPaint().setColor(newColourInt);
+    }
+
+    public int getColour() {
+        return shell.getPaint().getColor();
+    }
+
     @Override
     protected void onDraw(Canvas canvas) {
         shell.draw(canvas);
