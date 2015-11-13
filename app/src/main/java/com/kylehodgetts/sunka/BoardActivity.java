@@ -55,7 +55,6 @@ public class BoardActivity extends AppCompatActivity {
 
     public static final String EXTRA_INT = "com.kylehodgetts.sunka.boardactivity.gametype";
 
-    View decorView;
     private View decorView;
     private boolean areShellsCreated;
 
@@ -80,23 +79,23 @@ public class BoardActivity extends AppCompatActivity {
         EventBus<GameState> bus = new EventBus<>(state, this);
         bus.registerHandler(new GameManager(bus));
         bus.registerHandler(new ViewManager(bus, this));
+        bus.registerHandler(new AnimationManager(bus, this));
+
         if (gameType == ONEPLAYER) {
             bus.registerHandler(new AIManager(bus));
             makeXMLButtons(bus, false);
         } else if (gameType == TWOPLAYER) {
             makeXMLButtons(bus, true);
         } else if (gameType == ONLINE) {
-            //TODO bus.registerHandler(ONLINEHANDLER)
             bus.registerHandler(new OnlineGameManager(bus));
             makeXMLButtons(bus, false);
         }
-        bus.registerHandler(new AnimationManager(bus, this));
-        makeXMLButtons(bus); bus.feedEvent(new NewGame());
+
 
         bus.feedEvent(new NewGame());
     }
 
-}
+
 
     /**
      * Method used to inflate the relevant trays in the correct place on the game activity board.
@@ -110,12 +109,12 @@ public class BoardActivity extends AppCompatActivity {
        for(int i=1; i >= 0; --i) {
             for(int j=6; j >= 0; --j) {
                 final LinearLayout linearLayout;
-                if (player == 0) {
+                if (i == 0) {
                     linearLayout = (LinearLayout) getLayoutInflater().inflate(R.layout.buttonlayoutb, gridlayout, false);
                 } else {
                     linearLayout = (LinearLayout) getLayoutInflater().inflate(R.layout.buttonlayouta, gridlayout, false);
                 }
-                linearLayout.setId(Integer.parseInt(player + "" + tray));
+                linearLayout.setId(Integer.parseInt(i + "" + j));
 
                 RelativeLayout button = (RelativeLayout) linearLayout.findViewById(R.id.button);
 
@@ -137,8 +136,8 @@ public class BoardActivity extends AppCompatActivity {
                 gridlayout.addView(linearLayout);
                 
                 //we don't want the opposite side clickable if there are not two local players
-                if (player == 0 || player == 1 && bothSetsButtonsClickable) {
-                    button.setOnClickListener(new TrayOnClickListener(tray, player, bus));
+                if (i == 0 || i == 1 && bothSetsButtonsClickable) {
+                    button.setOnClickListener(new TrayOnClickListener(j, i, bus));
                 }
             }
         }
@@ -165,7 +164,9 @@ public class BoardActivity extends AppCompatActivity {
                                 | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
                                 | View.SYSTEM_UI_FLAG_FULLSCREEN
                                 | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
+
             }
+
 
             GridLayout gridLayout = (GridLayout) findViewById(R.id.gridLayout);
 
@@ -177,7 +178,7 @@ public class BoardActivity extends AppCompatActivity {
                 llparams.height = width + child.findViewById(R.id.tv).getHeight();
                 gridLayout.getChildAt(i).setLayoutParams(llparams);
                 if(!areShellsCreated) {
-                    createShells((RelativeLayout) gridLayout.getChildAt(i).findViewById(R.id.button));
+                    createShells((RelativeLayout) gridLayout.getChildAt(i).findViewById(R.id.button), 7);
                 }
             }
             areShellsCreated = true;
@@ -192,10 +193,10 @@ public class BoardActivity extends AppCompatActivity {
         BoardActivity.this.startActivity(intent);
     }
 
-    public void createShells(RelativeLayout button) {
+    public void createShells(RelativeLayout button, int numberOfShells) {
         Random random = new Random();
 
-        for(int shell=0; shell < 7; ++shell) {
+        for(int shell=0; shell < numberOfShells; ++shell) {
             ShellDrawable shellDrawable = new ShellDrawable(this, random.nextInt(button.getWidth()/2),
                     random.nextInt(button.getHeight()/2), 40, 20);
             RelativeLayout.LayoutParams shellParams = new RelativeLayout.LayoutParams(
@@ -209,6 +210,7 @@ public class BoardActivity extends AppCompatActivity {
             shellDrawable.setLayoutParams(shellParams);
             shellDrawable.setRotation(new Random().nextInt(360));
             button.addView(shellDrawable, shellParams);
+
         }
     }
 

@@ -21,7 +21,10 @@ import com.kylehodgetts.sunka.event.HighlightPlayerStore;
 import com.kylehodgetts.sunka.event.NewGame;
 import com.kylehodgetts.sunka.model.Board;
 import com.kylehodgetts.sunka.model.GameState;
+import com.kylehodgetts.sunka.uiutil.ShellDrawable;
 import com.kylehodgetts.sunka.util.Tuple2;
+
+import java.util.Random;
 
 
 /**
@@ -132,6 +135,7 @@ public class ViewManager extends EventHandler<GameState> {
         activity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
+
                 LinearLayout storeOne = (LinearLayout) activity.findViewById(R.id.playerBStore);
                 TextView tvPlayerAStoreCount = (TextView) activity.findViewById(R.id.tvPlayerBStoreCount);
                 tvPlayerAStoreCount.setText(Integer.toString(state.getPlayer2().getStonesInPot()));
@@ -177,7 +181,7 @@ public class ViewManager extends EventHandler<GameState> {
                 button.setBackgroundResource(player == 0 ? R.drawable.buttonb : R.drawable.buttona);
                 button.setPadding(35, 35, 35, 35);
 
-                if (!state.isInitialising()) {
+                if (!state.isRaceState()) {
                     TextView tv = (TextView) linearLayout.findViewById(R.id.tv);
                     int angle = playersTurn == 1 ? 180 : 0;
                     tv.setRotation(angle);
@@ -187,7 +191,7 @@ public class ViewManager extends EventHandler<GameState> {
             }
         }
 
-        if (state.isInitialising()) {
+        if (state.isRaceState()) {
             tvPlayerB.setBackgroundColor(Color.parseColor("#2D8BA8"));
             tvPlayerA.setBackgroundColor(Color.parseColor("#A84136"));
             tvPlayerB.setTextColor(Color.WHITE);
