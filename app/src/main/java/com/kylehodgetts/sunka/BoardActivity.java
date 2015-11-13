@@ -27,6 +27,8 @@ import com.kylehodgetts.sunka.model.Player;
 import com.kylehodgetts.sunka.uiutil.ShellDrawable;
 import com.kylehodgetts.sunka.util.FileUtility;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Random;
 
 /**
@@ -53,6 +55,9 @@ public class BoardActivity extends AppCompatActivity {
 
     private View decorView;
     private boolean areShellsCreated;
+
+    private HashMap<Integer, ArrayList<ShellDrawable>> shellAllocations;
+
 
     /**
      * Creates the board activity, instantiates all necessary objects and sets the content view for
@@ -209,6 +214,8 @@ public class BoardActivity extends AppCompatActivity {
                 gridLayout.getChildAt(i).setLayoutParams(llparams);
                 if(!areShellsCreated) {
                     createShells((RelativeLayout) gridLayout.getChildAt(i).findViewById(R.id.button), 7);
+                    initialiseShellAllocations();
+
                 }
             }
             areShellsCreated = true;
@@ -254,4 +261,23 @@ public class BoardActivity extends AppCompatActivity {
 
         }
     }
+
+    private void initialiseShellAllocations() {
+        shellAllocations = new HashMap<>();
+        for(int player=0; player < 2; ++player) {
+            for(int tray=0; tray < 7; ++tray) {
+                ArrayList<ShellDrawable> shellArrayList = new ArrayList<>();
+                shellAllocations.put(Integer.parseInt(player+""+tray), shellArrayList);
+
+                LinearLayout trayLinearLayout = (LinearLayout) findViewById(Integer.parseInt(player+""+tray));
+                RelativeLayout trayButton = (RelativeLayout) trayLinearLayout.findViewById(R.id.button);
+
+                for(int shell=0; shell < 7; ++shell) {
+                    shellArrayList.add((ShellDrawable) trayButton.getChildAt(shell));
+                }
+            }
+        }
+    }
+
+    public HashMap<Integer, ArrayList<ShellDrawable>> getShellAllocations() { return shellAllocations; }
 }
