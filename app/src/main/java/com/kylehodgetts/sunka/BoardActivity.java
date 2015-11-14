@@ -33,8 +33,13 @@ import com.kylehodgetts.sunka.model.Player;
 public class BoardActivity extends AppCompatActivity {
 
     private static int gameType;
+<<<<<<< 5edf0b929becaea3f69ab0abf0e7081184a90ca4
 
     //TODO: Implement OnPause, OnResume, OnStop methods. And within all other necessary classes
+=======
+    private GameState state;
+    private EventBus<GameState> bus;
+>>>>>>> WIP UITest Need to write comments and 1 testcase of button click GameOver 2 testCases having 2 straight turns.
     public static final int ONEPLAYER = 1;
     public static final int TWOPLAYER = 2;
     public static final int ONLINE = 3;
@@ -59,8 +64,17 @@ public class BoardActivity extends AppCompatActivity {
 
         gameType = getIntent().getIntExtra(EXTRA_INT, 0);
 
+<<<<<<< 5edf0b929becaea3f69ab0abf0e7081184a90ca4
         GameState state = new GameState(new Board(), new Player(), new Player());
         EventBus<GameState> bus = new EventBus<>(state, this);
+=======
+        state = (GameState) FileUtility.readFromSaveFile(this, FILE_NAME);
+        if(state == null) {
+            state = new GameState(new Board(), new Player(), new Player());
+        }
+
+        bus = new EventBus<>(state, this);
+>>>>>>> WIP UITest Need to write comments and 1 testcase of button click GameOver 2 testCases having 2 straight turns.
         bus.registerHandler(new GameManager(bus));
         bus.registerHandler(new ViewManager(bus, this));
         if (gameType == ONEPLAYER) {
@@ -166,4 +180,15 @@ public class BoardActivity extends AppCompatActivity {
         return gameType;
     }
 
+<<<<<<< 5edf0b929becaea3f69ab0abf0e7081184a90ca4
+=======
+
+    public GameState getGameState(){
+        return state;
+    }
+
+    public EventBus<GameState> getEventBus(){
+        return bus;
+    }
+>>>>>>> WIP UITest Need to write comments and 1 testcase of button click GameOver 2 testCases having 2 straight turns.
 }
