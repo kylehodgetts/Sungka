@@ -5,8 +5,6 @@ import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.app.Activity;
-import android.content.res.AssetFileDescriptor;
-import android.media.MediaPlayer;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
@@ -23,7 +21,6 @@ import com.kylehodgetts.sunka.uiutil.ShellDrawable;
 import com.kylehodgetts.sunka.util.FileUtility;
 import com.kylehodgetts.sunka.util.Tuple2;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
@@ -109,9 +106,8 @@ public class AnimationManager extends EventHandler<GameState> {
                 ArrayList<ShellDrawable> fromTrayArray = shellAllocations.get(Integer.parseInt(player + "" + fromTray));
                 ArrayList<ShellDrawable> trayToStealFromArray = shellAllocations.get(Integer.parseInt(((player+1)%2)+""+trayToStealFrom));
 
-                if(trayToStealFromArray.size() >= 10) {
-                    FileUtility.playSound(activity, R.raw.evil_laugh);
-                }
+                if(trayToStealFromArray.size() >= 10) { FileUtility.playSound(activity, R.raw.evil_laugh); }
+                else { FileUtility.playSound(activity, R.raw.short_laugh); }
 
                 // Removes & animates all shells from the opponent's tray to the player's store
                 for (ShellDrawable shellDrawable : trayToStealFromArray) {
