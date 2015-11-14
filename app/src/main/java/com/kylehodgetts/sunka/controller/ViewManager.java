@@ -5,7 +5,6 @@ import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -22,10 +21,8 @@ import com.kylehodgetts.sunka.event.HighlightPlayerStore;
 import com.kylehodgetts.sunka.event.NewGame;
 import com.kylehodgetts.sunka.model.Board;
 import com.kylehodgetts.sunka.model.GameState;
-import com.kylehodgetts.sunka.uiutil.ShellDrawable;
+import com.kylehodgetts.sunka.util.FileUtility;
 import com.kylehodgetts.sunka.util.Tuple2;
-
-import java.util.Random;
 
 
 /**
@@ -136,9 +133,11 @@ public class ViewManager extends EventHandler<GameState> {
                     public void onClick(View v) {
                         bus.feedEvent(new NewGame());
                         flipLayout(state);
+                        FileUtility.playSound(activity, R.raw.ping);
                     }
 
                 });
+                FileUtility.playSound(activity, R.raw.applause);
             }
 
         });
@@ -201,7 +200,6 @@ public class ViewManager extends EventHandler<GameState> {
                         textView.setText(Integer.toString(currentBoard.getTray(row, column)));
                     }
                 }
-
                 selectPlayer(activity, state, state.getCurrentPlayerIndex());
             }
         });

@@ -1,6 +1,7 @@
 package com.kylehodgetts.sunka.util;
 
 import android.content.Context;
+import android.media.MediaPlayer;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -66,4 +67,26 @@ public class FileUtility {
         }
         return object;
     }
+
+    /**
+     * Play's the sound file resource passed to this method
+     * @param context current application {@link Context}
+     * @param resource the sound {@link android.content.res.Resources} file to be played
+     */
+    public static boolean playSound(final Context context, int resource) {
+        // If creation fails, media player is null
+        final MediaPlayer mediaPlayer = MediaPlayer.create(context, resource);
+        if(mediaPlayer != null) {
+            mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                @Override
+                public void onCompletion(MediaPlayer mp) {
+                    mediaPlayer.release();
+                }
+            });
+            mediaPlayer.start();
+            return true;
+        }
+        return false;
+    }
+
 }
