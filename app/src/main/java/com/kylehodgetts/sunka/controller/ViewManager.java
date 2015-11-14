@@ -264,6 +264,8 @@ public class ViewManager extends EventHandler<GameState> {
         if (state.isRaceState()) {
             tvPlayerB.setBackgroundColor(Color.parseColor("#2D8BA8"));
             tvPlayerA.setBackgroundColor(Color.parseColor("#A84136"));
+            playerAStore.setBackgroundResource(R.drawable.buttonascore);
+            playerBStore.setBackgroundResource(R.drawable.buttonbscore);
             tvPlayerB.setTextColor(Color.WHITE);
             tvPlayerA.setTextColor(Color.WHITE);
             return;
