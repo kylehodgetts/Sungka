@@ -17,10 +17,21 @@ import java.util.List;
 /**
  * @author Adam Chlupacek
  * @version 1.0
- *          <-INPUT DESC->
+ * An end point for getting id and storing the user name into database
  */
 public class GetId extends Bind {
 
+    /**
+     * An end point to a call to the server, the response is build from the resources on the server and
+     * the arguments given in the path.
+     *
+     * This end point requires to have the username in request body. In form of JSON
+     *
+     * @param context   The server context, access to server resources
+     * @param body      The body of the request
+     * @param args      Arguments passed in path
+     * @return          A server response to the request with userID in its body in form of json
+     */
     @Override
     public RequestResponse run(ServerContext context, DBObject body, List<String> args) {
         //Save to db

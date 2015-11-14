@@ -3,6 +3,8 @@ package com.lynx.sungka.server;
 import com.lynx.sungka.server.actions.GetId;
 import com.lynx.sungka.server.actions.GetPages;
 import com.lynx.sungka.server.actions.GetScores;
+import com.lynx.sungka.server.actions.PopulateMockData;
+import com.lynx.sungka.server.actions.ResetDB;
 import com.lynx.sungka.server.actions.SaveScore;
 import com.lynx.sungka.server.http.MethodType;
 import com.lynx.sungka.server.http.route.Alternative;
@@ -37,7 +39,7 @@ public class Server implements Runnable {
     public static final String GAMES_LOST ="GamesLost";
     public static final String MAX_SCORE ="MaxScore";
 
-    public static final int BATCH_SIZE = 10;
+    public static final int BATCH_SIZE = 40;
 
     private ScheduledExecutorService pool;
     private ServerSocket socket;
@@ -61,8 +63,10 @@ public class Server implements Runnable {
                 new Segment("statistics", new Alternative(
                     new Method(MethodType.POST, new SaveScore()),
                     new Method(MethodType.GET,new Read("\\d+", new Read("\\d" ,new GetScores()))), //Reads the two path parameters that are required for GetScores
-                    new Segment("pages", new GetPages())
-                ))
+                    new Segment("pages", new GetPages()),
+                    new Segment("mock",new PopulateMockData())
+                )),
+                new Segment("resetdb",new ResetDB())
             );
 
 

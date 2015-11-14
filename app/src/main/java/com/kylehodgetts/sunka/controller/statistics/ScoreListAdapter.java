@@ -16,13 +16,20 @@ import java.util.List;
 /**
  * @author Adam Chlupacek
  * @version 1.0
- *          <-INPUT DESC->
+ * An adapter to list that renders stats of users
  */
 public class ScoreListAdapter extends ArrayAdapter<PlayerScores> {
+
+    /**
+     * Constructor to match the super of this adapter
+     */
     public ScoreListAdapter(Context context, List<PlayerScores> objects) {
         super(context, R.layout.user_stat, objects);
     }
 
+    /**
+     * Creates the view for one given row in the list
+     */
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 

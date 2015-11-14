@@ -18,9 +18,22 @@ import java.util.List;
 /**
  * @author Adam Chlupacek
  * @version 1.0
- *          <-INPUT DESC->
+ * An API end point that returns the scores for given list with given ordering
  */
 public class GetScores extends Bind {
+
+    /**
+     * An end point to a call to the server, the response is build from the resources on the server and
+     * the arguments given in the path.
+     *
+     * This request requires to have page number and sort index in path
+     *
+     * @param context   The server context, access to server resources
+     * @param body      The body of the request
+     * @param args      Arguments passed in path
+     * @return          A server response to the request with array of json objects that are the high scores
+     *                  on this statistics page(as supplied in path)
+     */
     @Override
     public RequestResponse run(ServerContext context, DBObject body, List<String> args) {
         try{
@@ -45,7 +58,7 @@ public class GetScores extends Bind {
             }
 
             List<DBObject> objects = new ArrayList<>();
-            for (DBObject object:cursor.skip(page*Server.BATCH_SIZE).batchSize(Server.BATCH_SIZE)){
+            for (DBObject object:cursor.skip(page*Server.BATCH_SIZE).limit(Server.BATCH_SIZE)){
                 String id = (String)object.get(Server.SERVER_ID);
                 DBObject name = context.getNameCollection().findOne(new BasicDBObject(Server.SERVER_ID,id));
                 object.put(Server.USER_NAME,name.get(Server.USER_NAME));

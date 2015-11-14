@@ -50,6 +50,9 @@ public class HandleRequest implements Runnable {
         this.context = context;
     }
 
+    /**
+     * Runs the parsing of the given request
+     */
     @Override
     public void run() {
         try {
@@ -165,12 +168,22 @@ public class HandleRequest implements Runnable {
         }
     }
 
-    private Tuple2<RequestResponse,ParseState> parseOne(ParseState orig){
-        Tuple2<Integer,Route> popped = orig.pop();
-        System.out.println("Handlig: " + popped.getY().toString());
-        return popped.getY().matchRequest(orig,context,popped.getX());
+    /**
+     * Pops next path from the paths stored and tries to match it against the request
+     * @param current The value of the parse state
+     * @return
+     */
+    private Tuple2<RequestResponse,ParseState> parseOne(ParseState current){
+        Tuple2<Integer,Route> popped = current.pop();
+        return popped.getY().matchRequest(current,context,popped.getX());
     }
 
+    /**
+     * Connects to byte arrays into one array
+     * @param ar1   first array to be connected, is on the head
+     * @param ar2   second array to be connected, is on the tail
+     * @return      an array that is created by connecting the two arrays
+     */
     private byte[] connectArrays(byte[] ar1, byte[]ar2){
         byte[] res = new byte[ar1.length+ar2.length];
         System.arraycopy(ar1, 0, res, 0, ar1.length);

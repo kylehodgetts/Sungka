@@ -20,6 +20,14 @@ import java.util.List;
  */
 public abstract class Bind implements Route {
 
+    /**
+     * An end point to a call to the server, the response is build from the resources on the server and
+     * the arguments given in the path
+     * @param context   The server context, access to server resources
+     * @param body      The body of the request
+     * @param args      Arguments passed in path
+     * @return          The server response to the request
+     */
     public abstract RequestResponse run(ServerContext context,DBObject body,List<String> args);
 
     @Override

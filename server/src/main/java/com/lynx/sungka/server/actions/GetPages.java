@@ -14,12 +14,21 @@ import java.util.List;
 /**
  * @author Adam Chlupacek
  * @version 1.0
- *          <-INPUT DESC->
+ * An api end point for getting the number of pages in the statistics
  */
 public class GetPages extends Bind {
+
+    /**
+     * An end point to a call to the server, the response is build from the resources on the server and
+     * the arguments given in the path.
+     * @param context   The server context, access to server resources
+     * @param body      The body of the request
+     * @param args      Arguments passed in path
+     * @return          A server response to the request with string that contains the number of pages of high score statistics
+     */
     @Override
     public RequestResponse run(ServerContext context, DBObject body, List<String> args) {
-        byte[] resp = ((Math.round(context.getStatisticsCollection().getCount()/ Server.BATCH_SIZE))+"").getBytes();
+        byte[] resp = ((Math.round(context.getStatisticsCollection().getCount()/ (float)Server.BATCH_SIZE))+"").getBytes();
         List<Header> headers = new ArrayList<>();
         headers.add(new ContentLength(resp.length));
         return new RequestResponse(headers, resp, RequestResponse.ResponseCode.OK);
