@@ -43,7 +43,6 @@ import java.util.Random;
  */
 public class BoardActivity extends AppCompatActivity {
 
-    private GameState state;
     private static int gameType;
 
     public static final int ONEPLAYER = 1;
@@ -55,6 +54,7 @@ public class BoardActivity extends AppCompatActivity {
 
     private View decorView;
     private boolean areShellsCreated;
+    private GameState state;
 
     private HashMap<Integer, ArrayList<ShellDrawable>> shellAllocations;
 
@@ -75,14 +75,12 @@ public class BoardActivity extends AppCompatActivity {
         this.setContentView(R.layout.activity_board);
 
         gameType = getIntent().getIntExtra(EXTRA_INT, 0);
-
         state = (GameState) FileUtility.readFromSaveFile(this, FILE_NAME);
         if(state == null) {
             state = new GameState(new Board(), new Player(), new Player());
         }
 
         EventBus<GameState> bus = new EventBus<>(state, this);
-        state = new GameState(new Board(), new Player(), new Player());
         bus.registerHandler(new GameManager(bus));
         bus.registerHandler(new ViewManager(bus, this));
         bus.registerHandler(new AnimationManager(bus, this));
@@ -202,7 +200,6 @@ public class BoardActivity extends AppCompatActivity {
 
             }
 
-
             GridLayout gridLayout = (GridLayout) findViewById(R.id.gridLayout);
 
             for(int i = 0; i < gridLayout.getChildCount(); ++i) {
@@ -212,8 +209,10 @@ public class BoardActivity extends AppCompatActivity {
                 llparams.width = width;
                 llparams.height = width + child.findViewById(R.id.tv).getHeight();
                 gridLayout.getChildAt(i).setLayoutParams(llparams);
+
+                // Creates shells if they have not already been created on the board
                 if(!areShellsCreated) {
-                    createShells((RelativeLayout) gridLayout.getChildAt(i).findViewById(R.id.button), 7);
+                    createShells((RelativeLayout) gridLayout.getChildAt(i).findViewById(R.id.button));
                     initialiseShellAllocations();
                 }
             }
@@ -240,8 +239,15 @@ public class BoardActivity extends AppCompatActivity {
         return gameType;
     }
 
-    public void createShells(RelativeLayout button, int numberOfShells) {
+    /**
+     * Creates the shell drawable views for each tray and adds them to the relevant parent being their
+     * currently allocated tray for the current game state.
+     *
+     * @param button indicating the tray button the shells are to be assigned to
+     */
+    public void createShells(RelativeLayout button) {
         Random random = new Random();
+        int numberOfShells = state.getBoard().getTray(button.getId()/10, button.getId()%10);
 
         for(int shell=0; shell < numberOfShells; ++shell) {
             ShellDrawable shellDrawable = new ShellDrawable(this, random.nextInt(button.getWidth()/2),
@@ -261,6 +267,11 @@ public class BoardActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Initialises the HashMap containing mappings to ArrayLists holding the allocatation of each
+     * shell to it's currently allocated tray based on the current game state.
+     *
+     */
     private void initialiseShellAllocations() {
         shellAllocations = new HashMap<>();
         for(int player=0; player < 2; ++player) {
@@ -271,7 +282,8 @@ public class BoardActivity extends AppCompatActivity {
                 LinearLayout trayLinearLayout = (LinearLayout) findViewById(Integer.parseInt(player+""+tray));
                 RelativeLayout trayButton = (RelativeLayout) trayLinearLayout.findViewById(R.id.button);
 
-                for(int shell=0; shell < 7; ++shell) {
+                int numberOfShells = state.getBoard().getTray(player, tray);
+                for(int shell=0; shell < numberOfShells; ++shell) {
                     shellArrayList.add((ShellDrawable) trayButton.getChildAt(shell));
                 }
             }
