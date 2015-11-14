@@ -2,10 +2,6 @@ package com.kylehodgetts.sunka.util;
 
 import android.content.Context;
 
-import com.kylehodgetts.sunka.model.Board;
-import com.kylehodgetts.sunka.model.GameState;
-import com.kylehodgetts.sunka.model.Player;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
