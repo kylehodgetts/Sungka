@@ -28,6 +28,10 @@ public class AnimationManagerTest extends TestCase {
     private AnimationManager animationManager;
     private BoardActivity boardActivity;
 
+    /**
+     * Initial set up for tests
+     * @throws Exception
+     */
     @BeforeClass
     @Override
     public void setUp() throws Exception {
@@ -39,6 +43,10 @@ public class AnimationManagerTest extends TestCase {
 
     }
 
+    /**
+     * After set up, assert that all components are non null
+     * @throws Exception
+     */
     @Test
     public void testPreConditions() throws Exception {
         assertNotNull(gameState);
@@ -47,6 +55,10 @@ public class AnimationManagerTest extends TestCase {
         assertNotNull(animationManager);
     }
 
+    /**
+     * Test that a correct tuple is returned when handling a shell movement event
+     * @throws Exception
+     */
     @Test
     public void testHandleEvent_shellMovement() throws Exception {
         Tuple2 tuple2 = animationManager.handleEvent(new ShellMovement(0, 0, 2, 0), gameState);
@@ -55,6 +67,10 @@ public class AnimationManagerTest extends TestCase {
         assertFalse((boolean)tuple2.getY());
     }
 
+    /**
+     * Test that a correct tuple is returned when handling a shell movement to pot event
+     * @throws Exception
+     */
     @Test
     public void testHandleEvent_shellMovementToPot() throws Exception {
         Tuple2 tuple2 = animationManager.handleEvent(new ShellMovementToPot(0, 2), gameState);
@@ -63,6 +79,10 @@ public class AnimationManagerTest extends TestCase {
         assertFalse((boolean)tuple2.getY());
     }
 
+    /**
+     * Test that a correct tuple is returned when handling a shell steal event
+     * @throws Exception
+     */
     @Test
     public void testHandleEvent_shellSteal() throws Exception {
         Tuple2 tuple2 = animationManager.handleEvent(new ShellSteal(0, 1, 1), gameState);
