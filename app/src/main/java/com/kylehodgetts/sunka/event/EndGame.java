@@ -16,6 +16,4 @@ import com.kylehodgetts.sunka.controller.bus.Event;
  * @version 1.0
  * Event that notifies that the current game has ended
  */
-public class EndGame implements Event {
-
-}
+public class EndGame implements Event {}

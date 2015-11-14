@@ -40,13 +40,11 @@ public class BoardActivity extends AppCompatActivity {
     private static int gameType;
     private GameState state;
 
-    //TODO: Implement OnPause, OnResume, OnStop methods. And within all other necessary classes
     public static final int ONEPLAYER = 1;
     public static final int TWOPLAYER = 2;
     public static final int ONLINE = 3;
 
     public static final String EXTRA_INT = "com.kylehodgetts.sunka.boardactivity.gametype";
-    public static final String PARCELABLE_GAME_STATE = "com.kylehodgetts.sunka.boardactivity.gamestate";
     private static final String FILE_NAME = "sungkasave";
 
     View decorView;
@@ -88,6 +86,12 @@ public class BoardActivity extends AppCompatActivity {
         bus.feedEvent(new NewGame());
     }
 
+    /**
+     * Triggers on the device's system back key being pressed
+     * @param keyCode   Key Code
+     * @param event     Key Event
+     * @return          onKeyDown event
+     */
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == event.KEYCODE_BACK) {
@@ -152,7 +156,7 @@ public class BoardActivity extends AppCompatActivity {
 
                 //we don't want the opposite side clickable if there are not two local players
                 if (player == 0 || player == 1 && bothSetsButtonsClickable) {
-                    button.setOnClickListener(new TrayOnClickListener(tray, player, bus));
+                    button.setOnClickListener(new TrayOnClickListener(player, tray, bus));
                 }
             }
         }

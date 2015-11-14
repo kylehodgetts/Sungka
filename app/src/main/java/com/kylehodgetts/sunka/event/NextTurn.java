@@ -7,11 +7,4 @@ import com.kylehodgetts.sunka.controller.bus.Event;
  * @version 1.0
  * Event that notifies that the next turn has began
  */
-public class NextTurn implements Event {
-
-    private boolean finishInit;
-
-    public NextTurn() {
-
-    }
-}
+public class NextTurn implements Event {}

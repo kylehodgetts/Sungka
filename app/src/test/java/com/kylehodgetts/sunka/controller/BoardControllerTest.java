@@ -64,7 +64,7 @@ public class BoardControllerTest extends TestCase {
 
         for (int i = 0; i < 2; ++i) {
             for (int j = 0; j < 7; ++j) {
-                bus.feedEvent(new PlayerChoseTray(j, i));
+                bus.feedEvent(new PlayerChoseTray(i, j));
                 Thread.sleep(5000);
                 System.out.println(printBoardState());
 
@@ -94,9 +94,9 @@ public class BoardControllerTest extends TestCase {
 
         for(int i = 0; i < 2; ++i) {
             for(int j = 0; j < 7; ++j) {
-                bus.feedEvent(new PlayerChoseTray(j, i));
+                bus.feedEvent(new PlayerChoseTray(i, j));
                 Thread.sleep(5000);
-                bus.feedEvent(new PlayerChoseTray(j, (i + 1) % 2));
+                bus.feedEvent(new PlayerChoseTray(((i + 1) % 2), j));
                 Thread.sleep(5000);
                 System.out.println(printBoardState());
 
@@ -127,8 +127,8 @@ public class BoardControllerTest extends TestCase {
 
         int i = 0;
         for (int j = 0; j < 7; ++j) {
-            bus.feedEvent(new PlayerChoseTray(j, i));
-            bus.feedEvent(new PlayerChoseTray(j, (i + 1) % 2));
+            bus.feedEvent(new PlayerChoseTray(i, j));
+            bus.feedEvent(new PlayerChoseTray(((i + 1) % 2), j));
             Thread.sleep(10000);
             System.out.println(printBoardState());
 
@@ -160,8 +160,8 @@ public class BoardControllerTest extends TestCase {
 
         int i = 1;
         for(int j = 0; j < 7; ++j) {
-            bus.feedEvent(new PlayerChoseTray(j, 1));
-            bus.feedEvent(new PlayerChoseTray(j, 0));
+            bus.feedEvent(new PlayerChoseTray(1, j));
+            bus.feedEvent(new PlayerChoseTray(0, j));
             Thread.sleep(10000);
             System.out.println(printBoardState());
 

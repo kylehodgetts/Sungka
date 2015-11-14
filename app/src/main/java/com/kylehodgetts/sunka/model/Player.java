@@ -69,6 +69,9 @@ public class Player implements Serializable {
         stonesInPot += x;
     }
 
+    /**
+     * Set the player's stones in pot to be 0
+     */
     public void resetStonesInPot(){
         stonesInPot = 0;
     }

@@ -28,8 +28,6 @@ public class AIStrategy implements AI {
      * @return the position the AI has picked
      */
     public int chooseTray(GameState state) {
-        Log.i(TAG, "Start turn");
-
         Board board = state.getBoard();
         Tuple2<Boolean, Integer> result;
 
@@ -117,7 +115,6 @@ public class AIStrategy implements AI {
      * @return Tuple(can we defend against, tray we should pick to defend against)
      */
     private Tuple2<Boolean, Integer> defendAgainstCaptureRule(Board board) {
-        //TODO make this actually work. May require modifying canPlayerPerformCaptureRule() to return a list rather than just element
 
         Tuple2<Boolean, Integer> result = canPlayerPerformCaptureRule(PLAYER_HUMAN, board);
         int trayToPick = -1;
@@ -148,7 +145,6 @@ public class AIStrategy implements AI {
      * @return Tuple(can we defend against this, the tray position to pick)
      */
     private Tuple2<Boolean, Integer> defendAgainstAnotherTurn(Board board) {
-        //TODO make this actually work. May require modifying canPlayerGetAnotherTurn() to return a list rather than just element
 
         Tuple2<Boolean, Integer> result = canPlayerGetAnotherTurn(PLAYER_HUMAN, board);
         int trayToPick = -1;

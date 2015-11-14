@@ -11,34 +11,50 @@ import com.kylehodgetts.sunka.controller.bus.Event;
 public class ShellMovement implements Event {
     private int trayIndex, playerIndex;
     private int shellsStillToBePlaced;
-    private boolean isFirstShellMoved;
     private int player;
 
-    //TODO change order of parameters to match Board class ordering
-    public ShellMovement(int trayIndex, int playerIndex, int shellsStillToBePlaced, boolean isFirstShellMoved, int player) {
-        this.trayIndex = trayIndex;
+    /**
+     * Default constructor
+     * @param playerIndex               The side of the board
+     * @param trayIndex                 The tray index
+     * @param shellsStillToBePlaced     Amount of shells to be moved to new trays
+     * @param player                    Current <code>Player</code>
+     */
+    public ShellMovement(int playerIndex, int trayIndex, int shellsStillToBePlaced, int player) {
         this.playerIndex = playerIndex;
+        this.trayIndex = trayIndex;
         this.shellsStillToBePlaced = shellsStillToBePlaced;
-        this.isFirstShellMoved = isFirstShellMoved;
         this.player = player;
     }
 
+    /**
+     *
+     * @return the tray index
+     */
     public int getTrayIndex() {
         return trayIndex;
     }
 
+    /**
+     *
+     * @return the side of the board
+     */
     public int getPlayerIndex() {
         return playerIndex;
     }
 
+    /**
+     *
+     * @return number of shells left to be placed into new trays
+     */
     public int getShellsStillToBePlaced() {
         return shellsStillToBePlaced;
     }
 
-    public boolean isFirstShellMoved() {
-        return isFirstShellMoved;
-    }
-
+    /**
+     *
+     * @return index of current <code>Player</code>
+     */
     public int getPlayer() {
         return player;
     }

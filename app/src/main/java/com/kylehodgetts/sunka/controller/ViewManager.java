@@ -29,8 +29,8 @@ import com.kylehodgetts.sunka.util.Tuple2;
  * to update the game board view accordingly.
  *
  * @author Charlie Baker
+ * @author Phileas Hocquard
  * @version 1.3
- *          V1.2 Phileas Hocquard
  */
 public class ViewManager extends EventHandler<GameState> {
 
