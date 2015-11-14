@@ -5,8 +5,6 @@ import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.app.Activity;
-import android.content.res.AssetFileDescriptor;
-import android.media.MediaPlayer;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
@@ -23,7 +21,6 @@ import com.kylehodgetts.sunka.uiutil.ShellDrawable;
 import com.kylehodgetts.sunka.util.FileUtility;
 import com.kylehodgetts.sunka.util.Tuple2;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
@@ -160,7 +157,7 @@ public class AnimationManager extends EventHandler<GameState> {
                 final LinearLayout fromTrayLayout = (LinearLayout) activity.findViewById(Integer.parseInt((toTray == 0? (player+1) % 2 : player)+""+fromTray));
                 int buttonWidth = fromTrayLayout.getWidth();
 
-                ArrayList<ShellDrawable> fromTrayArray = shellAllocations.get(Integer.parseInt((toTray == 0? (player+1) % 2 : player)+""+fromTray));
+                ArrayList<ShellDrawable> fromTrayArray = shellAllocations.get(Integer.parseInt((toTray == 0 ? (player + 1) % 2 : player) + "" + fromTray));
                 ArrayList<ShellDrawable> toTrayArray = shellAllocations.get(Integer.parseInt(event.getPlayerIndex()+""+toTray));
 
                 // Moves all the shells left to distribute to the next tray
@@ -198,7 +195,7 @@ public class AnimationManager extends EventHandler<GameState> {
                     fromTrayArray.remove(currentShell);
                 }
                 shellAllocations.put(Integer.parseInt(player + "" + toTray), toTrayArray);
-                FileUtility.playSound(activity, R.raw.blop);
+                boolean played = FileUtility.playSound(activity, R.raw.blop);
             }
         });
         return state;
@@ -262,7 +259,6 @@ public class AnimationManager extends EventHandler<GameState> {
                     }
                 });
                 animatorSet.start();
-                //TODO: Play Sound
                 FileUtility.playSound(activity, R.raw.blop);
 
                 ArrayList<ShellDrawable> shellArray = shellAllocations.get(Integer.parseInt(player+""+tray));
