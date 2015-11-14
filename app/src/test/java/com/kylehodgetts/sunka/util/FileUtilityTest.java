@@ -1,8 +1,10 @@
 package com.kylehodgetts.sunka.util;
 
+import android.test.InstrumentationTestCase;
 import android.test.mock.MockContext;
 
-import junit.framework.TestCase;
+import com.kylehodgetts.sunka.BoardActivity;
+import com.kylehodgetts.sunka.R;
 
 import org.junit.After;
 import org.junit.Before;
@@ -19,7 +21,7 @@ import java.io.ObjectOutputStream;
  * @version 1.0
  * Responsible for testing the <code>FileUtility</code> class
  */
-public class FileUtilityTest extends TestCase {
+public class FileUtilityTest extends InstrumentationTestCase {
     private MockContext context;
     private File testFile;
     private static final String FILE_NAME = "TestFile";
@@ -86,5 +88,11 @@ public class FileUtilityTest extends TestCase {
 
         String actual = (String) FileUtility.readFromSaveFile(context, FILE_NAME);
         assertTrue(actual.equals(expected));
+    }
+
+    @Test
+    public void testPlaySound() throws Exception {
+        assertFalse(FileUtility.playSound(getInstrumentation().getContext(), 0));
+        assertTrue(FileUtility.playSound(getInstrumentation().getContext(), R.raw.applause));
     }
 }

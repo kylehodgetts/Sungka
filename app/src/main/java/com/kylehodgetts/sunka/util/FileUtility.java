@@ -73,7 +73,8 @@ public class FileUtility {
      * @param context current application {@link Context}
      * @param resource the sound {@link android.content.res.Resources} file to be played
      */
-    public static void playSound(final Context context, int resource) {
+    public static boolean playSound(final Context context, int resource) {
+        // If creation fails, media player is null
         final MediaPlayer mediaPlayer = MediaPlayer.create(context, resource);
         if(mediaPlayer != null) {
             mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
@@ -83,7 +84,9 @@ public class FileUtility {
                 }
             });
             mediaPlayer.start();
+            return true;
         }
+        return false;
     }
 
 }
