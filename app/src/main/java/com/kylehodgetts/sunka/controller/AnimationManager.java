@@ -106,9 +106,8 @@ public class AnimationManager extends EventHandler<GameState> {
                 ArrayList<ShellDrawable> fromTrayArray = shellAllocations.get(Integer.parseInt(player + "" + fromTray));
                 ArrayList<ShellDrawable> trayToStealFromArray = shellAllocations.get(Integer.parseInt(((player+1)%2)+""+trayToStealFrom));
 
-                if(trayToStealFromArray.size() >= 10) {
-                    FileUtility.playSound(activity, R.raw.evil_laugh);
-                }
+                if(trayToStealFromArray.size() >= 10) { FileUtility.playSound(activity, R.raw.evil_laugh); }
+                else { FileUtility.playSound(activity, R.raw.short_laugh); }
 
                 // Removes & animates all shells from the opponent's tray to the player's store
                 for (ShellDrawable shellDrawable : trayToStealFromArray) {
