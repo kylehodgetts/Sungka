@@ -28,12 +28,15 @@ public class ScoreListAdapter extends ArrayAdapter<PlayerScores> {
 
         PlayerScores playerScores = getItem(position);
 
-        ((TextView) convertView.findViewById(R.id.user_name)).setText(playerScores.getName());
-        ((TextView) convertView.findViewById(R.id.games_won)).setText(playerScores.getGamesWon());
-        ((TextView) convertView.findViewById(R.id.games_lost)).setText(playerScores.getGamesLost());
-        ((TextView) convertView.findViewById(R.id.max_score)).setText(playerScores.getMaxScore());
+        LayoutInflater inflater = LayoutInflater.from(getContext());
 
+        View myView = inflater.inflate(R.layout.user_stat, parent, false);
 
-        return convertView;
+        ((TextView) myView.findViewById(R.id.user_name)).setText(playerScores.getName());
+        ((TextView) myView.findViewById(R.id.games_won_user)).setText(String.valueOf(playerScores.getGamesWon()));
+        ((TextView) myView.findViewById(R.id.games_lost_user)).setText(String.valueOf(playerScores.getGamesLost()));
+        ((TextView) myView.findViewById(R.id.max_score_user)).setText(String.valueOf(playerScores.getMaxScore()));
+
+        return myView;
     }
 }
