@@ -3,7 +3,8 @@ package com.kylehodgetts.sunka.controller.AI;
 import com.kylehodgetts.sunka.model.GameState;
 
 /**
- * Created by Jonathan on 06/11/2015.
+ * @author Jonathan Burton
+ * @version 1.0
  */
 public class AITree implements AI {
 
