@@ -5,6 +5,7 @@ import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.app.Activity;
+import android.content.res.AssetFileDescriptor;
 import android.media.MediaPlayer;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -19,8 +20,10 @@ import com.kylehodgetts.sunka.event.ShellMovementToPot;
 import com.kylehodgetts.sunka.event.ShellSteal;
 import com.kylehodgetts.sunka.model.GameState;
 import com.kylehodgetts.sunka.uiutil.ShellDrawable;
+import com.kylehodgetts.sunka.util.FileUtility;
 import com.kylehodgetts.sunka.util.Tuple2;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
@@ -87,7 +90,7 @@ public class AnimationManager extends EventHandler<GameState> {
      * @param event {@link ShellSteal} {@link Event} that has been received
      * @return {@link GameState} of the game
      */
-    private GameState animateStealShells(GameState state, final ShellSteal event) {
+    private GameState animateStealShells(final GameState state, final ShellSteal event) {
         activity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -106,6 +109,10 @@ public class AnimationManager extends EventHandler<GameState> {
                 ArrayList<ShellDrawable> fromTrayArray = shellAllocations.get(Integer.parseInt(player + "" + fromTray));
                 ArrayList<ShellDrawable> trayToStealFromArray = shellAllocations.get(Integer.parseInt(((player+1)%2)+""+trayToStealFrom));
 
+                if(trayToStealFromArray.size() >= 10) {
+                    FileUtility.playSound(activity, R.raw.evil_laugh);
+                }
+
                 // Removes & animates all shells from the opponent's tray to the player's store
                 for (ShellDrawable shellDrawable : trayToStealFromArray) {
                     ObjectAnimator objectAnimator = ObjectAnimator.ofFloat(shellDrawable, "translationX", (player == 0 ? (width * (6 - fromTray)) + storeWidth : -((width * (6 - fromTray))) - storeWidth));
@@ -123,10 +130,10 @@ public class AnimationManager extends EventHandler<GameState> {
                 // Clears both arrays as all the shells are now in the store
                 fromTrayArray.clear();
                 trayToStealFromArray.clear();
-
-                // TODO: Plays sound
             }
         });
+
+
         return state;
     }
 
@@ -191,6 +198,7 @@ public class AnimationManager extends EventHandler<GameState> {
                     fromTrayArray.remove(currentShell);
                 }
                 shellAllocations.put(Integer.parseInt(player + "" + toTray), toTrayArray);
+                FileUtility.playSound(activity, R.raw.blop);
             }
         });
         return state;
@@ -255,6 +263,8 @@ public class AnimationManager extends EventHandler<GameState> {
                 });
                 animatorSet.start();
                 //TODO: Play Sound
+                FileUtility.playSound(activity, R.raw.blop);
+
                 ArrayList<ShellDrawable> shellArray = shellAllocations.get(Integer.parseInt(player+""+tray));
                 shellArray.remove(shell);
             }
