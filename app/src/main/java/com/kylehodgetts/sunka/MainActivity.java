@@ -44,6 +44,15 @@ public class MainActivity extends AppCompatActivity {
         });
         mmbus = (Button) findViewById(R.id.main_menu_button_us);
         mmbexit = (Button) findViewById(R.id.main_menu_button_exit);
+        mmbexit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Intent.ACTION_MAIN);
+                intent.addCategory(Intent.CATEGORY_HOME);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
+            }
+        });
     }
 
     /**

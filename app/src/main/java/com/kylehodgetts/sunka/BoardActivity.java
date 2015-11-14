@@ -40,7 +40,6 @@ public class BoardActivity extends AppCompatActivity {
     private static int gameType;
     private GameState state;
 
-    //TODO: Implement OnPause, OnResume, OnStop methods. And within all other necessary classes
     public static final int ONEPLAYER = 1;
     public static final int TWOPLAYER = 2;
     public static final int ONLINE = 3;
@@ -87,6 +86,12 @@ public class BoardActivity extends AppCompatActivity {
         bus.feedEvent(new NewGame());
     }
 
+    /**
+     * Triggers on the device's system back key being pressed
+     * @param keyCode   Key Code
+     * @param event     Key Event
+     * @return          onKeyDown event
+     */
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == event.KEYCODE_BACK) {
