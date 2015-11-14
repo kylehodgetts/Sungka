@@ -21,12 +21,22 @@ public class TrayOnClickListener implements View.OnClickListener {
     private int trayIndex, playerIndex;
     private EventBus<GameState> bus;
 
+    /**
+     *
+     * @param playerIndex   Side of the board clicked
+     * @param trayIndex     Tray clicked index
+     * @param bus           Game's <code>EventBus</code>
+     */
     public TrayOnClickListener(int playerIndex, int trayIndex, EventBus<GameState> bus) {
         this.playerIndex = playerIndex;
         this.trayIndex = trayIndex;
         this.bus = bus;
     }
 
+    /**
+     * Feeds a <code>PlayerChoseTray</code> event to the event bus
+     * @param v view
+     */
     @Override
     public void onClick(View v) {
         bus.feedEvent(new PlayerChoseTray(playerIndex, trayIndex));

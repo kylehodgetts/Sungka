@@ -7,5 +7,4 @@ import com.kylehodgetts.sunka.controller.bus.Event;
  * @version 1.0
  * Denotes a start of a new game
  */
-public class NewGame implements Event{
-}
+public class NewGame implements Event{}

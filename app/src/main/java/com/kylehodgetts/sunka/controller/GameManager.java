@@ -149,7 +149,7 @@ public class GameManager extends EventHandler<GameState> {
         int shells = event.getShells() - 1;
         if (shells > 0) {
             scheduleEvent(new HighLightTray(event.getNextPlayerIndex(), 0, playerWhoTurnItIs), 0);
-            scheduleEvent(new ShellMovement(event.getNextPlayerIndex(), 0, shells, false, playerWhoTurnItIs), DELAY);
+            scheduleEvent(new ShellMovement(event.getNextPlayerIndex(), 0, shells, playerWhoTurnItIs), DELAY);
             return state;
 
         } else return endTurn(state, true, playerWhoTurnItIs);
@@ -172,11 +172,11 @@ public class GameManager extends EventHandler<GameState> {
             } else {
                 int otherPlayer = (playerIndex + 1) % 2;
                 scheduleEvent(new HighLightTray(otherPlayer, 0, playerWhoTurnItIs), 20);
-                scheduleEvent(new ShellMovement(otherPlayer, 0, shellsLeft, false, playerWhoTurnItIs), DELAY);
+                scheduleEvent(new ShellMovement(otherPlayer, 0, shellsLeft, playerWhoTurnItIs), DELAY);
             }
         } else {
             scheduleEvent(new HighLightTray(playerIndex, trayIndex + 1, playerWhoTurnItIs), 50);
-            scheduleEvent(new ShellMovement(playerIndex, trayIndex + 1, shellsLeft, false, playerWhoTurnItIs), DELAY);
+            scheduleEvent(new ShellMovement(playerIndex, trayIndex + 1, shellsLeft, playerWhoTurnItIs), DELAY);
         }
     }
 
