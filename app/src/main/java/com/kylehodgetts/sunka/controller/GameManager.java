@@ -22,11 +22,13 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 /**
- * @author Adam Chlupacek, Jonathan Burton
- * @version 3.0
+ * @author Adam Chlupacek, Jonathan Burton , Phileas Hocquard
+ * @version 3.1
  *          The controller for the main game logic
  */
 public class GameManager extends EventHandler<GameState> {
+
+    private static final int TOTAL_SHELLS = 98;
 
     private static final int DELAY = 300;
     private Timer timer;
@@ -62,8 +64,15 @@ public class GameManager extends EventHandler<GameState> {
             if (!state.isRaceState()) state.setDoingMove(false);
             return new Tuple2<>(state, true);
         } else if (event instanceof NewGame) {
-            state.getPlayer1().getStonesInPot();
-            state.getPlayer2().getStonesInPot();
+            if(state.getPlayer1().getStonesInPot() + state.getPlayer2().getStonesInPot() == TOTAL_SHELLS ){
+                state.getPlayer1().resetStonesInPot();
+                state.getPlayer2().resetStonesInPot();
+                state = new GameState(new Board(),state.getPlayer1(),state.getPlayer2());
+
+            }else {
+                state.getPlayer1().getStonesInPot();
+                state.getPlayer2().getStonesInPot();
+            }
             return new Tuple2<>(state, true);
         } else return new Tuple2<>(state, false);
 
@@ -192,7 +201,7 @@ public class GameManager extends EventHandler<GameState> {
         if (board.isEmptyRow(0) && board.isEmptyRow(1)) {
             if (state.getPlayer1().getStonesInPot() > state.getPlayer2().getStonesInPot()) {
                 state.getPlayer1().addWonGames();
-            } else {
+            } else if(state.getPlayer1().getStonesInPot() < state.getPlayer2().getStonesInPot()){
                 state.getPlayer2().addWonGames();
             }
             scheduleEvent(new EndGame(), 0);
@@ -241,6 +250,4 @@ public class GameManager extends EventHandler<GameState> {
             }, millis);
         }
     }
-
-
 }
