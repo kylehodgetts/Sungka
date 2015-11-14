@@ -215,7 +215,6 @@ public class BoardActivity extends AppCompatActivity {
                 if(!areShellsCreated) {
                     createShells((RelativeLayout) gridLayout.getChildAt(i).findViewById(R.id.button), 7);
                     initialiseShellAllocations();
-
                 }
             }
             areShellsCreated = true;

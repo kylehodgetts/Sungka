@@ -16,6 +16,7 @@ import com.kylehodgetts.sunka.event.ShellTrayAnimation;
 import com.kylehodgetts.sunka.event.ShellMovement;
 import com.kylehodgetts.sunka.event.ShellMovementToPot;
 import com.kylehodgetts.sunka.event.ShellSteal;
+import com.kylehodgetts.sunka.event.ShellStoreAnimation;
 import com.kylehodgetts.sunka.model.Board;
 import com.kylehodgetts.sunka.model.GameState;
 import com.kylehodgetts.sunka.model.Player;

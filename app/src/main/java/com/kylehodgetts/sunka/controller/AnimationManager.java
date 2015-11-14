@@ -32,6 +32,7 @@ import com.kylehodgetts.sunka.model.ShellReference;
 import com.kylehodgetts.sunka.uiutil.ShellDrawable;
 import com.kylehodgetts.sunka.util.Tuple2;
 
+import java.io.LineNumberReader;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -78,6 +79,7 @@ public class AnimationManager extends EventHandler<GameState> {
         activity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
+                Log.d("animateStealShells()", "called");
                 int fromTray = event.getPlayersTray();
                 int trayToStealFrom = event.getTrayToStealFrom();
                 int player = event.getPlayer();
@@ -85,18 +87,21 @@ public class AnimationManager extends EventHandler<GameState> {
                 LinearLayout fromTrayLayout = (LinearLayout) activity.findViewById(Integer.parseInt(player+""+fromTray));
                 int width = fromTrayLayout.getWidth();
 
+                LinearLayout playerStore = (LinearLayout) activity.findViewById(R.id.playerAStore);
+                int storeWidth = playerStore.getWidth();
+
                 HashMap<Integer, ArrayList<ShellDrawable>> shellAllocations = ((BoardActivity) activity).getShellAllocations();
                 ArrayList<ShellDrawable> fromTrayArray = shellAllocations.get(Integer.parseInt(player + "" + fromTray));
                 ArrayList<ShellDrawable> trayToStealFromArray = shellAllocations.get(Integer.parseInt(((player+1)%2)+""+trayToStealFrom));
 
                 for (ShellDrawable shellDrawable : trayToStealFromArray) {
-                    ObjectAnimator objectAnimator = ObjectAnimator.ofFloat(shellDrawable, "translationX", (width*fromTray) * player == 0? 1 : -1 );
+                    ObjectAnimator objectAnimator = ObjectAnimator.ofFloat(shellDrawable, "translationX", (player == 0? (width*(6-fromTray)) + storeWidth : -((width*(6-fromTray))) - storeWidth ));
                     objectAnimator.setDuration(290);
                     objectAnimator.start();
                 }
 
                 for (ShellDrawable shellDrawable : fromTrayArray) {
-                    ObjectAnimator objectAnimator = ObjectAnimator.ofFloat(shellDrawable, "translationX", (width*fromTray) * player == 0? 1 : -1 );
+                    ObjectAnimator objectAnimator = ObjectAnimator.ofFloat(shellDrawable, "translationX", (player == 0? (width*(6-fromTray)) + storeWidth : -((width*(6-fromTray))) - storeWidth ));
                     objectAnimator.setDuration(290);
                     objectAnimator.start();
                 }
@@ -127,13 +132,10 @@ public class AnimationManager extends EventHandler<GameState> {
 
                 HashMap<Integer, ArrayList<ShellDrawable>> shellAllocations = ((BoardActivity) activity).getShellAllocations();
 
-                if(toTray == 0) { player = (player + 1) % 2; }
-
-                final LinearLayout fromTrayLayout = (LinearLayout) activity.findViewById(Integer.parseInt(player+""+fromTray));
+                final LinearLayout fromTrayLayout = (LinearLayout) activity.findViewById(Integer.parseInt((toTray == 0? (player+1) % 2 : player)+""+fromTray));
                 int buttonWidth = fromTrayLayout.getWidth();
 
-                ArrayList<ShellDrawable> fromTrayArray = shellAllocations.get(Integer.parseInt(player + "" + fromTray));
-//                ArrayList<ShellDrawable> toMoveTrays = new ArrayList<>();
+                ArrayList<ShellDrawable> fromTrayArray = shellAllocations.get(Integer.parseInt((toTray == 0? (player+1) % 2 : player)+""+fromTray));
                 Log.d("from Tray Array", Arrays.toString(fromTrayArray.toArray()));
 
                 ArrayList<ShellDrawable> toTrayArray = shellAllocations.get(Integer.parseInt(event.getPlayerIndex()+""+toTray));
@@ -142,19 +144,19 @@ public class AnimationManager extends EventHandler<GameState> {
 
                 for(int i=0; i < shellsLeft; ++i) {
                     Log.d("iteration", i + "");
-                    final ShellDrawable currentShell = fromTrayArray.get(fromTrayArray.size()-1);
-                    final ShellDrawable shellCopy = new ShellDrawable(activity, random.nextInt(buttonWidth/2), random.nextInt(buttonWidth/2), currentShell.getShellWidth(), currentShell.getLength());
+                    final ShellDrawable currentShell = fromTrayArray.get(fromTrayArray.size() > 0? fromTrayArray.size()-1 : 0);
+                    final ShellDrawable shellCopy = new ShellDrawable(activity, currentShell.getShellX(), currentShell.getShellY(), currentShell.getShellWidth(), currentShell.getLength());
                     shellCopy.setColour(currentShell.getColour());
+                    shellCopy.setRotation(currentShell.getRotation());
 
                     LinearLayout trayLayout = (LinearLayout) activity.findViewById(Integer.parseInt(event.getPlayerIndex()+""+toTray));
                     final RelativeLayout newTrayButton = (RelativeLayout) trayLayout.findViewById(R.id.button);
 
                     currentShell.bringToFront();
-                    currentShell.setColour("grey");
-                    currentShell.invalidate();
+
                     ObjectAnimator objectAnimator;
                     if(toTray == 0) {
-                        objectAnimator = ObjectAnimator.ofFloat(currentShell, "translationY", player == 1? buttonWidth : -buttonWidth);
+                        objectAnimator = ObjectAnimator.ofFloat(currentShell, "translationY", player == 1? -buttonWidth : buttonWidth);
                     }
                     else {
                         Log.d("SHELLS X",""+currentShell.getX());
@@ -166,20 +168,19 @@ public class AnimationManager extends EventHandler<GameState> {
 
                         @Override
                         public void onAnimationEnd(Animator animation) {
-                            currentShell.setColour("red");
-                            currentShell.invalidate();
                             RelativeLayout previousTray = (RelativeLayout) fromTrayLayout.findViewById(R.id.button);
                             previousTray.removeView(currentShell);
+                            newTrayButton.addView(shellCopy, currentShell.getLayoutParams());
+
                         }
                     });
                     objectAnimator.start();
                     toTrayArray.add(shellCopy);
+                    shellCopy.bringToFront();
                     fromTrayArray.remove(currentShell);
-                    newTrayButton.addView(shellCopy, currentShell.getLayoutParams());
 
                 }
 
-//                toTrayArray.addAll(toMoveTrays);
                 shellAllocations.put(Integer.parseInt(player + "" + toTray), toTrayArray);
                 Log.d("to Tray Array", Arrays.toString(toTrayArray.toArray()));
                 Log.d("from Tray Array", Arrays.toString(fromTrayArray.toArray()));
@@ -199,12 +200,7 @@ public class AnimationManager extends EventHandler<GameState> {
                 final int tray = 6;
                 final HashMap<Integer, ArrayList<ShellDrawable>> shellAllocations = ((BoardActivity) activity).getShellAllocations();
 
-
-                final LinearLayout fromTrayLayout = (LinearLayout) activity.findViewById(Integer.parseInt(player+""+tray));
-                final RelativeLayout fromTrayButton = (RelativeLayout) fromTrayLayout.findViewById(R.id.button);
-
                 LinearLayout playerStoreLayout;
-                final RelativeLayout storeButton;
                 if(player == 0) {
                     playerStoreLayout = (LinearLayout) activity.findViewById(R.id.playerBStore);
                 }
@@ -213,11 +209,14 @@ public class AnimationManager extends EventHandler<GameState> {
                 }
 
                 ArrayList<ShellDrawable> trayArray = shellAllocations.get(Integer.parseInt(player+""+tray));
+                final LinearLayout fromTrayLayout = (LinearLayout) activity.findViewById(Integer.parseInt(player+""+tray));
 
                 Random random = new Random();
                 final ShellDrawable shell = trayArray.get(trayArray.size() - 1);
+                shell.bringToFront();
+
                 ObjectAnimator animateX = ObjectAnimator.ofFloat(shell, "translationX", player == 1? -playerStoreLayout.getWidth() : playerStoreLayout.getWidth());
-                ObjectAnimator animateY = ObjectAnimator.ofFloat(shell, "translationY", player == 1? -random.nextFloat() + playerStoreLayout.getHeight() : random.nextFloat() + playerStoreLayout.getHeight());
+                ObjectAnimator animateY = ObjectAnimator.ofFloat(shell, "translationY", player == 1? (-random.nextFloat() + playerStoreLayout.getHeight()/2)/2 : (random.nextFloat() - playerStoreLayout.getHeight()/2)/2);
                 animateX.setDuration(290);
                 animateY.setDuration(290);
                 AnimatorSet animatorSet = new AnimatorSet();
@@ -228,15 +227,16 @@ public class AnimationManager extends EventHandler<GameState> {
                         activity.runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                ArrayList<ShellDrawable> shellArray = shellAllocations.get(Integer.parseInt(player+""+tray));
+                                ArrayList<ShellDrawable> shellArray = shellAllocations.get(Integer.parseInt(player + "" + tray));
                                 shellArray.remove(shell);
                                 fromTrayLayout.removeView(shell);
                             }
                         });
-
                     }
                 });
                 animatorSet.start();
+                ArrayList<ShellDrawable> shellArray = shellAllocations.get(Integer.parseInt(player+""+tray));
+                shellArray.remove(shell);
             }
         });
         return state;
