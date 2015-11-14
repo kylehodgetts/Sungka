@@ -27,6 +27,10 @@ public class ContentLength extends Header{
         }
     }
 
+    /**
+     * Creates a Content length header with given integer value
+     * @param value the length
+     */
     public ContentLength(int value){
         super("Content-Length",value+"");
         length = value;

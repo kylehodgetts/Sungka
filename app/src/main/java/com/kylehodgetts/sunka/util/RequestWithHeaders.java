@@ -12,7 +12,7 @@ import java.util.Map;
 /**
  * @author Adam Chlupacek
  * @version 1.0
- *          <-INPUT DESC->
+ * A json request that is properly typed with headers
  */
 public class RequestWithHeaders extends JsonObjectRequest {
     public RequestWithHeaders(int method, String url, JSONObject jsonRequest, Response.Listener<JSONObject> listener, Response.ErrorListener errorListener) {
