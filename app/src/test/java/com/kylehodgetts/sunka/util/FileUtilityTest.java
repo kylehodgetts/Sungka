@@ -3,7 +3,6 @@ package com.kylehodgetts.sunka.util;
 import android.test.InstrumentationTestCase;
 import android.test.mock.MockContext;
 
-import com.kylehodgetts.sunka.BoardActivity;
 import com.kylehodgetts.sunka.R;
 
 import org.junit.After;
