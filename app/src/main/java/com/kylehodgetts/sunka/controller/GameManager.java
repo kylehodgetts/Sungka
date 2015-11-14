@@ -210,6 +210,8 @@ public class GameManager extends EventHandler<GameState> {
         //if not in race to start, they don't have another turn and the other side has shells then the other player can go
         if (!state.isRaceState() && !playerHasAnotherTurn && !board.isEmptyRow((currentPlayer + 1) % 2)) {
             state.switchCurrentPlayerIndex();
+        } else if (playerHasAnotherTurn && board.isEmptyRow(currentPlayer)) {
+            state.switchCurrentPlayerIndex();
         }
 
         //if race state is over but we haven't chosen the next players turn yet,
