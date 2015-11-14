@@ -200,7 +200,6 @@ public class ViewManager extends EventHandler<GameState> {
                         textView.setText(Integer.toString(currentBoard.getTray(row, column)));
                     }
                 }
-
                 selectPlayer(activity, state, state.getCurrentPlayerIndex());
             }
         });

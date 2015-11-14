@@ -68,6 +68,11 @@ public class FileUtility {
         return object;
     }
 
+    /**
+     * Play's the sound file resource passed to this method
+     * @param context current application {@link Context}
+     * @param resource the sound {@link android.content.res.Resources} file to be played
+     */
     public static void playSound(final Context context, int resource) {
         final MediaPlayer mediaPlayer = MediaPlayer.create(context, resource);
         if(mediaPlayer != null) {
