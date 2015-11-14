@@ -46,7 +46,6 @@ public class BoardActivity extends AppCompatActivity {
     public static final int ONLINE = 3;
 
     public static final String EXTRA_INT = "com.kylehodgetts.sunka.boardactivity.gametype";
-    public static final String PARCELABLE_GAME_STATE = "com.kylehodgetts.sunka.boardactivity.gamestate";
     private static final String FILE_NAME = "sungkasave";
 
     View decorView;
