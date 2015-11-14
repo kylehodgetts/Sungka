@@ -1,26 +1,17 @@
 package com.kylehodgetts.sunka;
 
-import android.app.ActionBar;
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.Point;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.GridLayout;
-import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.Space;
 
-import com.kylehodgetts.sunka.controller.AnimationManager;
 import com.kylehodgetts.sunka.controller.AIManager;
+import com.kylehodgetts.sunka.controller.AnimationManager;
 import com.kylehodgetts.sunka.controller.GameManager;
 import com.kylehodgetts.sunka.controller.OnlineGameManager;
 import com.kylehodgetts.sunka.controller.ViewManager;
@@ -30,9 +21,7 @@ import com.kylehodgetts.sunka.event.TrayOnClickListener;
 import com.kylehodgetts.sunka.model.Board;
 import com.kylehodgetts.sunka.model.GameState;
 import com.kylehodgetts.sunka.model.Player;
-import com.kylehodgetts.sunka.model.ShellReference;
 import com.kylehodgetts.sunka.uiutil.ShellDrawable;
-import com.kylehodgetts.sunka.util.Tuple2;
 
 import java.util.ArrayList;
 import java.util.HashMap;

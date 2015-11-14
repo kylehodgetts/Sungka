@@ -28,9 +28,11 @@ import java.util.Random;
 
 
 /**
+ *View Manager class as an {@link EventHandler} in order to handle all the events of relating to
+ * updating the view {@link Activity} of the game.
  *
  * @author Charlie Baker
- * @version 1.0
+ * @version 2.0
  * V1.2 Phileas Hocquard
  */
 public class ViewManager extends EventHandler<GameState> {
@@ -57,6 +59,10 @@ public class ViewManager extends EventHandler<GameState> {
         return new Tuple2<>(state, false); //default case to make the eventBus not do anything
     }
 
+    /**
+     * Highlight's the store to provide the users with feedback when a store is to be added to
+     * @param event
+     */
     private void highlightStore(final Event event) {
         activity.runOnUiThread(new Runnable() {
             @Override
@@ -111,6 +117,11 @@ public class ViewManager extends EventHandler<GameState> {
         }
 
 
+    /**
+     * Highlight's a tray to provide the user with visual feedback as to which tray will be
+     * incremented next
+     * @param event recieve from the bus to hightlight the next tray
+     */
     private void highlightTray(final Event event) {
         activity.runOnUiThread(new Runnable() {
             @Override
