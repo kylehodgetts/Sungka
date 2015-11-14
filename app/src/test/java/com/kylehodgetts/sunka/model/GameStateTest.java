@@ -11,9 +11,9 @@ import org.junit.Test;
 public class GameStateTest {
 
     private GameState gameState;
-    private Board board;
-    private Player player1;
-    private Player player2;
+    private Board board = new Board();
+    private Player player1 = new Player();
+    private Player player2 = new Player();
 
 
     /**
@@ -63,7 +63,7 @@ public class GameStateTest {
      * @throws Exception
      */
     @Test
-    public void setPLayerMoved() throws Exception {
+    public void setPlayerMoved() throws Exception {
 
         for (int player = 0; player < 2; player++) {
             gameState = new GameState(board, player1, player2);
