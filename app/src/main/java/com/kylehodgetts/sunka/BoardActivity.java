@@ -151,7 +151,7 @@ public class BoardActivity extends AppCompatActivity {
 
                 //we don't want the opposite side clickable if there are not two local players
                 if (player == 0 || player == 1 && bothSetsButtonsClickable) {
-                    button.setOnClickListener(new TrayOnClickListener(tray, player, bus));
+                    button.setOnClickListener(new TrayOnClickListener(player, tray, bus));
                 }
             }
         }

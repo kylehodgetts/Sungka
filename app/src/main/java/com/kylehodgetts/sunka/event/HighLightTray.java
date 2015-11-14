@@ -4,7 +4,9 @@ import com.kylehodgetts.sunka.controller.bus.Event;
 import com.kylehodgetts.sunka.model.Player;
 
 /**
- * Created by CBaker on 06/11/2015.
+ * @author Charlie Baker
+ * @version 1.0
+ * Class denoting a highlighted tray event
  */
 public class HighLightTray implements Event {
 
@@ -12,9 +14,9 @@ public class HighLightTray implements Event {
     private int player;
     private int currentPlayersTurn;
 
-    public HighLightTray(int tray, int player, int currentPlayersTurn) {
-        this.tray = tray;
+    public HighLightTray(int player, int tray, int currentPlayersTurn) {
         this.player = player;
+        this.tray = tray;
         this.currentPlayersTurn = currentPlayersTurn;
     }
 

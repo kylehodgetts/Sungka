@@ -14,10 +14,9 @@ public class ShellMovement implements Event {
     private boolean isFirstShellMoved;
     private int player;
 
-    //TODO change order of parameters to match Board class ordering
-    public ShellMovement(int trayIndex, int playerIndex, int shellsStillToBePlaced, boolean isFirstShellMoved, int player) {
-        this.trayIndex = trayIndex;
+    public ShellMovement(int playerIndex, int trayIndex, int shellsStillToBePlaced, boolean isFirstShellMoved, int player) {
         this.playerIndex = playerIndex;
+        this.trayIndex = trayIndex;
         this.shellsStillToBePlaced = shellsStillToBePlaced;
         this.isFirstShellMoved = isFirstShellMoved;
         this.player = player;

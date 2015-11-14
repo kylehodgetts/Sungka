@@ -22,7 +22,7 @@ import java.util.TimerTask;
  */
 public class AIManager extends EventHandler<GameState> {
 
-    private final int AI_DELAY = 1000; //delay before AI makes a move //TODO make this change on user request
+    private final int AI_DELAY = 1000; //delay before AI makes a move
     private EventBus<GameState> bus;
     private Timer timer;
 
@@ -38,7 +38,7 @@ public class AIManager extends EventHandler<GameState> {
         this.bus = bus;
         timer = new Timer("aiTimer");
 
-        ai = new AIStrategy(); //TODO change this based on a difficulty setting once we have multiple AI
+        ai = new AIStrategy();
     }
 
     /**
@@ -53,24 +53,18 @@ public class AIManager extends EventHandler<GameState> {
 
         //   normal turn                                                            || race to finish first turn
         if ((event instanceof NextTurn && state.getCurrentPlayerIndex() == AI.PLAYER_AI) || (event instanceof NewGame && state.getCurrentPlayerIndex() < 1)) {
-            final PlayerChoseTray aiMove = new PlayerChoseTray(ai.chooseTray(state), AI.PLAYER_AI);
-
+            final PlayerChoseTray aiMove = new PlayerChoseTray(AI.PLAYER_AI, ai.chooseTray(state));
             timer.schedule(new TimerTask() {
                 @Override
                 public void run() {
-                    //Log.i(AI.TAG, "AI feeding delayed event");
                     bus.feedEvent(aiMove);
                 }
             }, AI_DELAY);
-            //Log.i(AI.TAG, "AI scheduled an event at tray position " + aiMove.getTrayIndex());
-
         }
 
         return new Tuple2<>(state, false);
     }
 
     @Override
-    public void updateView(GameState state, Activity activity) {
-
-    }
+    public void updateView(GameState state, Activity activity) {}
 }

@@ -28,8 +28,6 @@ public class AIStrategy implements AI {
      * @return the position the AI has picked
      */
     public int chooseTray(GameState state) {
-        Log.i(TAG, "Start turn");
-
         Board board = state.getBoard();
         Tuple2<Boolean, Integer> result;
 

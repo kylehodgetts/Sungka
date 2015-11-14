@@ -34,6 +34,7 @@ public class GameManager extends EventHandler<GameState> {
 
     /**
      * Default constructor for event handler, assigns its id that should be unique
+     * @param bus Game's <code>EventBus</code>
      */
     public GameManager(EventBus<GameState> bus) {
         super("GameManager");
@@ -69,9 +70,7 @@ public class GameManager extends EventHandler<GameState> {
     }
 
     @Override
-    public void updateView(GameState state, Activity activity) {
-
-    }
+    public void updateView(GameState state, Activity activity) {}
 
     /**
      * Processes the player move, and starts the moving of the pebbles
@@ -149,8 +148,8 @@ public class GameManager extends EventHandler<GameState> {
 
         int shells = event.getShells() - 1;
         if (shells > 0) {
-            scheduleEvent(new HighLightTray(0, event.getNextPlayerIndex(), playerWhoTurnItIs), 0);
-            scheduleEvent(new ShellMovement(0, event.getNextPlayerIndex(), shells, false, playerWhoTurnItIs), DELAY);
+            scheduleEvent(new HighLightTray(event.getNextPlayerIndex(), 0, playerWhoTurnItIs), 0);
+            scheduleEvent(new ShellMovement(event.getNextPlayerIndex(), 0, shells, false, playerWhoTurnItIs), DELAY);
             return state;
 
         } else return endTurn(state, true, playerWhoTurnItIs);
@@ -172,12 +171,12 @@ public class GameManager extends EventHandler<GameState> {
                 scheduleEvent(new ShellMovementToPot(playerWhoTurnItIs, shellsLeft), DELAY);
             } else {
                 int otherPlayer = (playerIndex + 1) % 2;
-                scheduleEvent(new HighLightTray(0, otherPlayer, playerWhoTurnItIs), 20);
-                scheduleEvent(new ShellMovement(0, otherPlayer, shellsLeft, false, playerWhoTurnItIs), DELAY);
+                scheduleEvent(new HighLightTray(otherPlayer, 0, playerWhoTurnItIs), 20);
+                scheduleEvent(new ShellMovement(otherPlayer, 0, shellsLeft, false, playerWhoTurnItIs), DELAY);
             }
         } else {
-            scheduleEvent(new HighLightTray(trayIndex + 1, playerIndex, playerWhoTurnItIs), 50);
-            scheduleEvent(new ShellMovement(trayIndex + 1, playerIndex, shellsLeft, false, playerWhoTurnItIs), DELAY);
+            scheduleEvent(new HighLightTray(playerIndex, trayIndex + 1, playerWhoTurnItIs), 50);
+            scheduleEvent(new ShellMovement(playerIndex, trayIndex + 1, shellsLeft, false, playerWhoTurnItIs), DELAY);
         }
     }
 
@@ -224,8 +223,6 @@ public class GameManager extends EventHandler<GameState> {
 
         return state;
     }
-
-    //TODO potentially move this into the bus class for less code replication
 
     /**
      * Schedules an event to the timer for later dispatching

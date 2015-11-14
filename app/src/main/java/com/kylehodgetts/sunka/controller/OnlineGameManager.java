@@ -50,9 +50,8 @@ public class OnlineGameManager extends EventHandler<GameState>{
                     while(gameIsRunning){
                         if(socket.getInputStream().available() > 0 && socket.getLocalAddress() != socket.getInetAddress()) {
                             String received = bufferedReader.readLine();
-                            Log.d("Being recieved", received);
                             if(received != null) {
-                                bus.feedEvent(new PlayerChoseTray(Integer.parseInt(received), 1));
+                                bus.feedEvent(new PlayerChoseTray(1, Integer.parseInt(received)));
                             }
                         }
                     }
@@ -69,7 +68,6 @@ public class OnlineGameManager extends EventHandler<GameState>{
             try {
                 PrintWriter writer = new PrintWriter(new BufferedWriter(new OutputStreamWriter(socket.getOutputStream())));
                 writer.println(((PlayerChoseTray) event).getTrayIndex());
-                Log.d("Being sent", ((PlayerChoseTray) event).getTrayIndex()+"");
                 writer.flush();
                 return new Tuple2<>(state, true);
             } catch (IOException e) {

@@ -8,8 +8,6 @@ import com.kylehodgetts.sunka.model.GameState;
  */
 public interface AI {
 
-    String TAG = "SUNGKA_AI_LOGGING";
-
     int PLAYER_AI = 1;
     int PLAYER_HUMAN = 0;
 
