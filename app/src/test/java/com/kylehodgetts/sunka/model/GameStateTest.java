@@ -11,9 +11,9 @@ import org.junit.Test;
 public class GameStateTest {
 
     private GameState gameState;
-    private Board board;
-    private Player player1;
-    private Player player2;
+    private Board board = new Board();
+    private Player player1 = new Player();
+    private Player player2 = new Player();
 
 
     /**
@@ -29,7 +29,7 @@ public class GameStateTest {
      * @throws Exception if values not as should be
      */
     @Test
-    public void checkInitialValues() throws Exception {
+    public void testInitialValues() throws Exception {
         Assert.assertEquals(gameState.getCurrentPlayerIndex(), -1);
         Assert.assertEquals(gameState.playerHasMoved(0), false);
         Assert.assertEquals(gameState.playerHasMoved(1), false);
@@ -41,7 +41,7 @@ public class GameStateTest {
      * Test that switching players works as expected
      */
     @Test
-    public void setAndSwitchCurrentPlayer() throws Exception {
+    public void testSetAndSwitchCurrentPlayer() throws Exception {
         gameState.switchCurrentPlayerIndex();
         Assert.assertEquals(gameState.getCurrentPlayerIndex(), -1);
 
@@ -63,7 +63,7 @@ public class GameStateTest {
      * @throws Exception
      */
     @Test
-    public void setPLayerMoved() throws Exception {
+    public void testSetPlayerMoved() throws Exception {
 
         for (int player = 0; player < 2; player++) {
             gameState = new GameState(board, player1, player2);
