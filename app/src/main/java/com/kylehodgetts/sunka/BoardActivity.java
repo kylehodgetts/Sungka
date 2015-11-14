@@ -247,7 +247,9 @@ public class BoardActivity extends AppCompatActivity {
      */
     public void createShells(RelativeLayout button) {
         Random random = new Random();
-        int numberOfShells = state.getBoard().getTray(button.getId()/10, button.getId()%10);
+        LinearLayout buttonParent = (LinearLayout) button.getParent();
+
+        int numberOfShells = state.getBoard().getTray(buttonParent.getId()/10, buttonParent.getId()%10);
 
         for(int shell=0; shell < numberOfShells; ++shell) {
             ShellDrawable shellDrawable = new ShellDrawable(this, random.nextInt(button.getWidth()/2),
