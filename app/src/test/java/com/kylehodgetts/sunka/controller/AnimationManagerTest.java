@@ -37,7 +37,7 @@ public class AnimationManagerTest extends TestCase {
     }
 
     public void testHandleEvent_shellMovement() throws Exception {
-        Tuple2 tuple2 = animationManager.handleEvent(new ShellMovement(0, 0, 2, 0))
+//        Tuple2 tuple2 = animationManager.handleEvent(new ShellMovement(0, 0, 2, 0))
     }
 
     public void testHandleEvent_shellMovementToPot() throws Exception {

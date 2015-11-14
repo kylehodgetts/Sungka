@@ -50,8 +50,6 @@ public class ShellDrawable extends View {
 
         shell = new ShapeDrawable(new OvalShape()); // creates new oval shape to represent the shell
         shell.setBounds(x, y, x + width, y + length);
-        Random random = new Random();
-        shell.getPaint().setColor(Color.parseColor(colours[random.nextInt(colours.length)]));  //sets colour randomly
     }
 
     /**
@@ -79,14 +77,6 @@ public class ShellDrawable extends View {
     }
 
     /**
-     * Set's the Shell's x value
-     * @param x the new x value of the Shell
-     */
-    public void setShellX(int x) {
-        this.shellX = x;
-    }
-
-    /**
      * Get's the Shell's width
      * @return an integer of the Shell's width
      */
@@ -111,27 +101,19 @@ public class ShellDrawable extends View {
     }
 
     /**
-     * Set's the Shell's y value
-     * @param y new y values as an integer
-     */
-    public void setShellY(int y) {
-        this.shellY = y;
-    }
-
-    /**
-     * Set's the shell to a new colour
-     * @param newColour new colour as a String including hex values
-     */
-    public void setColour(String newColour) {
-        this.shell.getPaint().setColor(Color.parseColor(newColour));
-    }
-
-    /**
      * Set's the shell to a new colour
      * @param newColourInt integer representing a colour from the {@link Color} class
      */
     public void setColour(int newColourInt) {
         this.shell.getPaint().setColor(newColourInt);
+    }
+
+    /**
+     * Set's the shell to a random colour
+     */
+    public void setRandomColour() {
+        Random random = new Random();
+        shell.getPaint().setColor(Color.parseColor(colours[random.nextInt(colours.length)]));  //sets colour randomly
     }
 
     /**

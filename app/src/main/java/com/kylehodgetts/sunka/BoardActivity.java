@@ -254,6 +254,7 @@ public class BoardActivity extends AppCompatActivity {
         for(int shell=0; shell < numberOfShells; ++shell) {
             ShellDrawable shellDrawable = new ShellDrawable(this, random.nextInt(button.getWidth()/2),
                     random.nextInt(button.getHeight()/2), 40, 20);
+            shellDrawable.setRandomColour();
             RelativeLayout.LayoutParams shellParams = new RelativeLayout.LayoutParams(
                     RelativeLayout.LayoutParams.WRAP_CONTENT,
                     RelativeLayout.LayoutParams.WRAP_CONTENT);
@@ -274,7 +275,7 @@ public class BoardActivity extends AppCompatActivity {
      * shell to it's currently allocated tray based on the current game state.
      *
      */
-    private void initialiseShellAllocations() {
+    public void initialiseShellAllocations() {
         shellAllocations = new HashMap<>();
         for(int player=0; player < 2; ++player) {
             for(int tray=0; tray < 7; ++tray) {
