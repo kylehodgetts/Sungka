@@ -9,6 +9,7 @@
         android:endColor="#FF5757"
         android:startColor="#C4213C"
         android:type="linear" />
+
     <padding
         android:bottom="0dp"
         android:left="0dp"

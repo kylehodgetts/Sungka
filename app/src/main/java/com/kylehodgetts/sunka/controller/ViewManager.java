@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.ViewFlipper;
 
@@ -21,7 +22,10 @@ import com.kylehodgetts.sunka.event.HighlightPlayerStore;
 import com.kylehodgetts.sunka.event.NewGame;
 import com.kylehodgetts.sunka.model.Board;
 import com.kylehodgetts.sunka.model.GameState;
+import com.kylehodgetts.sunka.uiutil.ShellDrawable;
 import com.kylehodgetts.sunka.util.Tuple2;
+
+import java.util.Random;
 
 
 /**
@@ -156,8 +160,8 @@ public class ViewManager extends EventHandler<GameState> {
                 int tray = ((HighLightTray) event).getTray();
                 int currentPlayersTurn = ((HighLightTray) event).getCurrentPlayersTurn();
 
-                LinearLayout linearLayout = (LinearLayout) activity.findViewById(Integer.parseInt(player + "" + tray));
-                ImageButton imageButton = (ImageButton) linearLayout.findViewById(R.id.button);
+                LinearLayout linearLayout = (LinearLayout) activity.findViewById(Integer.parseInt(player+""+tray));
+                RelativeLayout imageButton = (RelativeLayout) linearLayout.findViewById(R.id.button);
                 GradientDrawable drawable = (GradientDrawable) imageButton.getBackground().getConstantState().newDrawable().mutate();
 
                 drawable.setStroke(8, currentPlayersTurn == 0 ? Color.parseColor("#C4213C") : Color.parseColor("#2D8BA8"));
@@ -180,28 +184,14 @@ public class ViewManager extends EventHandler<GameState> {
         activity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
+
                 LinearLayout storeOne = (LinearLayout) activity.findViewById(R.id.playerBStore);
-                ImageButton playerOneStoreButton = (ImageButton) storeOne.findViewById(R.id.buttonbs);
                 TextView tvPlayerAStoreCount = (TextView) activity.findViewById(R.id.tvPlayerBStoreCount);
                 tvPlayerAStoreCount.setText(Integer.toString(state.getPlayer2().getStonesInPot()));
-                int playerAStoreShellCount = state.getPlayer1().getStonesInPot();
-                if (playerAStoreShellCount < 9) {
-                    playerOneStoreButton.setImageResource(activity.getResources().getIdentifier("s" + playerAStoreShellCount, "drawable", activity.getPackageName()));
-                } else {
-                    playerOneStoreButton.setImageResource(activity.getResources().getIdentifier("s9", "drawable", activity.getPackageName()));
-                }
 
                 LinearLayout storeTwo = (LinearLayout) activity.findViewById(R.id.playerAStore);
-                ImageButton playerTwoStoreButton = (ImageButton) storeTwo.findViewById(R.id.buttonas);
                 TextView tvPlayerBStoreCount = (TextView) activity.findViewById(R.id.tvPlayerAStoreCount);
                 tvPlayerBStoreCount.setText(Integer.toString(state.getPlayer1().getStonesInPot()));
-                int playerBStoreShellCount = state.getPlayer2().getStonesInPot();
-                if (playerBStoreShellCount < 9) {
-                    playerTwoStoreButton.setImageResource(activity.getResources().getIdentifier("s" + playerBStoreShellCount, "drawable", activity.getPackageName()));
-                } else {
-                    playerTwoStoreButton.setImageResource(activity.getResources().getIdentifier("s9", "drawable", activity.getPackageName()));
-                }
-
 
                 Board currentBoard = state.getBoard();
                 for (int row = 0; row < 2; ++row) {
@@ -209,14 +199,6 @@ public class ViewManager extends EventHandler<GameState> {
                         LinearLayout linearLayout = (LinearLayout) activity.findViewById(Integer.parseInt(row + "" + column));
                         TextView textView = (TextView) linearLayout.findViewById(R.id.tv);
                         textView.setText(Integer.toString(currentBoard.getTray(row, column)));
-                        ImageButton button = (ImageButton) linearLayout.findViewById(R.id.button);
-                        button.setPadding(35, 35, 35, 35); // In order to make the image scale
-                        int currentTrayShellCount = currentBoard.getTray(row, column);
-                        if (currentTrayShellCount < 9) {
-                            button.setImageResource(activity.getResources().getIdentifier("s" + currentTrayShellCount, "drawable", activity.getPackageName()));
-                        } else {
-                            button.setImageResource(activity.getResources().getIdentifier("s9", "drawable", activity.getPackageName()));
-                        }
                     }
                 }
 
@@ -244,9 +226,9 @@ public class ViewManager extends EventHandler<GameState> {
         for (int player = 0; player < 2; ++player) {
             for (int tray = 0; tray < 7; ++tray) {
                 LinearLayout linearLayout = (LinearLayout) activity.findViewById(Integer.parseInt(player + "" + tray));
-                ImageButton imageButton = (ImageButton) linearLayout.findViewById(R.id.button);
-                imageButton.setBackgroundResource(player == 0 ? R.drawable.buttonb : R.drawable.buttona);
-                imageButton.setPadding(35, 35, 35, 35);
+                RelativeLayout button = (RelativeLayout) linearLayout.findViewById(R.id.button);
+                button.setBackgroundResource(player == 0 ? R.drawable.buttonb : R.drawable.buttona);
+                button.setPadding(35, 35, 35, 35);
 
                 if (!state.isRaceState()) {
                     TextView tv = (TextView) linearLayout.findViewById(R.id.tv);
@@ -287,9 +269,9 @@ public class ViewManager extends EventHandler<GameState> {
 
         for (int tray = 0; tray < 7; ++tray) {
             LinearLayout linearLayout = (LinearLayout) activity.findViewById(Integer.parseInt((playersTurn == 0 ? "1" : "0") + "" + tray));
-            ImageButton imageButton = (ImageButton) linearLayout.findViewById(R.id.button);
-            imageButton.setBackgroundResource(R.drawable.buttontransparent);
-            imageButton.setPadding(35, 35, 35, 35);
+            RelativeLayout button = (RelativeLayout) linearLayout.findViewById(R.id.button);
+            button.setBackgroundResource(R.drawable.buttontransparent);
+            button.setPadding(35, 35, 35, 35);
         }
     }
 
