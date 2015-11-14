@@ -23,6 +23,7 @@ import com.kylehodgetts.sunka.event.NewGame;
 import com.kylehodgetts.sunka.model.Board;
 import com.kylehodgetts.sunka.model.GameState;
 import com.kylehodgetts.sunka.uiutil.ShellDrawable;
+import com.kylehodgetts.sunka.util.FileUtility;
 import com.kylehodgetts.sunka.util.Tuple2;
 
 import java.util.Random;
@@ -136,9 +137,11 @@ public class ViewManager extends EventHandler<GameState> {
                     public void onClick(View v) {
                         bus.feedEvent(new NewGame());
                         flipLayout(state);
+                        FileUtility.playSound(activity, R.raw.ping);
                     }
 
                 });
+                FileUtility.playSound(activity, R.raw.applause);
             }
 
         });
