@@ -248,5 +248,4 @@ public class GameState implements BusState, Serializable {
         return player == 0 ? player1FirstMoveEnded : player2FirstMoveEnded;
     }
 
-    public int getInitialising() { return initialising; }
 }
