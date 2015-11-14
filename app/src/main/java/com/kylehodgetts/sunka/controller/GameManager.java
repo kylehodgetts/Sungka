@@ -28,6 +28,8 @@ import java.util.TimerTask;
  */
 public class GameManager extends EventHandler<GameState> {
 
+    private static final int TOTAL_SHELLS = 98;
+
     private static final int DELAY = 300;
     private Timer timer;
     private EventBus<GameState> bus;
@@ -62,7 +64,7 @@ public class GameManager extends EventHandler<GameState> {
             if (!state.isRaceState()) state.setDoingMove(false);
             return new Tuple2<>(state, true);
         } else if (event instanceof NewGame) {
-            if(state.getPlayer1().getStonesInPot() + state.getPlayer2().getStonesInPot() == 98 ){
+            if(state.getPlayer1().getStonesInPot() + state.getPlayer2().getStonesInPot() == TOTAL_SHELLS ){
                 state.getPlayer1().resetStonesInPot();
                 state.getPlayer2().resetStonesInPot();
                 state = new GameState(new Board(),state.getPlayer1(),state.getPlayer2());
@@ -248,6 +250,4 @@ public class GameManager extends EventHandler<GameState> {
             }, millis);
         }
     }
-
-
 }
