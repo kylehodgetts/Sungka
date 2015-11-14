@@ -1,6 +1,7 @@
 package com.kylehodgetts.sunka.util;
 
 import android.content.Context;
+import android.media.MediaPlayer;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -66,4 +67,18 @@ public class FileUtility {
         }
         return object;
     }
+
+    public static void playSound(final Context context, int resource) {
+        final MediaPlayer mediaPlayer = MediaPlayer.create(context, resource);
+        if(mediaPlayer != null) {
+            mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                @Override
+                public void onCompletion(MediaPlayer mp) {
+                    mediaPlayer.release();
+                }
+            });
+            mediaPlayer.start();
+        }
+    }
+
 }
