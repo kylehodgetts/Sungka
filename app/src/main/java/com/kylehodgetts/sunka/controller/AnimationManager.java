@@ -99,6 +99,14 @@ public class AnimationManager extends EventHandler<GameState> {
                     View child = relativeLayout.getChildAt(i);
                     if(child instanceof ShellDrawable) { relativeLayout.removeView(child); }
                 }
+                RelativeLayout playerAStore = (RelativeLayout) activity.findViewById(R.id.buttonbs);
+                playerAStore.removeAllViews();
+
+                RelativeLayout playerBStore = (RelativeLayout) activity.findViewById(R.id.buttonas);
+                playerBStore.removeAllViews();
+
+                ((BoardActivity) activity).initialiseShellAllocations();
+                ((BoardActivity) activity).setAreShellsCreated(false);
             }
         });
         return state;

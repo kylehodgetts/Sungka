@@ -75,11 +75,9 @@ public class ViewManager extends EventHandler<GameState> {
         } else if (event instanceof HighlightPlayerStore) {
             highlightStore(event);
         }
-
-        if (event instanceof EndGame) {
+        else if (event instanceof EndGame) {
             flipLayout(state);
         }
-
         return new Tuple2<>(state, false); //default case to make the eventBus not do anything
     }
 
@@ -127,16 +125,6 @@ public class ViewManager extends EventHandler<GameState> {
                 leftScore.setText("" + state.getPlayer2().getWonGames());
                 rightScore.setText("" + state.getPlayer1().getWonGames());
 
-                Button restart = (Button) activity.findViewById(R.id.bAgain);
-                restart.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        bus.feedEvent(new NewGame());
-                        flipLayout(state);
-                        FileUtility.playSound(activity, R.raw.ping);
-                    }
-
-                });
                 FileUtility.playSound(activity, R.raw.applause);
             }
 

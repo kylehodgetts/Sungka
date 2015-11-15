@@ -2,6 +2,7 @@ package com.kylehodgetts.sunka;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
@@ -43,7 +44,7 @@ import java.util.Random;
  * @author Charlie Baker
  * @author Jonathan Burton
  * @author Kyle Hodgetts
- * @version 1.7
+ * @version 1.8
  */
 public class BoardActivity extends AppCompatActivity {
 
@@ -67,7 +68,6 @@ public class BoardActivity extends AppCompatActivity {
 
     private TextView txtYourScoreLabel;
     private TextView txtYourScore;
-    private Button btnPlayAgain;
     private Button btnReturnToMainMenu;
     private TextView txtTheirScoreLabel;
     private TextView txtTheirScore;
@@ -99,8 +99,6 @@ public class BoardActivity extends AppCompatActivity {
         txtTheirScore = (TextView) findViewById(R.id.opponent_score);
         txtTheirScore.setTypeface(Fonts.getButtonFont(this));
         txtTheirScore.setTextColor(ContextCompat.getColor(this, R.color.white));
-        btnPlayAgain = (Button) findViewById(R.id.bAgain);
-        btnPlayAgain.setTypeface(Fonts.getButtonFont(this));
         btnReturnToMainMenu = (Button) findViewById(R.id.bMenu);
         btnReturnToMainMenu.setTypeface(Fonts.getButtonFont(this));
         btnReturnToMainMenu.setOnClickListener(new View.OnClickListener() {
@@ -109,10 +107,11 @@ public class BoardActivity extends AppCompatActivity {
                 returnToMainMenu();
             }
         });
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             this.setContentView(R.layout.activity_board);
         }
-        else {
+        else { // uses another XML layout should the Android version be less than Lollipop using Linear Layouts
             this.setContentView(R.layout.activity_board_prev_compatable);
         }
 
@@ -140,6 +139,23 @@ public class BoardActivity extends AppCompatActivity {
         bus.registerHandler(new ViewManager(bus, this));
         bus.registerHandler(new AnimationManager(bus, this));
         bus.feedEvent(new NewGame());
+
+        setupReturnToMenuButton();
+    }
+
+    /**
+     * Set's the {@link android.view.View.OnClickListener} for the return to main menu button after a
+     * game has finished.
+     *
+     */
+    private void setupReturnToMenuButton() {
+        Button mainMenuButton = (Button) findViewById(R.id.bMenu);
+        mainMenuButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                returnToMainMenu();
+            }
+        });
     }
 
     /**
@@ -183,6 +199,10 @@ public class BoardActivity extends AppCompatActivity {
      * @param bus The game Event Bus so the tray can be attached with the onClickListener
      */
     private void makeXMLButtons(EventBus bus, boolean bothSetsButtonsClickable) {
+
+        /*
+           Set's up the grid layout in the event that the device Android version is Lollipop or greater
+         */
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             GridLayout gridlayout = (GridLayout) findViewById(R.id.gridLayout);
 
@@ -215,7 +235,7 @@ public class BoardActivity extends AppCompatActivity {
                 }
             }
         }
-        else {
+        else { // Set's up the Linear Layout's for previous Android versions
             LinearLayout topRow = (LinearLayout) findViewById(R.id.topRow);
             LinearLayout bottomRow = (LinearLayout) findViewById(R.id.bottomRow);
 
@@ -269,6 +289,7 @@ public class BoardActivity extends AppCompatActivity {
 
             }
 
+            // Resizes and creates the new shells in the case that the Android version is greater than Lollipop
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 GridLayout gridLayout = (GridLayout) findViewById(R.id.gridLayout);
 
@@ -292,7 +313,7 @@ public class BoardActivity extends AppCompatActivity {
                 }
 
             }
-            else {
+            else { // resizes all elements for previous android versions and creates the Shells
                 LinearLayout topRow = (LinearLayout) findViewById(R.id.topRow);
                 LinearLayout trayButtonLayout = (LinearLayout) topRow.getChildAt(0);
                 LinearLayout.LayoutParams topRowParams = (LinearLayout.LayoutParams) topRow.getLayoutParams();
@@ -304,7 +325,7 @@ public class BoardActivity extends AppCompatActivity {
                 bottomRowParams.height = topRowParams.height;
                 bottomRow.setLayoutParams(bottomRowParams);
 
-                if(!areShellsCreated) {
+                if(!areShellsCreated) { // creates the shells in the correct order to be visible
                     for (int i = 6; i >= 0; --i) {
                         LinearLayout currentTrayButtonLayout = (LinearLayout) topRow.getChildAt(i);
                         RelativeLayout currentTrayButton = (RelativeLayout) currentTrayButtonLayout.findViewById(R.id.button);
@@ -314,7 +335,7 @@ public class BoardActivity extends AppCompatActivity {
                         createShells(currentTrayButton);
                         initialiseShellAllocations();
                     }
-                    for (int j = 0; j < 7; ++j) {
+                    for (int j = 0; j < 7; ++j) { // creates the shells in the correct order to be visible
                         LinearLayout currentTrayButtonLayout = (LinearLayout) bottomRow.getChildAt(j);
                         RelativeLayout currentTrayButton = (RelativeLayout) currentTrayButtonLayout.findViewById(R.id.button);
                         currentTrayButton.bringToFront();
@@ -371,8 +392,11 @@ public class BoardActivity extends AppCompatActivity {
         }
 
         for(int shell=0; shell < numberOfShells; ++shell) {
+            int shellWidth = 40;
+            int shellLength = 20;
+
             ShellDrawable shellDrawable = new ShellDrawable(this, random.nextInt(button.getWidth()/2),
-                    random.nextInt(button.getHeight()/2), 40, 20);
+                    random.nextInt(button.getHeight()/2), shellWidth, shellLength);
             shellDrawable.setRandomColour();
             RelativeLayout.LayoutParams shellParams = new RelativeLayout.LayoutParams(
                     RelativeLayout.LayoutParams.WRAP_CONTENT,
@@ -414,5 +438,15 @@ public class BoardActivity extends AppCompatActivity {
         shellAllocations.put(PLAYER_B_STORE, new ArrayList<ShellDrawable>());
     }
 
+    /**
+     * Get's the Map referencing the array lists of all the allocations of Shells
+     * @return {@link HashMap}
+     */
     public HashMap<Integer, ArrayList<ShellDrawable>> getShellAllocations() { return shellAllocations; }
+
+    /**
+     * Set's the boolean to tell the Activity if the shells need to be created on the board again
+     * @param newValue new boolean value
+     */
+    public void setAreShellsCreated(boolean newValue) { areShellsCreated = newValue; }
 }
