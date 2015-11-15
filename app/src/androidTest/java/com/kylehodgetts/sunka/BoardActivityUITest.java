@@ -66,7 +66,7 @@ private BoardActivity activity;
         TouchUtils.clickView(this, button);
         TextView textView = (TextView) linearLayout.findViewById(R.id.tv);
         assertEquals(textView.getText().toString(), "0");
-        Thread.sleep(1000);
+        getInstrumentation().waitForIdleSync();
         TextView tvPlayerAStoreCount = (TextView) activity.findViewById(R.id.tvPlayerBStoreCount);
         assertEquals(tvPlayerAStoreCount.getText(), "1");
 
@@ -94,7 +94,7 @@ private BoardActivity activity;
         TextView tvPlayerAStoreCount = (TextView) activity.findViewById(R.id.tvPlayerBStoreCount);
         assertEquals(tvPlayerAStoreCount.getText(),"1");
         for (int j = 0; j<3; j++) {
-            Thread.sleep(1000);
+            getInstrumentation().waitForIdleSync();
             LinearLayout linearLayout0 = (LinearLayout) activity.findViewById(Integer.parseInt("" + j));
             RelativeLayout button0 = (RelativeLayout) linearLayout0.findViewById(R.id.button);
             TextView textView0 = (TextView) linearLayout0.findViewById(R.id.tv);
@@ -118,7 +118,7 @@ private BoardActivity activity;
         TextView tvPlayerBStoreCount = (TextView) activity.findViewById(R.id.tvPlayerAStoreCount);
         assertEquals("1",tvPlayerBStoreCount.getText());
         for (int j =0; j<3; j++) {
-            Thread.sleep(1000);
+            getInstrumentation().waitForIdleSync();
             LinearLayout linearLayout1 = (LinearLayout) activity.findViewById(Integer.parseInt(1+"" + j));
             RelativeLayout button1 = (RelativeLayout) linearLayout1.findViewById(R.id.button);
             TextView textView1 = (TextView) linearLayout1.findViewById(R.id.tv);
@@ -203,12 +203,12 @@ private BoardActivity activity;
     public void testGameToGameOverPlayer0Win() throws InterruptedException {
 
        activity.getGameState().getPlayer1().addWonGames();
-        Thread.sleep(1000);
+        getInstrumentation().waitForIdleSync();
         activity.getEventBus().feedEvent(new EndGame());
-        Thread.sleep(1000);
+        getInstrumentation().waitForIdleSync();
         TextView player0Score = (TextView) activity.findViewById(R.id.your_score);
         System.out.println(player0Score.getText());
-        assertEquals("1",player0Score.getText());
+        assertEquals("1", player0Score.getText());
 
     }
 
@@ -219,9 +219,9 @@ private BoardActivity activity;
     public void testGameToGameOverPlayer1Win() throws InterruptedException {
 
         activity.getGameState().getPlayer2().addWonGames();
-        Thread.sleep(1000);
+        getInstrumentation().waitForIdleSync();
         activity.getEventBus().feedEvent(new EndGame());
-        Thread.sleep(1000);
+        getInstrumentation().waitForIdleSync();
         TextView player1Score = (TextView) activity.findViewById(R.id.opponent_score);
         System.out.println(player1Score.getText());
         assertEquals("1",player1Score.getText());
@@ -231,15 +231,23 @@ private BoardActivity activity;
      *@throws: InterruptedException
      */
     public void testBackToMainMenu() throws InterruptedException {
+        Instrumentation.ActivityMonitor activityMonitor = new Instrumentation.ActivityMonitor(MainActivity.class.getName(), null, false);
+        getInstrumentation().addMonitor(activityMonitor);
         activity.getEventBus().feedEvent(new EndGame());
-        Thread.sleep(1000);
-        Button bMenu = (Button) activity.findViewById(R.id.bMenu);
-        TouchUtils.clickView(this, bMenu);
-        Thread.sleep(1000);
-        Activity currActivity = getActivity();
-        assertEquals(currActivity,MainActivity.class);
-    }
+        getInstrumentation().waitForIdleSync();
+        getInstrumentation().runOnMainSync(new Runnable() {
+            @Override
+            public void run() {
+                Button bMenu = (Button) activity.findViewById(R.id.bMenu);
+                bMenu.performClick();
+            }
+        });
 
+        getInstrumentation().waitForIdleSync();
+        MainActivity mainActivity = (MainActivity) getInstrumentation().waitForMonitorWithTimeout(activityMonitor, 5000);
+        assertNotNull(mainActivity);
+        mainActivity.finish();
+    }
 }
 
 
