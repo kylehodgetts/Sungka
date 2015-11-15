@@ -1,14 +1,18 @@
 package com.lynx.sungka.server;
 
-import com.lynx.sungka.server.http.RequestResponse;
-import com.lynx.sungka.server.http.header.Header;
-import com.lynx.sungka.server.http.route.Bind;
+import com.lynx.sungka.server.actions.GetId;
+import com.lynx.sungka.server.actions.GetPages;
+import com.lynx.sungka.server.actions.GetScores;
+import com.lynx.sungka.server.actions.PopulateMockData;
+import com.lynx.sungka.server.actions.ResetDB;
+import com.lynx.sungka.server.actions.SaveScore;
+import com.lynx.sungka.server.http.MethodType;
+import com.lynx.sungka.server.http.route.Alternative;
+import com.lynx.sungka.server.http.route.Method;
+import com.lynx.sungka.server.http.route.Read;
 import com.lynx.sungka.server.http.route.Route;
 import com.lynx.sungka.server.http.route.Segment;
-import com.mongodb.BasicDBObject;
-import com.mongodb.DB;
 import com.mongodb.DBAddress;
-import com.mongodb.DBObject;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
@@ -16,12 +20,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ThreadPoolExecutor;
 
 /**
  * @author Adam Chlupacek
@@ -32,6 +32,14 @@ import java.util.concurrent.ThreadPoolExecutor;
  * to the server, they are being submitted to this Service and executed at some point.
  */
 public class Server implements Runnable {
+
+    public static final String USER_NAME ="UserName";
+    public static final String SERVER_ID ="ServerID";
+    public static final String GAMES_WON ="GamesWon";
+    public static final String GAMES_LOST ="GamesLost";
+    public static final String MAX_SCORE ="MaxScore";
+
+    public static final int BATCH_SIZE = 40;
 
     private ScheduledExecutorService pool;
     private ServerSocket socket;
@@ -47,22 +55,24 @@ public class Server implements Runnable {
         pool = Executors.newScheduledThreadPool(5);
         running = true;
 
-        // TODO: implement proper routing construction, for now just create routes with this
-        route = new Segment("me",new Bind() {
-            @Override
-            public RequestResponse run(ServerContext context, DBObject body, List<String> args) {
-                ArrayList<Header> headers = new ArrayList<>();
-                headers.add(new Header("Server","Simple rest server"));
-                headers.add(new Header("Content-Type", "text/html"));
-                DB tDB = context.getMongo().getDB("test");
-                DBObject o = new BasicDBObject("Hello","Yeah");
-                tDB.getCollection("myCollection").insert(o);
-                return new RequestResponse(headers,"<a>Hello</a>".getBytes(), RequestResponse.ResponseCode.OK);
-            }
-        });
+        route =
+            new Alternative(
+                new Segment("user",new Alternative(
+                    new Segment("id", new Method(MethodType.POST,new GetId()))
+                )),
+                new Segment("statistics", new Alternative(
+                    new Method(MethodType.POST, new SaveScore()),
+                    new Method(MethodType.GET,new Read("\\d+", new Read("\\d" ,new GetScores()))), //Reads the two path parameters that are required for GetScores
+                    new Segment("pages", new GetPages()),
+                    new Segment("mock",new PopulateMockData())
+                )),
+                new Segment("resetdb",new ResetDB())
+            );
+
+
         try {
             //Creating server context, access to all its resources
-            context = new ServerContext(new DBAddress("localhost",27017,"local"));
+            context = new ServerContext(new DBAddress("127.0.0.1",27017,"local"));
             socket = new ServerSocket(8080);
             System.out.println("Starting server at: "+socket.getInetAddress().getHostName());
             new Thread(this).start();

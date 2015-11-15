@@ -26,13 +26,16 @@
             </intent-filter>
         </activity>
         <activity android:name=".BoardActivity"
-            android:theme="@style/NoActionBar" android:screenOrientation="landscape">
+            android:theme="@style/NoActionBar" android:screenOrientation="userLandscape">
 
         </activity>
         <activity android:name=".WiFiDirectActivity" android:theme="@style/NoActionBar"></activity>
         <activity android:name=".HostActivity"
             android:theme="@style/NoActionBar"
             android:screenOrientation="portrait"></activity>
+        <activity android:name=".StatisticsActivity"
+            android:theme="@style/NoActionBar"
+            android:screenOrientation="userLandscape"/>
     </application>
 
 </manifest>

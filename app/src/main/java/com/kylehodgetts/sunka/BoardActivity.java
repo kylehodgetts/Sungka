@@ -22,6 +22,7 @@ import com.kylehodgetts.sunka.controller.AnimationManager;
 import com.kylehodgetts.sunka.controller.GameManager;
 import com.kylehodgetts.sunka.controller.OnlineGameManager;
 import com.kylehodgetts.sunka.controller.ViewManager;
+import com.kylehodgetts.sunka.controller.StatisticsCollector;
 import com.kylehodgetts.sunka.controller.bus.EventBus;
 import com.kylehodgetts.sunka.event.NewGame;
 import com.kylehodgetts.sunka.event.TrayOnClickListener;
@@ -125,6 +126,7 @@ public class BoardActivity extends AppCompatActivity {
         bus.registerHandler(new GameManager(bus));
         bus.registerHandler(new ViewManager(bus, this));
         bus.registerHandler(new AnimationManager(bus, this));
+        bus.registerHandler(new StatisticsCollector(this,getSharedPreferences(MainActivity.PREFERENCES, 0).getString(MainActivity.SERVER_ID,null)));
 
         if (gameType == ONEPLAYER) {
             bus.registerHandler(new AIManager(bus));
