@@ -155,6 +155,9 @@ public class StatisticsCollector extends EventHandler<GameState> {
                     obj.put(MainActivity.AVG_TIME,avg);
             }
 
+            Log.v("AVG",avg+"");
+            Log.v("AVG",obj.toString());
+
             byte[] bytes = obj.toString().getBytes();
             File file = new File(activity.getFilesDir(), STATS_LOCAL);
             FileOutputStream out = new FileOutputStream(file);
@@ -164,7 +167,6 @@ public class StatisticsCollector extends EventHandler<GameState> {
             if(online && queue != null)
                 sendToServer(obj, queue);
         } catch (IOException | JSONException e) {
-            System.out.println("lol no");
            Log.v("STATS", "Could not write stats");
         }
     }
