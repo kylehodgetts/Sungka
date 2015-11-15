@@ -1,6 +1,6 @@
 package com.kylehodgetts.sunka.uiutil;
 
-import com.kylehodgetts.sunka.BoardActivity;
+import com.kylehodgetts.sunka.view.BoardActivity;
 
 import junit.framework.TestCase;
 

@@ -1,9 +1,8 @@
-package com.kylehodgetts.sunka;
+package com.kylehodgetts.sunka.view;
 
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Typeface;
 import android.net.nsd.NsdManager;
 import android.net.nsd.NsdServiceInfo;
 import android.os.AsyncTask;
@@ -15,6 +14,7 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.kylehodgetts.sunka.R;
 import com.kylehodgetts.sunka.controller.wifi.ServiceAdapter;
 import com.kylehodgetts.sunka.controller.wifi.SingletonSocket;
 import com.kylehodgetts.sunka.uiutil.Fonts;

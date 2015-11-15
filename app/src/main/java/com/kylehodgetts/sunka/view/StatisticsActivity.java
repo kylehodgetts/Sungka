@@ -1,4 +1,4 @@
-package com.kylehodgetts.sunka;
+package com.kylehodgetts.sunka.view;
 
 import android.app.Activity;
 import android.content.SharedPreferences;
@@ -16,6 +16,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.kylehodgetts.sunka.R;
 import com.kylehodgetts.sunka.controller.StatisticsCollector;
 import com.kylehodgetts.sunka.controller.statistics.ScoreListAdapter;
 import com.kylehodgetts.sunka.model.PlayerScores;
@@ -30,15 +31,15 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.kylehodgetts.sunka.MainActivity.AVG_TIME;
-import static com.kylehodgetts.sunka.MainActivity.GAMES_LOST;
-import static com.kylehodgetts.sunka.MainActivity.GAMES_WON;
-import static com.kylehodgetts.sunka.MainActivity.MAX_SCORE;
-import static com.kylehodgetts.sunka.MainActivity.PREFERENCES;
-import static com.kylehodgetts.sunka.MainActivity.SERVER_ID;
-import static com.kylehodgetts.sunka.MainActivity.SERVER_URL;
-import static com.kylehodgetts.sunka.MainActivity.STATS_LOCAL;
-import static com.kylehodgetts.sunka.MainActivity.USER_NAME;
+import static com.kylehodgetts.sunka.view.MainActivity.AVG_TIME;
+import static com.kylehodgetts.sunka.view.MainActivity.GAMES_LOST;
+import static com.kylehodgetts.sunka.view.MainActivity.GAMES_WON;
+import static com.kylehodgetts.sunka.view.MainActivity.MAX_SCORE;
+import static com.kylehodgetts.sunka.view.MainActivity.PREFERENCES;
+import static com.kylehodgetts.sunka.view.MainActivity.SERVER_ID;
+import static com.kylehodgetts.sunka.view.MainActivity.SERVER_URL;
+import static com.kylehodgetts.sunka.view.MainActivity.STATS_LOCAL;
+import static com.kylehodgetts.sunka.view.MainActivity.USER_NAME;
 import static com.kylehodgetts.sunka.util.JsonUtil.getDouble;
 import static com.kylehodgetts.sunka.util.JsonUtil.getInt;
 

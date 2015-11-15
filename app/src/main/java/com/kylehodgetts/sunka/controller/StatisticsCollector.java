@@ -9,7 +9,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
-import com.kylehodgetts.sunka.MainActivity;
+import com.kylehodgetts.sunka.view.MainActivity;
 import com.kylehodgetts.sunka.controller.bus.Event;
 import com.kylehodgetts.sunka.controller.bus.EventHandler;
 import com.kylehodgetts.sunka.event.EndGame;
@@ -22,7 +22,6 @@ import com.kylehodgetts.sunka.util.Tuple2;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.json.JSONStringer;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -31,7 +30,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.kylehodgetts.sunka.MainActivity.*;
+import static com.kylehodgetts.sunka.view.MainActivity.*;
 import static com.kylehodgetts.sunka.util.JsonUtil.getInt;
 
 /**

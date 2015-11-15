@@ -18,22 +18,22 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity" android:theme="@style/NoActionBar">
+        <activity android:name=".view.MainActivity" android:theme="@style/NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".BoardActivity"
+        <activity android:name=".view.BoardActivity"
             android:theme="@style/NoActionBar" android:screenOrientation="userLandscape">
 
         </activity>
-        <activity android:name=".WiFiDirectActivity" android:theme="@style/NoActionBar"></activity>
-        <activity android:name=".HostActivity"
+        <activity android:name=".view.WiFiDirectActivity" android:theme="@style/NoActionBar"></activity>
+        <activity android:name=".view.HostActivity"
             android:theme="@style/NoActionBar"
             android:screenOrientation="portrait"></activity>
-        <activity android:name=".StatisticsActivity"
+        <activity android:name=".view.StatisticsActivity"
             android:theme="@style/NoActionBar"
             android:screenOrientation="userLandscape"/>
     </application>

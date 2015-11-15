@@ -9,13 +9,12 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
-import com.kylehodgetts.sunka.BoardActivity;
+import com.kylehodgetts.sunka.view.BoardActivity;
 import com.kylehodgetts.sunka.R;
 import com.kylehodgetts.sunka.controller.bus.Event;
 import com.kylehodgetts.sunka.controller.bus.EventBus;
 import com.kylehodgetts.sunka.controller.bus.EventHandler;
 import com.kylehodgetts.sunka.event.EndGame;
-import com.kylehodgetts.sunka.event.NewGame;
 import com.kylehodgetts.sunka.event.ShellMovement;
 import com.kylehodgetts.sunka.event.ShellMovementToPot;
 import com.kylehodgetts.sunka.event.ShellSteal;

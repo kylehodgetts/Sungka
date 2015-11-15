@@ -1,6 +1,5 @@
 package com.kylehodgetts.sunka.controller;
 
-import android.app.Activity;
 import android.content.Context;
 import android.test.mock.MockContext;
 
@@ -21,11 +20,11 @@ import org.junit.Test;
 import java.io.File;
 import java.io.FileInputStream;
 
-import static com.kylehodgetts.sunka.MainActivity.AVG_TIME;
-import static com.kylehodgetts.sunka.MainActivity.GAMES_LOST;
-import static com.kylehodgetts.sunka.MainActivity.GAMES_WON;
-import static com.kylehodgetts.sunka.MainActivity.MAX_SCORE;
-import static com.kylehodgetts.sunka.MainActivity.STATS_LOCAL;
+import static com.kylehodgetts.sunka.view.MainActivity.AVG_TIME;
+import static com.kylehodgetts.sunka.view.MainActivity.GAMES_LOST;
+import static com.kylehodgetts.sunka.view.MainActivity.GAMES_WON;
+import static com.kylehodgetts.sunka.view.MainActivity.MAX_SCORE;
+import static com.kylehodgetts.sunka.view.MainActivity.STATS_LOCAL;
 
 
 /**
