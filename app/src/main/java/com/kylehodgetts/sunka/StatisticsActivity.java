@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -17,6 +18,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.kylehodgetts.sunka.controller.statistics.ScoreListAdapter;
 import com.kylehodgetts.sunka.model.PlayerScores;
+import com.kylehodgetts.sunka.uiutil.Fonts;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -78,6 +80,7 @@ public class StatisticsActivity extends Activity {
                 getCurrentPage();
             }
         });
+        ((Button)(findViewById(R.id.next_stats))).setTypeface(Fonts.getButtonFont(getApplicationContext()));
 
         //Sets listener for moving to previous page
         findViewById(R.id.prev_stats).setOnClickListener(new View.OnClickListener() {
@@ -89,6 +92,7 @@ public class StatisticsActivity extends Activity {
                 getCurrentPage();
             }
         });
+        ((Button)(findViewById(R.id.prev_stats))).setTypeface(Fonts.getButtonFont(getApplicationContext()));
 
         setUpLocal();
         getPages();
@@ -122,10 +126,15 @@ public class StatisticsActivity extends Activity {
         DecimalFormat format = new DecimalFormat("#.#");
 
         ((TextView)findViewById(R.id.display_name)).setText(name);
+        ((TextView)findViewById(R.id.display_name)).setTypeface(Fonts.getButtonFont(getApplicationContext()));
         ((TextView)findViewById(R.id.games_won)).setText(String.valueOf(won));
+        ((TextView)findViewById(R.id.games_won)).setTypeface(Fonts.getButtonFont(getApplicationContext()));
         ((TextView)findViewById(R.id.games_lost)).setText(String.valueOf(lost));
+        ((TextView)findViewById(R.id.games_lost)).setTypeface(Fonts.getButtonFont(getApplicationContext()));
         ((TextView)findViewById(R.id.max_score)).setText(String.valueOf(topScore));
+        ((TextView)findViewById(R.id.max_score)).setTypeface(Fonts.getButtonFont(getApplicationContext()));
         ((TextView)findViewById(R.id.avg_time)).setText(avg == -1 ? "N/A" : format.format(avg / 1000));
+        ((TextView)findViewById(R.id.avg_time)).setTypeface(Fonts.getButtonFont(getApplicationContext()));
     }
 
     /**

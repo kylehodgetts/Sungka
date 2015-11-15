@@ -3,7 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".NewUserActivity">
+    tools:context=".NewUserActivity"
+    android:background="@drawable/footer_lodyas">
 
     <Space
         android:layout_width="match_parent"
@@ -17,7 +18,8 @@
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="@string/your_name"
         android:id="@+id/your_username_prompt"
-        android:layout_gravity="center_horizontal" />
+        android:layout_gravity="center_horizontal"
+        android:textColor="@color/white"/>
 
     <LinearLayout
         android:orientation="horizontal"
@@ -32,14 +34,16 @@
             android:inputType="textPersonName"
             android:ems="10"
             android:id="@+id/user_name"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            android:textColor="@color/white"/>
 
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/done"
             android:id="@+id/done_button"
-            android:layout_weight="0.3" />
+            android:layout_weight="0.3"
+            style="@style/btnStyleBeige"/>
     </LinearLayout>
 
     <Space
