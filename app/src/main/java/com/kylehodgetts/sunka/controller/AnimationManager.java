@@ -5,6 +5,7 @@ import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.app.Activity;
+import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
@@ -13,6 +14,8 @@ import com.kylehodgetts.sunka.R;
 import com.kylehodgetts.sunka.controller.bus.Event;
 import com.kylehodgetts.sunka.controller.bus.EventBus;
 import com.kylehodgetts.sunka.controller.bus.EventHandler;
+import com.kylehodgetts.sunka.event.EndGame;
+import com.kylehodgetts.sunka.event.NewGame;
 import com.kylehodgetts.sunka.event.ShellMovement;
 import com.kylehodgetts.sunka.event.ShellMovementToPot;
 import com.kylehodgetts.sunka.event.ShellSteal;
@@ -75,8 +78,38 @@ public class AnimationManager extends EventHandler<GameState> {
         }
         else if(event instanceof ShellSteal) {
             return new Tuple2<>(animateStealShells(state, (ShellSteal) event), false);
+        }else if(event instanceof EndGame) {
+            return new Tuple2<>(endOfGame(state, (EndGame) event), false);
         }
         return new Tuple2<>(state, false);
+    }
+
+    /**
+     * Method that removes all {@link ShellDrawable} objects from the board
+     * @param state current {@link GameState}
+     * @param event current {@link Event}
+     * @return new {@link GameState}
+     */
+    private GameState endOfGame(GameState state, EndGame event) {
+        activity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                RelativeLayout relativeLayout = (RelativeLayout) activity.findViewById(R.id.relativeLayout);
+                for(int i=0; i < relativeLayout.getChildCount(); ++i) {
+                    View child = relativeLayout.getChildAt(i);
+                    if(child instanceof ShellDrawable) { relativeLayout.removeView(child); }
+                }
+                RelativeLayout playerAStore = (RelativeLayout) activity.findViewById(R.id.buttonbs);
+                playerAStore.removeAllViews();
+
+                RelativeLayout playerBStore = (RelativeLayout) activity.findViewById(R.id.buttonas);
+                playerBStore.removeAllViews();
+
+                ((BoardActivity) activity).initialiseShellAllocations();
+                ((BoardActivity) activity).setAreShellsCreated(false);
+            }
+        });
+        return state;
     }
 
     /**
@@ -106,6 +139,15 @@ public class AnimationManager extends EventHandler<GameState> {
                 ArrayList<ShellDrawable> fromTrayArray = shellAllocations.get(Integer.parseInt(player + "" + fromTray));
                 ArrayList<ShellDrawable> trayToStealFromArray = shellAllocations.get(Integer.parseInt(((player+1)%2)+""+trayToStealFrom));
 
+
+                ArrayList<ShellDrawable> playerStoreArray;
+                if (player == 0) {
+                    playerStoreArray = shellAllocations.get(BoardActivity.PLAYER_A_STORE);
+                }
+                else {
+                    playerStoreArray = shellAllocations.get(BoardActivity.PLAYER_B_STORE);
+                }
+
                 if(trayToStealFromArray.size() >= 10) { FileUtility.playSound(activity, R.raw.evil_laugh); }
                 else { FileUtility.playSound(activity, R.raw.short_laugh); }
 
@@ -114,6 +156,7 @@ public class AnimationManager extends EventHandler<GameState> {
                     ObjectAnimator objectAnimator = ObjectAnimator.ofFloat(shellDrawable, "translationX", (player == 0 ? (width * (6 - fromTray)) + storeWidth : -((width * (6 - fromTray))) - storeWidth));
                     objectAnimator.setDuration(290);
                     objectAnimator.start();
+                    playerStoreArray.add(shellDrawable);
                 }
 
                 // Removes & animates all shells from the current player's tray always being 1 shell
@@ -121,6 +164,7 @@ public class AnimationManager extends EventHandler<GameState> {
                     ObjectAnimator objectAnimator = ObjectAnimator.ofFloat(shellDrawable, "translationX", (player == 0 ? (width * (6 - fromTray)) + storeWidth : -((width * (6 - fromTray))) - storeWidth));
                     objectAnimator.setDuration(290);
                     objectAnimator.start();
+                    playerStoreArray.add(shellDrawable);
                 }
 
                 // Clears both arrays as all the shells are now in the store
@@ -227,11 +271,7 @@ public class AnimationManager extends EventHandler<GameState> {
                 ArrayList<ShellDrawable> trayArray = shellAllocations.get(Integer.parseInt(player+""+tray));
                 final LinearLayout fromTrayLayout = (LinearLayout) activity.findViewById(Integer.parseInt(player+""+tray));
 
-                /**
-                 * so the player is able to see the shells in the stores due to the order Views are ordered
-                 * in the LinearLayout.
-                 */
-                playerStoreLayout.setAlpha(0.5f);
+
 
                 Random random = new Random();
                 final ShellDrawable shell = trayArray.get(trayArray.size() - 1);
@@ -253,6 +293,14 @@ public class AnimationManager extends EventHandler<GameState> {
                                 ArrayList<ShellDrawable> shellArray = shellAllocations.get(Integer.parseInt(player + "" + tray));
                                 shellArray.remove(shell);
                                 fromTrayLayout.removeView(shell);
+                                ArrayList<ShellDrawable> playerStore;
+                                if (player == 0) {
+                                    playerStore = shellAllocations.get(BoardActivity.PLAYER_A_STORE);
+                                }
+                                else {
+                                    playerStore = shellAllocations.get(BoardActivity.PLAYER_B_STORE);
+                                }
+                                playerStore.add(shell);
                             }
                         });
                     }

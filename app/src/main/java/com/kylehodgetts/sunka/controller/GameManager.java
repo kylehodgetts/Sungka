@@ -1,7 +1,9 @@
 package com.kylehodgetts.sunka.controller;
 
 import android.app.Activity;
+import android.content.Intent;
 
+import com.kylehodgetts.sunka.BoardActivity;
 import com.kylehodgetts.sunka.controller.bus.Event;
 import com.kylehodgetts.sunka.controller.bus.EventBus;
 import com.kylehodgetts.sunka.controller.bus.EventHandler;

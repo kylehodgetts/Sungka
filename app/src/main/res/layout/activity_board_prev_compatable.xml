@@ -14,8 +14,9 @@
         android:paddingBottom="@dimen/activity_vertical_margin"
         tools:context="com.kylehodgetts.sunka.BoardActivity"
         android:clipToPadding="false"
-        android:clipChildren="false"
-        android:background="@drawable/congruent_pentagon">
+        android:clipChildren="false">
+
+
         <LinearLayout
             android:id="@+id/linearLayout"
             android:layout_width="match_parent"
@@ -32,7 +33,7 @@
                 android:background="@drawable/buttonascore"
                 android:layout_marginTop="20dp"
                 android:layout_marginBottom="20dp"
-                android:layout_weight="0.25"
+                android:layout_weight="0.5"
                 android:clipChildren="false"
                 android:clipToPadding="false">
 
@@ -58,16 +59,37 @@
             </LinearLayout>
 
 
-            <GridLayout
+
+            <LinearLayout
+                android:id="@+id/gridlayout"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:id="@+id/gridLayout"
-                android:layout_weight="1"
-                android:columnCount="7"
-                android:rowCount="2"
+                android:orientation="vertical"
+                android:layout_weight="2"
                 android:clipChildren="false"
-                android:clipToPadding="false"
-                />
+                android:clipToPadding="false">
+
+                <LinearLayout
+                    android:id="@+id/topRow"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:weightSum="7"
+                    android:clipChildren="false"
+                    android:clipToPadding="false"/>
+
+                <LinearLayout
+                    android:id="@+id/bottomRow"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:weightSum="7"
+                    android:clipChildren="false"
+                    android:clipToPadding="false"/>
+
+            </LinearLayout>
+
+
 
 
             <LinearLayout
@@ -77,7 +99,7 @@
                 android:background="@drawable/buttonbscore"
                 android:layout_marginBottom="20dp"
                 android:layout_marginTop="20dp"
-                android:layout_weight="0.25"
+                android:layout_weight="0.5"
                 android:clipToPadding="false"
                 android:clipChildren="false">
 
@@ -154,8 +176,7 @@
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:orientation="vertical" android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:weightSum="1"
-        android:background="@drawable/footer_lodyas">
+        android:weightSum="1">
 
         <Space
             android:layout_width="match_parent"
@@ -225,9 +246,7 @@
                     android:text="@string/game_over_main_menu"
                     android:id="@+id/bMenu"
                     android:layout_row="2"
-                    android:layout_column="1"
-                    style="@style/btnStyleBeige"/>
-
+                    android:layout_column="1" />
             </LinearLayout>
 
             <LinearLayout
@@ -242,7 +261,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:text="@string/opponent_score"
+                    android:text="Opponent Score"
                     android:id="@+id/opponent_score_label"
                     android:layout_gravity="center_horizontal"
                     android:paddingBottom="20px" />
@@ -251,7 +270,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:text="@string/zero"
+                    android:text="0"
                     android:id="@+id/opponent_score"
                     android:layout_row="1"
                     android:layout_column="2"

@@ -2,6 +2,7 @@ package com.kylehodgetts.sunka;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
@@ -43,7 +44,7 @@ import java.util.Random;
  * @author Charlie Baker
  * @author Jonathan Burton
  * @author Kyle Hodgetts
- * @version 1.7
+ * @version 1.8
  */
 public class BoardActivity extends AppCompatActivity {
 
@@ -56,6 +57,9 @@ public class BoardActivity extends AppCompatActivity {
     public static final String EXTRA_INT = "com.kylehodgetts.sunka.boardactivity.gametype";
     private static final String FILE_NAME = "sungkasave";
 
+    public static final int PLAYER_A_STORE = 20;
+    public static final int PLAYER_B_STORE = 21;
+
     private View decorView;
     private boolean areShellsCreated;
     private GameState state;
@@ -64,7 +68,6 @@ public class BoardActivity extends AppCompatActivity {
 
     private TextView txtYourScoreLabel;
     private TextView txtYourScore;
-    private Button btnPlayAgain;
     private Button btnReturnToMainMenu;
     private TextView txtTheirScoreLabel;
     private TextView txtTheirScore;
@@ -96,8 +99,6 @@ public class BoardActivity extends AppCompatActivity {
         txtTheirScore = (TextView) findViewById(R.id.opponent_score);
         txtTheirScore.setTypeface(Fonts.getButtonFont(this));
         txtTheirScore.setTextColor(ContextCompat.getColor(this, R.color.white));
-        btnPlayAgain = (Button) findViewById(R.id.bAgain);
-        btnPlayAgain.setTypeface(Fonts.getButtonFont(this));
         btnReturnToMainMenu = (Button) findViewById(R.id.bMenu);
         btnReturnToMainMenu.setTypeface(Fonts.getButtonFont(this));
         btnReturnToMainMenu.setOnClickListener(new View.OnClickListener() {
@@ -106,6 +107,13 @@ public class BoardActivity extends AppCompatActivity {
                 returnToMainMenu();
             }
         });
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            this.setContentView(R.layout.activity_board);
+        }
+        else { // uses another XML layout should the Android version be less than Lollipop using Linear Layouts
+            this.setContentView(R.layout.activity_board_prev_compatable);
+        }
 
         gameType = getIntent().getIntExtra(EXTRA_INT, 0);
         state = (GameState) FileUtility.readFromSaveFile(this, FILE_NAME);
@@ -131,6 +139,23 @@ public class BoardActivity extends AppCompatActivity {
         bus.registerHandler(new ViewManager(bus, this));
         bus.registerHandler(new AnimationManager(bus, this));
         bus.feedEvent(new NewGame());
+
+        setupReturnToMenuButton();
+    }
+
+    /**
+     * Set's the {@link android.view.View.OnClickListener} for the return to main menu button after a
+     * game has finished.
+     *
+     */
+    private void setupReturnToMenuButton() {
+        Button mainMenuButton = (Button) findViewById(R.id.bMenu);
+        mainMenuButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                returnToMainMenu();
+            }
+        });
     }
 
     /**
@@ -174,41 +199,72 @@ public class BoardActivity extends AppCompatActivity {
      * @param bus The game Event Bus so the tray can be attached with the onClickListener
      */
     private void makeXMLButtons(EventBus bus, boolean bothSetsButtonsClickable) {
-        GridLayout gridlayout = (GridLayout) findViewById(R.id.gridLayout);
 
-        for(int i=1; i >= 0; --i) {
-            for(int j=6; j >= 0; --j) {
-                final LinearLayout linearLayout;
-                if (i == 0) {
-                    linearLayout = (LinearLayout) getLayoutInflater().inflate(R.layout.buttonlayoutb, gridlayout, false);
-                } else {
-                    linearLayout = (LinearLayout) getLayoutInflater().inflate(R.layout.buttonlayouta, gridlayout, false);
+        /*
+           Set's up the grid layout in the event that the device Android version is Lollipop or greater
+         */
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            GridLayout gridlayout = (GridLayout) findViewById(R.id.gridLayout);
+
+            for (int i = 1; i >= 0; --i) {
+                for (int j = 6; j >= 0; --j) {
+                    final LinearLayout linearLayout;
+                    if (i == 0) {
+                        linearLayout = (LinearLayout) getLayoutInflater().inflate(R.layout.buttonlayoutb, gridlayout, false);
+                    } else {
+                        linearLayout = (LinearLayout) getLayoutInflater().inflate(R.layout.buttonlayouta, gridlayout, false);
+                    }
+                    linearLayout.setId(Integer.parseInt(i + "" + j));
+
+                    RelativeLayout button = (RelativeLayout) linearLayout.findViewById(R.id.button);
+
+                    // Due to grid layout weights only being available from API 21 onwards to scale the layout
+                    GridLayout.LayoutParams param = new GridLayout.LayoutParams();
+                    param.columnSpec = GridLayout.spec(i == 1 ? 6 - j : j, 1f);
+                    param.rowSpec = GridLayout.spec((i + 1) % 2, 1f);
+                    param.width = GridLayout.LayoutParams.WRAP_CONTENT;
+                    param.height = GridLayout.LayoutParams.WRAP_CONTENT;
+                    param.setGravity(Gravity.FILL_HORIZONTAL);
+                    linearLayout.setLayoutParams(param);
+                    gridlayout.addView(linearLayout);
+
+                    //we don't want the opposite side clickable if there are not two local players
+                    if (i == 0 || i == 1 && bothSetsButtonsClickable) {
+                        button.setOnClickListener(new TrayOnClickListener(i, j, bus));
+                    }
                 }
-                linearLayout.setId(Integer.parseInt(i + "" + j));
+            }
+        }
+        else { // Set's up the Linear Layout's for previous Android versions
+            LinearLayout topRow = (LinearLayout) findViewById(R.id.topRow);
+            LinearLayout bottomRow = (LinearLayout) findViewById(R.id.bottomRow);
 
-                RelativeLayout button = (RelativeLayout) linearLayout.findViewById(R.id.button);
+            for(int i=0; i < 2; ++i) {
+                for(int j=0; j < 7; ++j) {
+                    LinearLayout trayButtonLayout;
+                    if(i == 0) {
+                        trayButtonLayout = (LinearLayout) getLayoutInflater().inflate(R.layout.buttonlayoutb, bottomRow, false);
+                    }
+                    else {
+                        trayButtonLayout = (LinearLayout) getLayoutInflater().inflate(R.layout.buttonlayouta, topRow, false);
+                    }
+                    trayButtonLayout.setId(Integer.parseInt((i==0?1:0)+""+(i==0?6-j:j)));
 
-                // Due to grid layout weights only being available from API 21 onwards to scale the layout
-                GridLayout.LayoutParams param = new GridLayout.LayoutParams();
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    param.columnSpec = GridLayout.spec(i == 1?6-j:j,1f);
-                    param.rowSpec = GridLayout.spec((i+1)%2, 1f);
+                    LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.MATCH_PARENT);
+                    params.gravity = Gravity.FILL_HORIZONTAL;
+                    params.weight = 1;
+                    trayButtonLayout.setLayoutParams(params);
+                    if(i==0) { topRow.addView(trayButtonLayout); }
+                    else { bottomRow.addView(trayButtonLayout); }
 
-                }
-                param.width = GridLayout.LayoutParams.WRAP_CONTENT;
-                param.height = GridLayout.LayoutParams.WRAP_CONTENT;
-                param.setGravity(Gravity.FILL_HORIZONTAL);
-                linearLayout.setLayoutParams(param);
-                gridlayout.addView(linearLayout);
-
-                //we don't want the opposite side clickable if there are not two local players
-                if (i == 0 || i == 1 && bothSetsButtonsClickable) {
-                    button.setOnClickListener(new TrayOnClickListener(i, j, bus));
+                    RelativeLayout trayButton = (RelativeLayout) trayButtonLayout.findViewById(R.id.button);
+                    if(i == 1 || i == 0 && bothSetsButtonsClickable) {
+                        trayButton.setOnClickListener(new TrayOnClickListener(i==0?1:0, i==0? 6-j:j, bus));
+                    }
                 }
             }
         }
     }
-
 
     /**
      * Makes the game board activity completely full screen, but allowing access to the users status bar
@@ -233,20 +289,62 @@ public class BoardActivity extends AppCompatActivity {
 
             }
 
-            GridLayout gridLayout = (GridLayout) findViewById(R.id.gridLayout);
+            // Resizes and creates the new shells in the case that the Android version is greater than Lollipop
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                GridLayout gridLayout = (GridLayout) findViewById(R.id.gridLayout);
 
-            for(int i = 0; i < gridLayout.getChildCount(); ++i) {
-                LinearLayout child = (LinearLayout) gridLayout.getChildAt(i);
-                int width = gridLayout.getChildAt(i).getWidth();
-                GridLayout.LayoutParams llparams = (GridLayout.LayoutParams) child.getLayoutParams();
-                llparams.width = width;
-                llparams.height = width + child.findViewById(R.id.tv).getHeight();
-                gridLayout.getChildAt(i).setLayoutParams(llparams);
+                for (int i = 0; i < gridLayout.getChildCount(); ++i) {
+                    LinearLayout child = (LinearLayout) gridLayout.getChildAt(i);
+                    int width = gridLayout.getChildAt(i).getWidth();
+                    GridLayout.LayoutParams llparams = (GridLayout.LayoutParams) child.getLayoutParams();
+                    llparams.width = width;
+                    llparams.height = width + child.findViewById(R.id.tv).getHeight();
+                    gridLayout.getChildAt(i).setLayoutParams(llparams);
 
-                // Creates shells if they have not already been created on the board
+                    // Creates shells if they have not already been created on the board
+                    if (!areShellsCreated) {
+                        createShells((RelativeLayout) gridLayout.getChildAt(i).findViewById(R.id.button));
+                        initialiseShellAllocations();
+                    }
+                }
                 if(!areShellsCreated) {
-                    createShells((RelativeLayout) gridLayout.getChildAt(i).findViewById(R.id.button));
-                    initialiseShellAllocations();
+                    createShells((RelativeLayout) findViewById(R.id.buttonas));
+                    createShells((RelativeLayout) findViewById(R.id.buttonbs));
+                }
+
+            }
+            else { // resizes all elements for previous android versions and creates the Shells
+                LinearLayout topRow = (LinearLayout) findViewById(R.id.topRow);
+                LinearLayout trayButtonLayout = (LinearLayout) topRow.getChildAt(0);
+                LinearLayout.LayoutParams topRowParams = (LinearLayout.LayoutParams) topRow.getLayoutParams();
+                topRowParams.height = trayButtonLayout.getWidth() + trayButtonLayout.findViewById(R.id.tv).getHeight();
+                topRow.setLayoutParams(topRowParams);
+
+                LinearLayout bottomRow = (LinearLayout) findViewById(R.id.bottomRow);
+                LinearLayout.LayoutParams bottomRowParams = (LinearLayout.LayoutParams) bottomRow.getLayoutParams();
+                bottomRowParams.height = topRowParams.height;
+                bottomRow.setLayoutParams(bottomRowParams);
+
+                if(!areShellsCreated) { // creates the shells in the correct order to be visible
+                    for (int i = 6; i >= 0; --i) {
+                        LinearLayout currentTrayButtonLayout = (LinearLayout) topRow.getChildAt(i);
+                        RelativeLayout currentTrayButton = (RelativeLayout) currentTrayButtonLayout.findViewById(R.id.button);
+                        TextView textView = (TextView) currentTrayButtonLayout.findViewById(R.id.tv);
+                        textView.bringToFront();
+                        currentTrayButtonLayout.getLayoutParams().width = 0;
+                        createShells(currentTrayButton);
+                        initialiseShellAllocations();
+                    }
+                    for (int j = 0; j < 7; ++j) { // creates the shells in the correct order to be visible
+                        LinearLayout currentTrayButtonLayout = (LinearLayout) bottomRow.getChildAt(j);
+                        RelativeLayout currentTrayButton = (RelativeLayout) currentTrayButtonLayout.findViewById(R.id.button);
+                        currentTrayButton.bringToFront();
+                        currentTrayButtonLayout.getLayoutParams().width = 0;
+                        createShells(currentTrayButton);
+                        initialiseShellAllocations();
+                    }
+                    createShells((RelativeLayout) findViewById(R.id.buttonas));
+                    createShells((RelativeLayout) findViewById(R.id.buttonbs));
                 }
             }
             areShellsCreated = true;
@@ -282,11 +380,23 @@ public class BoardActivity extends AppCompatActivity {
         Random random = new Random();
         LinearLayout buttonParent = (LinearLayout) button.getParent();
 
-        int numberOfShells = state.getBoard().getTray(buttonParent.getId()/10, buttonParent.getId()%10);
+        int numberOfShells = 0;
+        if(button.getId() == R.id.buttonas) {
+            numberOfShells = state.getPlayer2().getStonesInPot();
+        }
+        else if(button.getId() == R.id.buttonbs) {
+            numberOfShells = state.getPlayer1().getStonesInPot();
+        }
+        else {
+            numberOfShells = state.getBoard().getTray(buttonParent.getId()/10, buttonParent.getId()%10);
+        }
 
         for(int shell=0; shell < numberOfShells; ++shell) {
+            int shellWidth = 40;
+            int shellLength = 20;
+
             ShellDrawable shellDrawable = new ShellDrawable(this, random.nextInt(button.getWidth()/2),
-                    random.nextInt(button.getHeight()/2), 40, 20);
+                    random.nextInt(button.getHeight()/2), shellWidth, shellLength);
             shellDrawable.setRandomColour();
             RelativeLayout.LayoutParams shellParams = new RelativeLayout.LayoutParams(
                     RelativeLayout.LayoutParams.WRAP_CONTENT,
@@ -324,7 +434,19 @@ public class BoardActivity extends AppCompatActivity {
                 }
             }
         }
+        shellAllocations.put(PLAYER_A_STORE, new ArrayList<ShellDrawable>());
+        shellAllocations.put(PLAYER_B_STORE, new ArrayList<ShellDrawable>());
     }
 
+    /**
+     * Get's the Map referencing the array lists of all the allocations of Shells
+     * @return {@link HashMap}
+     */
     public HashMap<Integer, ArrayList<ShellDrawable>> getShellAllocations() { return shellAllocations; }
+
+    /**
+     * Set's the boolean to tell the Activity if the shells need to be created on the board again
+     * @param newValue new boolean value
+     */
+    public void setAreShellsCreated(boolean newValue) { areShellsCreated = newValue; }
 }
