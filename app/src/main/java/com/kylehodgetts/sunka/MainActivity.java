@@ -11,7 +11,6 @@ public class MainActivity extends AppCompatActivity {
     private Button mmbone;
     private Button mmbtwo;
     private Button mmbonline;
-    private Button mmbus;
     private Button mmbexit;
 
     @Override
@@ -42,7 +41,6 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(i);
             }
         });
-        mmbus = (Button) findViewById(R.id.main_menu_button_us);
         mmbexit = (Button) findViewById(R.id.main_menu_button_exit);
         mmbexit.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -73,20 +71,4 @@ public class MainActivity extends AppCompatActivity {
         intent.putExtra(BoardActivity.EXTRA_INT, gameType);
         MainActivity.this.startActivity(intent);
     }
-
-    /**
-     * Allows the user to switch to the AboutUsActivity
-     * or exit the application.
-     */
-    public void otherOptions(View view) {
-        Intent intent;
-        Button selectedButton = (Button) view;
-        if (selectedButton.equals(mmbus)) {
-            //  intent = new Intent(MainActivity.this, AboutUsActivity.class);
-        } else {
-            // Either make an Activity window asking "Are you sure? YES/NO" or directly Kill.
-            android.os.Process.killProcess(android.os.Process.myPid());
-        }
-    }
-
 }
