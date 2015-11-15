@@ -114,11 +114,7 @@ public class StatisticsActivity extends Activity {
             inp.read(bytes);
             inp.close();
             object = new JSONObject(new String(bytes));
-            String serverId = getSharedPreferences(PREFERENCES,0).getString(SERVER_ID,null);
-            if (serverId != null) {
-                object.put(SERVER_ID,serverId);
-                StatisticsCollector.sendToServer(object, queue);
-            }
+
         } catch (java.io.IOException | JSONException ignored) {}
 
         SharedPreferences preferences = getSharedPreferences(PREFERENCES, 0);
@@ -142,6 +138,15 @@ public class StatisticsActivity extends Activity {
         ((TextView)findViewById(R.id.max_score)).setTypeface(Fonts.getButtonFont(getApplicationContext()));
         ((TextView)findViewById(R.id.avg_time)).setText(avg == -1 ? "N/A" : format.format(avg / 1000));
         ((TextView)findViewById(R.id.avg_time)).setTypeface(Fonts.getButtonFont(getApplicationContext()));
+
+
+        String serverId = getSharedPreferences(PREFERENCES,0).getString(SERVER_ID,null);
+        if (serverId != null) {
+            try {
+                object.put(SERVER_ID,serverId);
+                StatisticsCollector.sendToServer(object, queue);
+            } catch (JSONException ignored) {}
+        }
     }
 
     /**

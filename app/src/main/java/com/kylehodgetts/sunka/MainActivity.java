@@ -47,9 +47,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         SharedPreferences prefs = getSharedPreferences(PREFERENCES, 0);
-        SharedPreferences.Editor editor = prefs.edit();
-        editor.clear();
-        editor.commit();
         if(!prefs.contains(USER_NAME)){
             setContentView(R.layout.new_user);
             findViewById(R.id.done_button).setOnClickListener(new View.OnClickListener() {
