@@ -1,7 +1,5 @@
 package com.kylehodgetts.sunka.controller.AI;
 
-import android.util.Log;
-
 import com.kylehodgetts.sunka.model.Board;
 import com.kylehodgetts.sunka.model.GameState;
 import com.kylehodgetts.sunka.util.Tuple2;
@@ -45,7 +43,7 @@ public class AIStrategy implements AI {
 
         if (board.getTray(PLAYER_AI, 6) > 0) return 6;
 
-        return getRandomTray(state);
+        return getRandomTray(state.getBoard());
     }
 
     /**
@@ -54,7 +52,7 @@ public class AIStrategy implements AI {
      * @param player player to check
      * @return Tuple2(can they get another turn, from what tray)
      */
-    private Tuple2<Boolean, Integer> canPlayerGetAnotherTurn(int player, Board board) {
+    protected Tuple2<Boolean, Integer> canPlayerGetAnotherTurn(int player, Board board) {
         for (int tray = 6; tray > -1; tray--) {
             int shells = board.getTray(player, tray);
             int jumpsLeft = 7 - tray;
@@ -73,7 +71,7 @@ public class AIStrategy implements AI {
      * @param board  the current game board
      * @return Tuple(if we can perform the action, the tray to pick that captures the largest amount)
      */
-    private Tuple2<Boolean, Integer> canPlayerPerformCaptureRule(int player, Board board) {
+    protected Tuple2<Boolean, Integer> canPlayerPerformCaptureRule(int player, Board board) {
 
         int otherPlayer = (player + 1) % 2;
 
@@ -114,7 +112,7 @@ public class AIStrategy implements AI {
      * @param board current board state
      * @return Tuple(can we defend against, tray we should pick to defend against)
      */
-    private Tuple2<Boolean, Integer> defendAgainstCaptureRule(Board board) {
+    protected Tuple2<Boolean, Integer> defendAgainstCaptureRule(Board board) {
 
         Tuple2<Boolean, Integer> result = canPlayerPerformCaptureRule(PLAYER_HUMAN, board);
         int trayToPick = -1;
@@ -125,11 +123,13 @@ public class AIStrategy implements AI {
         //(may cause other trays to be able to get them an other turn but this is looking
         //into the future which is not the point of this method
         if (result.getX()) {
-            int trayPositionsAfterPot = result.getY() + board.getTray(PLAYER_HUMAN, result.getY()) + 1; // + 1 because indexing
+            int trayPositionsAfterPot = result.getY() + 1; //+ 1 because indexing
             for (int trayIndex = 6; trayIndex > -1; trayIndex--) {
-                if (board.getTray(PLAYER_AI, trayIndex) >= trayPositionsAfterPot + (7 - trayIndex)) {
+                int trayPositionsToMyPot = 7 - trayIndex;
+                if (board.getTray(PLAYER_AI, trayIndex) >= trayPositionsAfterPot + trayPositionsToMyPot) {
                     //we can add a shell to the tray that gives them another turn
                     trayToPick = trayIndex;
+                    break;
                 }
             }
         }
@@ -144,16 +144,19 @@ public class AIStrategy implements AI {
      * @param board current board state
      * @return Tuple(can we defend against this, the tray position to pick)
      */
-    private Tuple2<Boolean, Integer> defendAgainstAnotherTurn(Board board) {
+    protected Tuple2<Boolean, Integer> defendAgainstAnotherTurn(Board board) {
 
         Tuple2<Boolean, Integer> result = canPlayerGetAnotherTurn(PLAYER_HUMAN, board);
         int trayToPick = -1;
+
         if (result.getX()) {
-            int trayPositionsAfterPot = result.getY() + board.getTray(PLAYER_HUMAN, result.getY()) + 1; // + 1 because indexing
+            int trayPositionsAfterPot = result.getY() + 1; //+ 1 because indexing
             for (int trayIndex = 6; trayIndex > -1; trayIndex--) {
-                if (board.getTray(PLAYER_AI, trayIndex) >= trayPositionsAfterPot + (7 - trayIndex)) {
+                int trayPositionsToMyPot = 7 - trayIndex;
+                if (board.getTray(PLAYER_AI, trayIndex) >= trayPositionsAfterPot + trayPositionsToMyPot) {
                     //we can add a shell to the tray that gives them another turn
                     trayToPick = trayIndex;
+                    break;
                 }
             }
         }
@@ -163,15 +166,14 @@ public class AIStrategy implements AI {
     /**
      * Choose a random tray that has a shells in
      *
-     * @param state the current state of the game
+     * @param board the current board of the game
      * @return the tray index to pick
      */
-    private int getRandomTray(GameState state) {
+    protected int getRandomTray(Board board) {
         Random r = new Random();
         int i = r.nextInt(7);
-        Board b = state.getBoard();
 
-        while (b.getTray(PLAYER_AI, i) == 0) {
+        while (board.getTray(PLAYER_AI, i) == 0) {
             i = r.nextInt(7);
         }
 
