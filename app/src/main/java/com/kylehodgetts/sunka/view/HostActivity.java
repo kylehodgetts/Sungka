@@ -1,4 +1,4 @@
-package com.kylehodgetts.sunka;
+package com.kylehodgetts.sunka.view;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -10,6 +10,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 
+import com.kylehodgetts.sunka.R;
 import com.kylehodgetts.sunka.controller.wifi.SingletonSocket;
 
 import java.io.IOException;

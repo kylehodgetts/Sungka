@@ -11,6 +11,8 @@ import android.widget.Button;
 import android.widget.ListView;
 
 import com.kylehodgetts.sunka.controller.wifi.ServiceAdapter;
+import com.kylehodgetts.sunka.view.HostActivity;
+import com.kylehodgetts.sunka.view.WiFiDirectActivity;
 
 import org.junit.BeforeClass;
 import org.junit.Test;

@@ -1,6 +1,6 @@
 package com.kylehodgetts.sunka.controller;
 
-import com.kylehodgetts.sunka.BoardActivity;
+import com.kylehodgetts.sunka.view.BoardActivity;
 import com.kylehodgetts.sunka.controller.bus.EventBus;
 import com.kylehodgetts.sunka.event.ShellMovement;
 import com.kylehodgetts.sunka.event.ShellMovementToPot;

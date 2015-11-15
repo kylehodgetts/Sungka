@@ -1,19 +1,11 @@
 package com.kylehodgetts.sunka;
 
-import android.app.Activity;
 import android.test.ActivityInstrumentationTestCase2;
-import android.util.Log;
-import android.widget.TextView;
 
-import com.kylehodgetts.sunka.controller.wifi.SingletonSocket;
-
-import junit.framework.TestCase;
+import com.kylehodgetts.sunka.view.HostActivity;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
-
-import java.net.InetAddress;
-import java.net.InetSocketAddress;
 
 /**
  * @author Kyle Hodgetts

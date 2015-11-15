@@ -7,6 +7,7 @@ import android.widget.TextView;
 
 import com.kylehodgetts.sunka.controller.statistics.ScoreListAdapter;
 import com.kylehodgetts.sunka.model.PlayerScores;
+import com.kylehodgetts.sunka.view.StatisticsActivity;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -19,11 +20,11 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.kylehodgetts.sunka.MainActivity.AVG_TIME;
-import static com.kylehodgetts.sunka.MainActivity.GAMES_LOST;
-import static com.kylehodgetts.sunka.MainActivity.GAMES_WON;
-import static com.kylehodgetts.sunka.MainActivity.MAX_SCORE;
-import static com.kylehodgetts.sunka.MainActivity.STATS_LOCAL;
+import static com.kylehodgetts.sunka.view.MainActivity.AVG_TIME;
+import static com.kylehodgetts.sunka.view.MainActivity.GAMES_LOST;
+import static com.kylehodgetts.sunka.view.MainActivity.GAMES_WON;
+import static com.kylehodgetts.sunka.view.MainActivity.MAX_SCORE;
+import static com.kylehodgetts.sunka.view.MainActivity.STATS_LOCAL;
 
 /**
  * @author Adam Chlupacek

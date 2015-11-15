@@ -2,7 +2,7 @@ package com.kylehodgetts.sunka.controller;
 
 import android.app.Activity;
 
-import com.kylehodgetts.sunka.BoardActivity;
+import com.kylehodgetts.sunka.view.BoardActivity;
 import com.kylehodgetts.sunka.controller.bus.EventBus;
 import com.kylehodgetts.sunka.model.Board;
 import com.kylehodgetts.sunka.model.GameState;
