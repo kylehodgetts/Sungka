@@ -3,13 +3,16 @@ package com.kylehodgetts.sunka;
 import android.content.Intent;
 import android.test.ActivityInstrumentationTestCase2;
 import android.test.TouchUtils;
+import android.text.method.Touch;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.kylehodgetts.sunka.event.EndGame;
+import com.kylehodgetts.sunka.view.MainActivity;
 
 import org.junit.Test;
 import org.w3c.dom.Text;
@@ -89,11 +92,11 @@ private BoardActivity activity;
 
       @Test
     public void testClickButtonCircularCycle0() throws InterruptedException {
-        LinearLayout linearLayout = (LinearLayout) activity.findViewById(Integer.parseInt(0 + "" +3));
-        ImageButton button = (ImageButton) linearLayout.findViewById(R.id.button);
+        RelativeLayout relativeLayout = (RelativeLayout) activity.findViewById(Integer.parseInt(0 + "" +3));
+        ImageButton button = (ImageButton) relativeLayout.findViewById(R.id.button);
         TouchUtils.clickView(this, button);
 
-        TextView textView = (TextView) linearLayout.findViewById(R.id.tv);
+        TextView textView = (TextView) relativeLayout.findViewById(R.id.tv);
         assertEquals("0",textView.getText().toString());
         assertEquals("s0",button.getTag());
 
@@ -169,15 +172,17 @@ private BoardActivity activity;
             activity.getGameState().getPlayer2().addToPot(46);
             activity.getEventBus().feedEvent(new EndGame());
         Button bMenu =(Button) activity.findViewById(R.id.bMenu);
-        Button bAgain = (Button) activity.findViewById(R.id.bAgain);
         TextView gameOverLabel = (TextView) activity.findViewById(R.id.game_over_label);
         TextView player1Label = (TextView) activity.findViewById(R.id.your_score_label);
         TextView player0Label = (TextView) activity.findViewById(R.id.opponent_score_label);
         TextView player1Score = (TextView) activity.findViewById(R.id.opponent_score);
         TextView player0Score = (TextView) activity.findViewById(R.id.your_score);
-        assertNotNull(bMenu);assertNotNull(bAgain);assertNotNull(gameOverLabel);
-        assertNotNull(player1Label);assertNotNull(player1Score);
-        assertNotNull(player0Label);assertNotNull(player0Score);
+        assertNotNull(bMenu);
+        assertNotNull(gameOverLabel);
+        assertNotNull(player1Label);
+        assertNotNull(player1Score);
+        assertNotNull(player0Label);
+        assertNotNull(player0Score);
     }
 
     @Test
@@ -200,16 +205,9 @@ private BoardActivity activity;
         Thread.sleep(1000);
         activity.getEventBus().feedEvent(new EndGame());
         Thread.sleep(1000);
-        TextView player1Score = (TextView) activity.findViewById(R.id.opponent_score);
-        System.out.println(player1Score.getText());
-        assertEquals("1",player1Score.getText());
+        assertEquals(activity.getClass(), MainActivity.class);
     }
-
-//    @Todo: Need to comment and create 2 testcases for when user reaches the Play again button or Menu button.
-
-
-
-    }
+}
 
 
 
