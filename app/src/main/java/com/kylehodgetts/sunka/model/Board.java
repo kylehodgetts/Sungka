@@ -23,11 +23,9 @@ public class Board implements Serializable {
         {
             for(int j=0; j < 7; ++j)
             {
-//                board[i][j] = 7;
+                board[i][j] = 7;
             }
         }
-        board[1][5]= 2;
-        board[0][6]=1;
     }
 
     /**

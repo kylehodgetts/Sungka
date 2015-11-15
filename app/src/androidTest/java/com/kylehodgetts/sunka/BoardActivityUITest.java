@@ -1,22 +1,16 @@
 package com.kylehodgetts.sunka;
 
-import android.app.Activity;
 import android.app.Instrumentation;
 import android.test.ActivityInstrumentationTestCase2;
 import android.test.TouchUtils;
-import android.text.method.Touch;
 import android.util.Log;
 import android.widget.Button;
-import android.widget.RelativeLayout;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.kylehodgetts.sunka.event.EndGame;
 import com.kylehodgetts.sunka.view.MainActivity;
-
-import org.junit.Test;
-import org.w3c.dom.Text;
 
 /**
  * @Author: Phileas Hocquard
@@ -88,6 +82,7 @@ private BoardActivity activity;
         LinearLayout linearLayout = (LinearLayout) activity.findViewById(Integer.parseInt(1 + "" + 3));
         RelativeLayout button = (RelativeLayout) linearLayout.findViewById(R.id.button);
         TouchUtils.clickView(this, button);
+        Thread.sleep(3000);
         TextView textView = (TextView) linearLayout.findViewById(R.id.tv);
         assertEquals("0",textView.getText().toString());
 
@@ -111,11 +106,12 @@ private BoardActivity activity;
         LinearLayout linearLayout = (LinearLayout) activity.findViewById(Integer.parseInt(0 + "" +3));
         RelativeLayout button = (RelativeLayout) linearLayout.findViewById(R.id.button);
         TouchUtils.clickView(this, button);
-
+        Thread.sleep(3000);
         TextView textView = (TextView) linearLayout.findViewById(R.id.tv);
         assertEquals("0",textView.getText().toString());
 
         TextView tvPlayerBStoreCount = (TextView) activity.findViewById(R.id.tvPlayerAStoreCount);
+
         assertEquals("1",tvPlayerBStoreCount.getText());
         for (int j =0; j<3; j++) {
             getInstrumentation().waitForIdleSync();
