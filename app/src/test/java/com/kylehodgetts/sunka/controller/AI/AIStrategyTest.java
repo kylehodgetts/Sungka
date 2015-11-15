@@ -63,7 +63,8 @@ public class AIStrategyTest extends AIStrategy {
     }
 
     /**
-     * Tes
+     * This tests that the AI can find a potential capture from the other player,
+     * and select a pot to stop this from happening
      */
     @Test
     public void testDefendAgainstCaptureRule() {
