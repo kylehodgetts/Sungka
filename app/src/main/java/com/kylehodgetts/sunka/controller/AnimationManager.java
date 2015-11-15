@@ -5,6 +5,7 @@ import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.app.Activity;
+import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
@@ -13,6 +14,8 @@ import com.kylehodgetts.sunka.R;
 import com.kylehodgetts.sunka.controller.bus.Event;
 import com.kylehodgetts.sunka.controller.bus.EventBus;
 import com.kylehodgetts.sunka.controller.bus.EventHandler;
+import com.kylehodgetts.sunka.event.EndGame;
+import com.kylehodgetts.sunka.event.NewGame;
 import com.kylehodgetts.sunka.event.ShellMovement;
 import com.kylehodgetts.sunka.event.ShellMovementToPot;
 import com.kylehodgetts.sunka.event.ShellSteal;
@@ -75,8 +78,30 @@ public class AnimationManager extends EventHandler<GameState> {
         }
         else if(event instanceof ShellSteal) {
             return new Tuple2<>(animateStealShells(state, (ShellSteal) event), false);
+        }else if(event instanceof EndGame) {
+            return new Tuple2<>(endOfGame(state, (EndGame) event), false);
         }
         return new Tuple2<>(state, false);
+    }
+
+    /**
+     * Method that removes all {@link ShellDrawable} objects from the board
+     * @param state current {@link GameState}
+     * @param event current {@link Event}
+     * @return new {@link GameState}
+     */
+    private GameState endOfGame(GameState state, EndGame event) {
+        activity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                RelativeLayout relativeLayout = (RelativeLayout) activity.findViewById(R.id.relativeLayout);
+                for(int i=0; i < relativeLayout.getChildCount(); ++i) {
+                    View child = relativeLayout.getChildAt(i);
+                    if(child instanceof ShellDrawable) { relativeLayout.removeView(child); }
+                }
+            }
+        });
+        return state;
     }
 
     /**
@@ -227,11 +252,7 @@ public class AnimationManager extends EventHandler<GameState> {
                 ArrayList<ShellDrawable> trayArray = shellAllocations.get(Integer.parseInt(player+""+tray));
                 final LinearLayout fromTrayLayout = (LinearLayout) activity.findViewById(Integer.parseInt(player+""+tray));
 
-                /**
-                 * so the player is able to see the shells in the stores due to the order Views are ordered
-                 * in the LinearLayout.
-                 */
-                playerStoreLayout.setAlpha(0.5f);
+
 
                 Random random = new Random();
                 final ShellDrawable shell = trayArray.get(trayArray.size() - 1);

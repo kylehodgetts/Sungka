@@ -219,6 +219,8 @@ public class ViewManager extends EventHandler<GameState> {
         LinearLayout playerBStore = (LinearLayout) activity.findViewById(R.id.playerBStore);
         TextView tvPlayerA = (TextView) activity.findViewById(R.id.tvPlayerA);
         TextView tvPlayerB = (TextView) activity.findViewById(R.id.tvPlayerB);
+        TextView tvPlayerAScore = (TextView) activity.findViewById(R.id.tvPlayerAStoreCount);
+        TextView tvPlayerBScore = (TextView) activity.findViewById(R.id.tvPlayerBStoreCount);
 
 
         for (int player = 0; player < 2; ++player) {
@@ -237,13 +239,15 @@ public class ViewManager extends EventHandler<GameState> {
                     tv.setRotation(angle);
                     tvPlayerA.setRotation(angle);
                     tvPlayerB.setRotation(angle);
+                    tvPlayerAScore.setRotation(angle);
+                    tvPlayerBScore.setRotation(angle);
                 }
             }
         }
 
         if (state.isRaceState()) {
             tvPlayerB.setBackgroundColor(Color.parseColor("#2D8BA8"));
-            tvPlayerA.setBackgroundColor(Color.parseColor("#A84136"));
+            tvPlayerA.setBackgroundColor(Color.parseColor("#50C4213C"));
             playerAStore.setBackgroundResource(R.drawable.buttonascore);
             playerBStore.setBackgroundResource(R.drawable.buttonbscore);
             tvPlayerB.setTextColor(Color.WHITE);
@@ -254,7 +258,7 @@ public class ViewManager extends EventHandler<GameState> {
             playerBStore.setBackgroundResource(R.drawable.buttonbscore);
             tvPlayerB.setBackgroundColor(Color.TRANSPARENT);
             tvPlayerB.setTextColor(Color.BLACK);
-            tvPlayerA.setBackgroundColor(Color.parseColor("#A84136"));
+            tvPlayerA.setBackgroundColor(Color.parseColor("#50C4213C"));
             tvPlayerA.setTextColor(Color.WHITE);
         } else if (playersTurn == 1) {
             playerBStore.setBackgroundResource(R.drawable.buttonstoretransparent);
