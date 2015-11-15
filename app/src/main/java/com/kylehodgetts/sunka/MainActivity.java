@@ -9,6 +9,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.kylehodgetts.sunka.uiutil.Fonts;
+
 import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
@@ -25,13 +27,11 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         txtTeamName = (TextView) findViewById(R.id.teamName);
-        Typeface teamFont = Typeface.createFromAsset(getAssets(), String.format("fonts/%s", "fordscript.ttf"));
-        txtTeamName.setTypeface(teamFont);
+        txtTeamName.setTypeface(Fonts.getTitleFont(this));
 
         /** Menu Buttons **/
-        Typeface buttonFont = Typeface.createFromAsset(getAssets(), String.format("fonts/%s", "special_elite.ttf"));
         mmbone = (Button) findViewById(R.id.main_menu_button_one);
-        mmbone.setTypeface(buttonFont);
+        mmbone.setTypeface(Fonts.getButtonFont(this));
         mmbone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -39,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         mmbtwo = (Button) findViewById(R.id.main_menu_button_two);
-        mmbtwo.setTypeface(buttonFont);
+        mmbtwo.setTypeface(Fonts.getButtonFont(this));
         mmbtwo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -47,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         mmbonline = (Button) findViewById(R.id.main_menu_button_online);
-        mmbonline.setTypeface(buttonFont);
+        mmbonline.setTypeface(Fonts.getButtonFont(this));
         mmbonline.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -56,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         mmbexit = (Button) findViewById(R.id.main_menu_button_exit);
-        mmbexit.setTypeface(buttonFont);
+        mmbexit.setTypeface(Fonts.getButtonFont(this));
         mmbexit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

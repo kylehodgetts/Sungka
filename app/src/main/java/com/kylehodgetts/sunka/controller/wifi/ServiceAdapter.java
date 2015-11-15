@@ -2,6 +2,7 @@ package com.kylehodgetts.sunka.controller.wifi;
 
 import android.content.Context;
 import android.net.nsd.NsdServiceInfo;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +10,7 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import com.kylehodgetts.sunka.R;
+import com.kylehodgetts.sunka.uiutil.Fonts;
 
 import java.util.List;
 
@@ -51,7 +53,8 @@ public class ServiceAdapter extends ArrayAdapter<NsdServiceInfo> {
 
         TextView deviceName = (TextView) device.findViewById(R.id.deviceName);
         deviceName.setText(serviceName);
-        deviceName.setTextColor(getContext().getColor(R.color.white));
+        deviceName.setTypeface(Fonts.getButtonFont(getContext()));
+        deviceName.setTextColor(ContextCompat.getColor(getContext(), R.color.white));
         return device;
     }
 }

@@ -1,6 +1,7 @@
 package com.kylehodgetts.sunka;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.net.nsd.NsdManager;
@@ -8,17 +9,12 @@ import android.net.nsd.NsdServiceInfo;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.TextView;
 
 import com.kylehodgetts.sunka.controller.wifi.SingletonSocket;
 
 import java.io.IOException;
-import java.net.InetAddress;
-import java.net.NetworkInterface;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.net.SocketException;
-import java.util.Enumeration;
 
 /**
  * @author Kyle Hodgetts
@@ -29,9 +25,7 @@ import java.util.Enumeration;
  */
 public class HostActivity extends Activity {
     private static final int PORT = 8080;
-    private TextView txtAddress;
-    private TextView txtPort;
-    private TextView txtStatus;
+    private ProgressDialog progressDialog;
 
     private Thread serverSocketThread;
     private ServerSocket serverSocket;
@@ -48,11 +42,10 @@ public class HostActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_host);
-
-        txtAddress = (TextView) findViewById(R.id.txtHostAddress);
-        txtPort = (TextView) findViewById(R.id.txtHostPort);
-        txtStatus = (TextView) findViewById(R.id.txtStatus);
-        txtAddress.setText(getIpAddress());
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setTitle("Hosting");
+        progressDialog.setMessage("Awaiting opponent connection...");
+        progressDialog.show();
 
     }
 
@@ -90,7 +83,7 @@ public class HostActivity extends Activity {
      */
     public void registerService(int port) {
         serviceInfo = new NsdServiceInfo();
-        serviceInfo.setServiceName("Sunka-lynx-" + "TESTNAME");
+        serviceInfo.setServiceName("Sunka-lynx-" + String.valueOf((int)Math.random()*9000)+1000);
         serviceInfo.setServiceType("_http._tcp.");
         serviceInfo.setPort(port);
         initialiseRegistrationListener();
@@ -168,15 +161,9 @@ public class HostActivity extends Activity {
         public void run() {
             try {
                 serverSocket = new ServerSocket(PORT);
-                HostActivity.this.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        txtPort.setText(""+serverSocket.getLocalPort());
-                    }
-                });
-
                 Socket socket = serverSocket.accept();
                 Log.d("HostActivity: ", "Connection accepted");
+                progressDialog.dismiss();
 
                 /*
                  * At this point, the connection has been accepted
@@ -190,33 +177,5 @@ public class HostActivity extends Activity {
                 e.printStackTrace();
             }
         }
-    }
-
-    /**
-     *
-     * @return IP Address for the device
-     */
-    public String getIpAddress() {
-        String ip = "";
-        try{
-            Enumeration<NetworkInterface> enumeration = NetworkInterface.getNetworkInterfaces();
-            while(enumeration.hasMoreElements()) {
-                NetworkInterface networkInterface = enumeration.nextElement();
-                Enumeration<InetAddress> enumInet = networkInterface.getInetAddresses();
-
-                while(enumInet.hasMoreElements()) {
-                    InetAddress inetAddress = enumInet.nextElement();
-
-                    if(inetAddress.isSiteLocalAddress()) {
-                        ip += inetAddress.getHostAddress() + "\n";
-                    }
-                }
-            }
-        }
-        catch(SocketException e) {
-            e.printStackTrace();
-        }
-
-        return ip;
     }
 }
