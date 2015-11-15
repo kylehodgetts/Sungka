@@ -1,13 +1,19 @@
 package com.kylehodgetts.sunka;
 
 import android.content.Intent;
+import android.content.res.AssetManager;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
+
+import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
 
+    private TextView txtTeamName;
     private Button mmbone;
     private Button mmbtwo;
     private Button mmbonline;
@@ -18,8 +24,14 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        txtTeamName = (TextView) findViewById(R.id.teamName);
+        Typeface teamFont = Typeface.createFromAsset(getAssets(), String.format("fonts/%s", "fordscript.ttf"));
+        txtTeamName.setTypeface(teamFont);
+
         /** Menu Buttons **/
+        Typeface buttonFont = Typeface.createFromAsset(getAssets(), String.format("fonts/%s", "special_elite.ttf"));
         mmbone = (Button) findViewById(R.id.main_menu_button_one);
+        mmbone.setTypeface(buttonFont);
         mmbone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -27,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         mmbtwo = (Button) findViewById(R.id.main_menu_button_two);
+        mmbtwo.setTypeface(buttonFont);
         mmbtwo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -34,6 +47,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         mmbonline = (Button) findViewById(R.id.main_menu_button_online);
+        mmbonline.setTypeface(buttonFont);
         mmbonline.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -42,6 +56,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         mmbexit = (Button) findViewById(R.id.main_menu_button_exit);
+        mmbexit.setTypeface(buttonFont);
         mmbexit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

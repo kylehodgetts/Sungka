@@ -24,7 +24,16 @@
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/leopard"/>
+            android:src="@drawable/leopard"
+            />
+        <TextView
+            android:id="@+id/teamName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:text="@string/team_lynx"
+            android:layout_marginBottom="40dp"
+            android:textSize="30sp"/>
 
         <Button
             android:id="@+id/main_menu_button_one"

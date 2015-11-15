@@ -49,8 +49,9 @@ public class ServiceAdapter extends ArrayAdapter<NsdServiceInfo> {
             serviceName = getItem(position).getServiceName();
         }
 
-        ((TextView) device.findViewById(R.id.deviceName)).setText(serviceName);
-
+        TextView deviceName = (TextView) device.findViewById(R.id.deviceName);
+        deviceName.setText(serviceName);
+        deviceName.setTextColor(getContext().getColor(R.color.white));
         return device;
     }
 }
