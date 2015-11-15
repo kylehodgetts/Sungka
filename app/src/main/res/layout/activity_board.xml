@@ -39,7 +39,7 @@
 
                 <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="100dp"
                     android:id="@+id/buttonas"
                     android:width="30dp"
                     android:height="40dp"
@@ -83,7 +83,7 @@
 
                 <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="100dp"
                     android:id="@+id/buttonbs"
                     android:width="30dp"
                     android:height="40dp"

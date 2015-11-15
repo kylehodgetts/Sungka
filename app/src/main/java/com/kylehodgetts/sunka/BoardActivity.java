@@ -56,6 +56,9 @@ public class BoardActivity extends AppCompatActivity {
     public static final String EXTRA_INT = "com.kylehodgetts.sunka.boardactivity.gametype";
     private static final String FILE_NAME = "sungkasave";
 
+    public static final int PLAYER_A_STORE = 20;
+    public static final int PLAYER_B_STORE = 21;
+
     private View decorView;
     private boolean areShellsCreated;
     private GameState state;
@@ -283,6 +286,11 @@ public class BoardActivity extends AppCompatActivity {
                         initialiseShellAllocations();
                     }
                 }
+                if(!areShellsCreated) {
+                    createShells((RelativeLayout) findViewById(R.id.buttonas));
+                    createShells((RelativeLayout) findViewById(R.id.buttonbs));
+                }
+
             }
             else {
                 LinearLayout topRow = (LinearLayout) findViewById(R.id.topRow);
@@ -314,6 +322,8 @@ public class BoardActivity extends AppCompatActivity {
                         createShells(currentTrayButton);
                         initialiseShellAllocations();
                     }
+                    createShells((RelativeLayout) findViewById(R.id.buttonas));
+                    createShells((RelativeLayout) findViewById(R.id.buttonbs));
                 }
             }
             areShellsCreated = true;
@@ -349,7 +359,16 @@ public class BoardActivity extends AppCompatActivity {
         Random random = new Random();
         LinearLayout buttonParent = (LinearLayout) button.getParent();
 
-        int numberOfShells = state.getBoard().getTray(buttonParent.getId()/10, buttonParent.getId()%10);
+        int numberOfShells = 0;
+        if(button.getId() == R.id.buttonas) {
+            numberOfShells = state.getPlayer2().getStonesInPot();
+        }
+        else if(button.getId() == R.id.buttonbs) {
+            numberOfShells = state.getPlayer1().getStonesInPot();
+        }
+        else {
+            numberOfShells = state.getBoard().getTray(buttonParent.getId()/10, buttonParent.getId()%10);
+        }
 
         for(int shell=0; shell < numberOfShells; ++shell) {
             ShellDrawable shellDrawable = new ShellDrawable(this, random.nextInt(button.getWidth()/2),
@@ -391,6 +410,8 @@ public class BoardActivity extends AppCompatActivity {
                 }
             }
         }
+        shellAllocations.put(PLAYER_A_STORE, new ArrayList<ShellDrawable>());
+        shellAllocations.put(PLAYER_B_STORE, new ArrayList<ShellDrawable>());
     }
 
     public HashMap<Integer, ArrayList<ShellDrawable>> getShellAllocations() { return shellAllocations; }

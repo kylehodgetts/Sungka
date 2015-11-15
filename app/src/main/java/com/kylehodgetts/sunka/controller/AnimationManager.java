@@ -131,6 +131,15 @@ public class AnimationManager extends EventHandler<GameState> {
                 ArrayList<ShellDrawable> fromTrayArray = shellAllocations.get(Integer.parseInt(player + "" + fromTray));
                 ArrayList<ShellDrawable> trayToStealFromArray = shellAllocations.get(Integer.parseInt(((player+1)%2)+""+trayToStealFrom));
 
+
+                ArrayList<ShellDrawable> playerStoreArray;
+                if (player == 0) {
+                    playerStoreArray = shellAllocations.get(BoardActivity.PLAYER_A_STORE);
+                }
+                else {
+                    playerStoreArray = shellAllocations.get(BoardActivity.PLAYER_B_STORE);
+                }
+
                 if(trayToStealFromArray.size() >= 10) { FileUtility.playSound(activity, R.raw.evil_laugh); }
                 else { FileUtility.playSound(activity, R.raw.short_laugh); }
 
@@ -139,6 +148,7 @@ public class AnimationManager extends EventHandler<GameState> {
                     ObjectAnimator objectAnimator = ObjectAnimator.ofFloat(shellDrawable, "translationX", (player == 0 ? (width * (6 - fromTray)) + storeWidth : -((width * (6 - fromTray))) - storeWidth));
                     objectAnimator.setDuration(290);
                     objectAnimator.start();
+                    playerStoreArray.add(shellDrawable);
                 }
 
                 // Removes & animates all shells from the current player's tray always being 1 shell
@@ -146,6 +156,7 @@ public class AnimationManager extends EventHandler<GameState> {
                     ObjectAnimator objectAnimator = ObjectAnimator.ofFloat(shellDrawable, "translationX", (player == 0 ? (width * (6 - fromTray)) + storeWidth : -((width * (6 - fromTray))) - storeWidth));
                     objectAnimator.setDuration(290);
                     objectAnimator.start();
+                    playerStoreArray.add(shellDrawable);
                 }
 
                 // Clears both arrays as all the shells are now in the store
@@ -274,6 +285,14 @@ public class AnimationManager extends EventHandler<GameState> {
                                 ArrayList<ShellDrawable> shellArray = shellAllocations.get(Integer.parseInt(player + "" + tray));
                                 shellArray.remove(shell);
                                 fromTrayLayout.removeView(shell);
+                                ArrayList<ShellDrawable> playerStore;
+                                if (player == 0) {
+                                    playerStore = shellAllocations.get(BoardActivity.PLAYER_A_STORE);
+                                }
+                                else {
+                                    playerStore = shellAllocations.get(BoardActivity.PLAYER_B_STORE);
+                                }
+                                playerStore.add(shell);
                             }
                         });
                     }
