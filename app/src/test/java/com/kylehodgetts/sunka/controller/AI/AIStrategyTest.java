@@ -85,13 +85,14 @@ public class AIStrategyTest extends AIStrategy {
                     result = ai.canPlayerPerformCaptureRule(AI.PLAYER_HUMAN, board);
                     Assert.assertTrue(result.getX());
 
+                    //set tray to be valid for this move
                     int distance = (7 - AITray) + (captureTray + 1);
                     board.setTray(AI.PLAYER_AI, AITray, distance);
-                    result = ai.defendAgainstCaptureRule(board);
 
+                    //check the ai found it
+                    result = ai.defendAgainstCaptureRule(board);
                     Assert.assertTrue(result.getX());
                     Assert.assertEquals((int) result.getY(), AITray);
-
                 }
             }
         }
@@ -135,16 +136,13 @@ public class AIStrategyTest extends AIStrategy {
         for (int positionWithShells = 0; positionWithShells < 7; positionWithShells++) {
             board = new Board();
             for (int position = 0; position < 7; position++) {
+                //zero all other trays so the AI can't pick that tray
                 if (positionWithShells != position) {
                     board.setTray(AI.PLAYER_AI, position, 0);
                 }
             }
-
             int choice = ai.getRandomTray(board);
             Assert.assertEquals(choice, positionWithShells);
         }
-
     }
-
-
 }
