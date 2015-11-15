@@ -22,7 +22,9 @@ import com.kylehodgetts.sunka.util.Tuple2;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.json.JSONStringer;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -41,11 +43,10 @@ public class StatisticsCollector extends EventHandler<GameState> {
 
     private RequestQueue queue;
     private JSONObject obj;
-    private boolean collecting;
     private boolean online;
     private List<Long> turnTimes;
     private long startRecord;
-    private Activity activity;
+    private Context activity;
 
     /**
      * Default constructor for event handler
@@ -53,30 +54,31 @@ public class StatisticsCollector extends EventHandler<GameState> {
      * relevance when saving new stats for the user
      *
      */
-    public StatisticsCollector(Activity activity, String serverId) {
+    public StatisticsCollector(Context activity, String serverId) {
         super("StatisticsCollector");
 
-        collecting = true;
         turnTimes = new ArrayList<>();
-        queue = Volley.newRequestQueue(activity);
         startRecord = System.currentTimeMillis();
         this.activity = activity;
+        online = false;
+        obj = new JSONObject();
+
         try {
-            FileInputStream inp = activity.openFileInput(STATS_LOCAL);
+            File file = new File(activity.getFilesDir(), STATS_LOCAL);
+            FileInputStream inp = new FileInputStream(file);
             byte[] bytes = new byte[(int) inp.getChannel().size()];
             inp.read(bytes);
             inp.close();
             obj = new JSONObject(new String(bytes));
-        } catch (java.io.IOException | JSONException e) {
-            obj = new JSONObject();
-            online = false;
-            if (serverId !=null)
-                try {
-                    obj.put(MainActivity.SERVER_ID, serverId);
-                    online = true;
-                } catch (JSONException ignored) {}
-        }
 
+        } catch (java.io.IOException | JSONException e) {}
+
+        if (serverId !=null)
+            try {
+                queue = Volley.newRequestQueue(activity);
+                obj.put(MainActivity.SERVER_ID, serverId);
+                online = true;
+            } catch (JSONException ignored) {}
     }
 
     /**
@@ -90,6 +92,7 @@ public class StatisticsCollector extends EventHandler<GameState> {
      */
     @Override
     public Tuple2<GameState, Boolean> handleEvent(Event event, GameState state) {
+        System.out.println(event);
 
         if ((event instanceof NextTurn && state.getCurrentPlayerIndex() == 0) || event instanceof NewGame)
             startRecord = System.currentTimeMillis();
@@ -100,9 +103,8 @@ public class StatisticsCollector extends EventHandler<GameState> {
             turnTimes.add(avg);
         }
 
-        else if (event instanceof EndGame && collecting)
+        else if (event instanceof EndGame)
             endGame(state);
-
 
         return new Tuple2<>(state,false);
     }
@@ -153,15 +155,16 @@ public class StatisticsCollector extends EventHandler<GameState> {
                     obj.put(MainActivity.AVG_TIME,avg);
             }
 
-
             byte[] bytes = obj.toString().getBytes();
-            FileOutputStream out = activity.openFileOutput(STATS_LOCAL, Context.MODE_PRIVATE);
+            File file = new File(activity.getFilesDir(), STATS_LOCAL);
+            FileOutputStream out = new FileOutputStream(file);
             out.write(bytes);
             out.close();
 
-            if(online)
+            if(online && queue != null)
                 sendToServer(obj);
         } catch (IOException | JSONException e) {
+            System.out.println("lol no");
            Log.v("STATS", "Could not write stats");
         }
     }

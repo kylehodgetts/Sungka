@@ -113,6 +113,7 @@ public class StatisticsActivity extends Activity {
         SharedPreferences preferences = getSharedPreferences(PREFERENCES, 0);
 
         String name = preferences.getString(USER_NAME, "N/A");
+        System.out.println(object);
         int won = getInt(object,GAMES_WON,0);
         int lost = getInt(object,GAMES_LOST,0);
         int topScore = getInt(object, MAX_SCORE, 0);

@@ -180,7 +180,7 @@ public class BoardControllerTest extends TestCase {
 
     }
 
-    private class ManagerTest extends GameManager {
+    public static class ManagerTest extends GameManager {
         public ManagerTest(EventBus<GameState> bus) {
             super(bus);
         }
