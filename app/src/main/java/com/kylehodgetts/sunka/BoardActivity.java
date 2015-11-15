@@ -339,6 +339,7 @@ public class BoardActivity extends AppCompatActivity {
                         LinearLayout currentTrayButtonLayout = (LinearLayout) bottomRow.getChildAt(j);
                         RelativeLayout currentTrayButton = (RelativeLayout) currentTrayButtonLayout.findViewById(R.id.button);
                         currentTrayButton.bringToFront();
+                        currentTrayButton.setAlpha(0.7f);
                         currentTrayButtonLayout.getLayoutParams().width = 0;
                         createShells(currentTrayButton);
                         initialiseShellAllocations();
