@@ -23,4 +23,6 @@
     <string name="notConnected">Not Connected</string>
     <string name="team_lynx">Team Lynx</string>
     <string name="awaiting_connection">Awaiting connection...</string>
+    <string name="opponent_score">Opponent Score</string>
+    <string name="zero">0</string>
 </resources>
