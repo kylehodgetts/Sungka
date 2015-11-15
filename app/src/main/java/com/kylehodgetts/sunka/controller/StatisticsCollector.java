@@ -162,7 +162,7 @@ public class StatisticsCollector extends EventHandler<GameState> {
             out.close();
 
             if(online && queue != null)
-                sendToServer(obj);
+                sendToServer(obj, queue);
         } catch (IOException | JSONException e) {
             System.out.println("lol no");
            Log.v("STATS", "Could not write stats");
@@ -172,8 +172,9 @@ public class StatisticsCollector extends EventHandler<GameState> {
     /**
      * Sends the updated statistics to the server
      * @param obj the statistics to be send to server
+     * @param queue the request queue
      */
-    private void sendToServer(JSONObject obj){
+    public static void sendToServer(JSONObject obj, RequestQueue queue){
         obj.remove(MainActivity.AVG_TIME);
         Request request = new RequestWithHeaders(Request.Method.POST, MainActivity.SERVER_URL + "/statistics/", obj, new Response.Listener<JSONObject>() {
             @Override

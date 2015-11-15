@@ -61,6 +61,7 @@ public class GetScores extends Bind {
             for (DBObject object:cursor.skip(page*Server.BATCH_SIZE).limit(Server.BATCH_SIZE)){
                 String id = (String)object.get(Server.SERVER_ID);
                 DBObject name = context.getNameCollection().findOne(new BasicDBObject(Server.SERVER_ID,id));
+                name = name==null?new BasicDBObject(Server.USER_NAME,"NOT_FOUND"):name;
                 object.put(Server.USER_NAME,name.get(Server.USER_NAME));
                 objects.add(object);
             }

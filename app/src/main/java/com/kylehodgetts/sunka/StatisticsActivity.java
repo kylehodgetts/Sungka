@@ -16,6 +16,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.kylehodgetts.sunka.controller.StatisticsCollector;
 import com.kylehodgetts.sunka.controller.statistics.ScoreListAdapter;
 import com.kylehodgetts.sunka.model.PlayerScores;
 import com.kylehodgetts.sunka.uiutil.Fonts;
@@ -34,6 +35,7 @@ import static com.kylehodgetts.sunka.MainActivity.GAMES_LOST;
 import static com.kylehodgetts.sunka.MainActivity.GAMES_WON;
 import static com.kylehodgetts.sunka.MainActivity.MAX_SCORE;
 import static com.kylehodgetts.sunka.MainActivity.PREFERENCES;
+import static com.kylehodgetts.sunka.MainActivity.SERVER_ID;
 import static com.kylehodgetts.sunka.MainActivity.SERVER_URL;
 import static com.kylehodgetts.sunka.MainActivity.STATS_LOCAL;
 import static com.kylehodgetts.sunka.MainActivity.USER_NAME;
@@ -112,6 +114,11 @@ public class StatisticsActivity extends Activity {
             inp.read(bytes);
             inp.close();
             object = new JSONObject(new String(bytes));
+            String serverId = getSharedPreferences(PREFERENCES,0).getString(SERVER_ID,null);
+            if (serverId != null) {
+                object.put(SERVER_ID,serverId);
+                StatisticsCollector.sendToServer(object, queue);
+            }
         } catch (java.io.IOException | JSONException ignored) {}
 
         SharedPreferences preferences = getSharedPreferences(PREFERENCES, 0);
