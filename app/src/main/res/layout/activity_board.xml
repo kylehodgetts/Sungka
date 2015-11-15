@@ -154,7 +154,8 @@
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:orientation="vertical" android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:weightSum="1">
+        android:weightSum="1"
+        android:background="@drawable/footer_lodyas">
 
         <Space
             android:layout_width="match_parent"
@@ -225,7 +226,7 @@
                     android:id="@+id/bAgain"
                     android:layout_row="1"
                     android:layout_column="1"
-                    />
+                    style="@style/btnStyleBeige"/>
 
                 <Button
                     android:layout_width="wrap_content"
@@ -234,7 +235,7 @@
                     android:id="@+id/bMenu"
                     android:layout_row="2"
                     android:layout_column="1"
-                    android:onClick="returnToMainMenu"/>
+                    style="@style/btnStyleBeige"/>
             </LinearLayout>
 
             <LinearLayout
@@ -249,7 +250,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:text="Opponent Score"
+                    android:text="@string/opponent_score"
                     android:id="@+id/opponent_score_label"
                     android:layout_gravity="center_horizontal"
                     android:paddingBottom="20px" />
@@ -258,7 +259,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:text="0"
+                    android:text="@string/zero"
                     android:id="@+id/opponent_score"
                     android:layout_row="1"
                     android:layout_column="2"

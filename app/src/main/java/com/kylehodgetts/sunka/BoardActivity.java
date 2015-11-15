@@ -4,14 +4,17 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
+import android.widget.Button;
 import android.widget.GridLayout;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.kylehodgetts.sunka.controller.AIManager;
 import com.kylehodgetts.sunka.controller.AnimationManager;
@@ -24,6 +27,7 @@ import com.kylehodgetts.sunka.event.TrayOnClickListener;
 import com.kylehodgetts.sunka.model.Board;
 import com.kylehodgetts.sunka.model.GameState;
 import com.kylehodgetts.sunka.model.Player;
+import com.kylehodgetts.sunka.uiutil.Fonts;
 import com.kylehodgetts.sunka.uiutil.ShellDrawable;
 import com.kylehodgetts.sunka.util.FileUtility;
 
@@ -58,6 +62,13 @@ public class BoardActivity extends AppCompatActivity {
 
     private HashMap<Integer, ArrayList<ShellDrawable>> shellAllocations;
 
+    private TextView txtYourScoreLabel;
+    private TextView txtYourScore;
+    private Button btnPlayAgain;
+    private Button btnReturnToMainMenu;
+    private TextView txtTheirScoreLabel;
+    private TextView txtTheirScore;
+
 
     /**
      * Creates the board activity, instantiates all necessary objects and sets the content view for
@@ -73,6 +84,28 @@ public class BoardActivity extends AppCompatActivity {
         areShellsCreated = false;
 
         this.setContentView(R.layout.activity_board);
+        txtYourScoreLabel = (TextView) findViewById(R.id.your_score_label);
+        txtYourScoreLabel.setTypeface(Fonts.getButtonFont(this));
+        txtYourScoreLabel.setTextColor(ContextCompat.getColor(this, R.color.white));
+        txtYourScore = (TextView) findViewById(R.id.your_score);
+        txtYourScore.setTypeface(Fonts.getButtonFont(this));
+        txtYourScore.setTextColor(ContextCompat.getColor(this, R.color.white));
+        txtTheirScoreLabel = (TextView) findViewById(R.id.opponent_score_label);
+        txtTheirScoreLabel.setTypeface(Fonts.getButtonFont(this));
+        txtTheirScoreLabel.setTextColor(ContextCompat.getColor(this, R.color.white));
+        txtTheirScore = (TextView) findViewById(R.id.opponent_score);
+        txtTheirScore.setTypeface(Fonts.getButtonFont(this));
+        txtTheirScore.setTextColor(ContextCompat.getColor(this, R.color.white));
+        btnPlayAgain = (Button) findViewById(R.id.bAgain);
+        btnPlayAgain.setTypeface(Fonts.getButtonFont(this));
+        btnReturnToMainMenu = (Button) findViewById(R.id.bMenu);
+        btnReturnToMainMenu.setTypeface(Fonts.getButtonFont(this));
+        btnReturnToMainMenu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                returnToMainMenu();
+            }
+        });
 
         gameType = getIntent().getIntExtra(EXTRA_INT, 0);
         state = (GameState) FileUtility.readFromSaveFile(this, FILE_NAME);
