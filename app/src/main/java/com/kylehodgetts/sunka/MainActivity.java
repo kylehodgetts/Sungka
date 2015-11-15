@@ -1,17 +1,24 @@
 package com.kylehodgetts.sunka;
 
 import android.content.Intent;
+import android.content.res.AssetManager;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
+
+import com.kylehodgetts.sunka.uiutil.Fonts;
+
+import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
 
+    private TextView txtTeamName;
     private Button mmbone;
     private Button mmbtwo;
     private Button mmbonline;
-    private Button mmbus;
     private Button mmbexit;
 
     @Override
@@ -19,8 +26,12 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        txtTeamName = (TextView) findViewById(R.id.teamName);
+        txtTeamName.setTypeface(Fonts.getTitleFont(this));
+
         /** Menu Buttons **/
         mmbone = (Button) findViewById(R.id.main_menu_button_one);
+        mmbone.setTypeface(Fonts.getButtonFont(this));
         mmbone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -28,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         mmbtwo = (Button) findViewById(R.id.main_menu_button_two);
+        mmbtwo.setTypeface(Fonts.getButtonFont(this));
         mmbtwo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -35,6 +47,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         mmbonline = (Button) findViewById(R.id.main_menu_button_online);
+        mmbonline.setTypeface(Fonts.getButtonFont(this));
         mmbonline.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -42,8 +55,8 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(i);
             }
         });
-        mmbus = (Button) findViewById(R.id.main_menu_button_us);
         mmbexit = (Button) findViewById(R.id.main_menu_button_exit);
+        mmbexit.setTypeface(Fonts.getButtonFont(this));
         mmbexit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -73,20 +86,4 @@ public class MainActivity extends AppCompatActivity {
         intent.putExtra(BoardActivity.EXTRA_INT, gameType);
         MainActivity.this.startActivity(intent);
     }
-
-    /**
-     * Allows the user to switch to the AboutUsActivity
-     * or exit the application.
-     */
-    public void otherOptions(View view) {
-        Intent intent;
-        Button selectedButton = (Button) view;
-        if (selectedButton.equals(mmbus)) {
-            //  intent = new Intent(MainActivity.this, AboutUsActivity.class);
-        } else {
-            // Either make an Activity window asking "Are you sure? YES/NO" or directly Kill.
-            android.os.Process.killProcess(android.os.Process.myPid());
-        }
-    }
-
 }

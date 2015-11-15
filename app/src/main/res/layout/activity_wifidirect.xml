@@ -1,18 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@drawable/footer_lodyas">
 
     <ListView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/list_found_services"></ListView>
+        android:id="@+id/list_found_services">
+
+    </ListView>
 
     <Button
         android:id="@+id/btnHost"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:text="@string/host"/>
+        android:text="@string/host"
+        style="@style/btnStyleBeige"/>
 
 </RelativeLayout>

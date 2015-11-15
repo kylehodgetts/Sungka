@@ -23,11 +23,6 @@ import java.net.InetSocketAddress;
 public class HostActivityTest extends ActivityInstrumentationTestCase2<HostActivity> {
 
     private HostActivity hostActivity;
-    private TextView labelHostAddress;
-    private TextView txtHostAddress;
-    private TextView labelHostPort;
-    private TextView txtHostPort;
-    private TextView txtStatus;
 
     public HostActivityTest() {
         super(HostActivity.class);
@@ -42,25 +37,6 @@ public class HostActivityTest extends ActivityInstrumentationTestCase2<HostActiv
     public void setUp() throws Exception {
         super.setUp();
         hostActivity = getActivity();
-        labelHostAddress = (TextView) hostActivity.findViewById(R.id.labelHostAddress);
-        txtHostAddress = (TextView) hostActivity.findViewById(R.id.txtHostAddress);
-        labelHostPort = (TextView) hostActivity.findViewById(R.id.labelHostPort);
-        txtHostPort = (TextView) hostActivity.findViewById(R.id.txtHostPort);
-        txtStatus = (TextView) hostActivity.findViewById(R.id.txtStatus);
-    }
-
-    /**
-     * Assert that view components are not null post onCreate execution
-     * @throws Exception
-     */
-    @Test
-    public void testPreconditions() throws Exception {
-        assertNotNull(hostActivity);
-        assertNotNull(labelHostAddress);
-        assertNotNull(txtHostAddress);
-        assertNotNull(labelHostPort);
-        assertNotNull(txtHostPort);
-        assertNotNull(txtStatus);
     }
 
     /**
@@ -81,7 +57,6 @@ public class HostActivityTest extends ActivityInstrumentationTestCase2<HostActiv
     @Test
     public void testRegisterService() throws Exception {
         assertTrue(hostActivity.isServiceInfoSet());
-        assertTrue(txtHostAddress.getText().toString().equals(hostActivity.getIpAddress()));
     }
 
     /**

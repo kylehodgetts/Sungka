@@ -5,7 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="horizontal"
-    tools:context=".MainActivity">
+    tools:context=".MainActivity"
+    android:background="@drawable/footer_lodyas">
 
     <Space
         android:layout_width="0dp"
@@ -20,37 +21,52 @@
         android:gravity="center"
         android:orientation="vertical">
 
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/leopard"
+            />
+        <TextView
+            android:id="@+id/teamName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:text="@string/team_lynx"
+            android:layout_marginBottom="40dp"
+            android:textSize="30sp"/>
+
         <Button
             android:id="@+id/main_menu_button_one"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="@string/main_menu_one_player" />
+            android:text="@string/main_menu_one_player"
+            android:layout_marginBottom="10dp"
+            style="@style/btnStyleBeige"/>
 
         <Button
             android:id="@+id/main_menu_button_two"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="@string/main_menu_two_player" />
+            android:text="@string/main_menu_two_player"
+            android:layout_marginBottom="10dp"
+            style="@style/btnStyleBeige"/>
 
         <Button
             android:id="@+id/main_menu_button_online"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="@string/main_menu_online" />
-
-        <Button
-            android:id="@+id/main_menu_button_us"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:text="@string/main_menu_about_us" />
+            android:text="@string/main_menu_online"
+            android:layout_marginBottom="10dp"
+            style="@style/btnStyleBeige"/>
 
         <Button
             android:id="@+id/main_menu_button_exit"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:text="@string/main_menu_exit" />
+            android:text="@string/main_menu_exit"
+            android:layout_marginBottom="10dp"
+            style="@style/btnStyleBeige"/>
 
     </LinearLayout>
 

@@ -21,4 +21,6 @@
     <string name="hostAddress">Host Address:</string>
     <string name="hostPort">Host Port:</string>
     <string name="notConnected">Not Connected</string>
+    <string name="team_lynx">Team Lynx</string>
+    <string name="awaiting_connection">Awaiting connection...</string>
 </resources>
