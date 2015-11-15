@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Gravity;
 import android.view.View;
+import android.widget.Button;
 import android.widget.GridLayout;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
@@ -69,7 +70,7 @@ public class BoardActivity extends AppCompatActivity {
         EventBus<GameState> bus = new EventBus<>(state, this);
 =======
         state = (GameState) FileUtility.readFromSaveFile(this, FILE_NAME);
-        if(state == null) {
+        if (state == null) {
             state = new GameState(new Board(), new Player(), new Player());
         }
 
@@ -86,14 +87,63 @@ public class BoardActivity extends AppCompatActivity {
             //TODO bus.registerHandler(ONLINEHANDLER)
             bus.registerHandler(new OnlineGameManager(bus));
             makeXMLButtons(bus, false);
-        }else {
+        } else {
             makeXMLButtons(bus, true);
         }
 
         bus.feedEvent(new NewGame());
+        /**
+         * Method that allows us to return to the main menu .
+         */
+        Button bMenu = (Button) findViewById(R.id.bMenu);
+        bMenu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                returnToMainMenu();
+            }
+
+        });
     }
 
     /**
+<<<<<<< 7c1a67bfc711ce41682ead6ca06668ff6cc311d6
+=======
+     * Triggers on the device's system back key being pressed
+     *
+     * @param keyCode Key Code
+     * @param event   Key Event
+     * @return onKeyDown event
+     */
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == event.KEYCODE_BACK) {
+            new AlertDialog.Builder(this)
+                    .setMessage("Will you want to return to this game?")
+                    .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+
+                        public void onClick(DialogInterface arg0, int arg1) {
+                            FileUtility.saveGame(BoardActivity.this, FILE_NAME, state);
+                            returnToMainMenu();
+                        }
+                    })
+                    .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface arg0, int arg1) {
+                            returnToMainMenu();
+                        }
+                    })
+                    .setNeutralButton("Cancel", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            return;
+                        }
+                    })
+                    .show();
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
+    /**
+>>>>>>> Merge branch 'UITesting' of https://github.com/KyleHodgetts/Sungka into UITesting
      * Method used to inflate the relevant trays in the correct place on the game activity board.
      * This method also attaches the necessary onClickListener to each tray.
      *
@@ -167,7 +217,12 @@ public class BoardActivity extends AppCompatActivity {
         }
     }
 
+     public void  returnToMainMenu(){
+         Intent intent = new Intent(BoardActivity.this, MainActivity.class);
+          startActivity(intent);
+     }
 
+<<<<<<< 7c1a67bfc711ce41682ead6ca06668ff6cc311d6
     /**
      * Method that allows us to return to the main menu .
      */
@@ -175,6 +230,8 @@ public class BoardActivity extends AppCompatActivity {
         Intent intent = new Intent(BoardActivity.this, MainActivity.class);
         BoardActivity.this.startActivity(intent);
     }
+=======
+>>>>>>> Merge branch 'UITesting' of https://github.com/KyleHodgetts/Sungka into UITesting
 
     public static int getGameType() {
         return gameType;

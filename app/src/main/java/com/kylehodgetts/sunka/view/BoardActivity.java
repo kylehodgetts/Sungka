@@ -16,7 +16,6 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.kylehodgetts.sunka.R;
 import com.kylehodgetts.sunka.controller.AIManager;
 import com.kylehodgetts.sunka.controller.AnimationManager;
 import com.kylehodgetts.sunka.controller.GameManager;
