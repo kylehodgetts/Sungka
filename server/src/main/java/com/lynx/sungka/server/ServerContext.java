@@ -23,6 +23,11 @@ public class ServerContext {
     }
 
     /**
+     * Used when you only need to match the type, should be only used with test, never with actual server
+     */
+    protected ServerContext(){}
+
+    /**
      * Getter for the mongo API resource
      * @return the reference to mongo
      */

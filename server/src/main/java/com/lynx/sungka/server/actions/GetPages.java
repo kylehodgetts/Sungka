@@ -28,7 +28,7 @@ public class GetPages extends Bind {
      */
     @Override
     public RequestResponse run(ServerContext context, DBObject body, List<String> args) {
-        byte[] resp = ((Math.round(context.getStatisticsCollection().getCount()/ (float)Server.BATCH_SIZE))+"").getBytes();
+        byte[] resp = (((int)Math.ceil(context.getStatisticsCollection().getCount()/ (float)Server.BATCH_SIZE))+"").getBytes();
         List<Header> headers = new ArrayList<>();
         headers.add(new ContentLength(resp.length));
         return new RequestResponse(headers, resp, RequestResponse.ResponseCode.OK);

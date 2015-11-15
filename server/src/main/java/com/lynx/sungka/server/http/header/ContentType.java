@@ -28,6 +28,6 @@ public class ContentType extends Header {
      * @return
      */
     public static ContentType json(){
-        return new ContentType("application/json");
+        return new ContentType("application/json; charset=utf-8");
     }
 }
