@@ -218,7 +218,7 @@ public class ViewManager extends EventHandler<GameState> {
                 if (!state.isRaceState()) {
                     TextView tv = (TextView) linearLayout.findViewById(R.id.tv);
                     int angle = 0;
-                    if(playersTurn == 1 && BoardActivity.getGameType() != BoardActivity.ONLINE){
+                    if(playersTurn == 1 && BoardActivity.getGameType() == BoardActivity.TWOPLAYER){
                         angle = 180;
                     }
                     tv.setRotation(angle);
