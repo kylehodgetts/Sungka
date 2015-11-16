@@ -48,7 +48,7 @@ public class AIStrategy implements AI {
 
         if (board.getTray(PLAYER_AI, 6) > 0) return 6;
 
-        return getRandomTray(state.getBoard());
+        return getRandomTray(board);
     }
 
     /**
