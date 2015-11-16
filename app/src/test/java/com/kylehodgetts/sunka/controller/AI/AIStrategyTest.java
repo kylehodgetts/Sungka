@@ -23,14 +23,13 @@ public class AIStrategyTest extends AIStrategy {
     @Before
     public void setUp() {
         ai = new AIStrategy();
-        board = new Board();
     }
 
     /**
      * Tests if the ai can see and execute getting another turn
      */
     @Test
-    public void testCanPlayerGetAnotherTurn() {
+    public void testCanPlayerGetAnotherTurn() throws Exception {
         for (int tray = 0; tray < 7; tray++) {
             board = new Board();
             board.setTray(AI.PLAYER_AI, tray, 7 - tray);
@@ -43,7 +42,7 @@ public class AIStrategyTest extends AIStrategy {
      * This test confirms the AI can perform the capture rule
      */
     @Test
-    public void testCanPlayerPerformCaptureRule() {
+    public void testCanPlayerPerformCaptureRule() throws Exception {
         for (int emptyTray = 1; emptyTray < 7; emptyTray++) {
             for (int trayToChoose = 0; trayToChoose < 7; trayToChoose++) {
                 board = new Board();
@@ -67,7 +66,7 @@ public class AIStrategyTest extends AIStrategy {
      * and select a pot to stop this from happening
      */
     @Test
-    public void testDefendAgainstCaptureRule() {
+    public void testDefendAgainstCaptureRule() throws Exception {
 
         for (int emptyTray = 1; emptyTray < 7; emptyTray++) {
             for (int captureTray = 0; captureTray < emptyTray; captureTray++) {
@@ -104,7 +103,7 @@ public class AIStrategyTest extends AIStrategy {
      * another turn
      */
     @Test
-    public void testDefendAgainstAnotherTurn() {
+    public void testDefendAgainstAnotherTurn() throws Exception {
 
         for (int opponentsTray = 0; opponentsTray < 7; opponentsTray++) {
             board = new Board();
@@ -131,7 +130,7 @@ public class AIStrategyTest extends AIStrategy {
      * Tests that the ai can pick a tray that has shells in
      */
     @Test
-    public void testRandomTray() {
+    public void testRandomTray() throws Exception {
 
         for (int positionWithShells = 0; positionWithShells < 7; positionWithShells++) {
             board = new Board();

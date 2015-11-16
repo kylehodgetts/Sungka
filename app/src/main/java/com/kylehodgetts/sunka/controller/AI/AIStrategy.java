@@ -12,11 +12,13 @@ import java.util.Random;
  */
 public class AIStrategy implements AI {
 
+    private int turnNumber;
+
     /**
      * AI that uses a set of strategies to determine it's choice of tray. Does no look into the future
      */
     public AIStrategy() {
-
+        turnNumber = 0;
     }
 
     /**
@@ -26,6 +28,9 @@ public class AIStrategy implements AI {
      * @return the position the AI has picked
      */
     public int chooseTray(GameState state) {
+        turnNumber++;
+        if (turnNumber == 1) return 6;
+
         Board board = state.getBoard();
         Tuple2<Boolean, Integer> result;
 
