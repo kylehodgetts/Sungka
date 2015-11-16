@@ -159,6 +159,9 @@ public class MainActivity extends AppCompatActivity {
 
     private void setServerId(String userName){
         final SharedPreferences prefs = getSharedPreferences(PREFERENCES, 0);
+//        SharedPreferences.Editor editor = prefs.edit();
+//        editor.clear();
+//        editor.commit();
 
         if (!prefs.contains(SERVER_ID)){
             RequestQueue queue = Volley.newRequestQueue(this);
