@@ -169,7 +169,8 @@
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:text="@string/game_over"
             android:id="@+id/game_over_label"
-            android:layout_gravity="center_horizontal" />
+            android:layout_gravity="center_horizontal"
+            android:textColor="@color/white"/>
 
         <Space
             android:layout_width="match_parent"
@@ -199,7 +200,8 @@
                     android:layout_column="0"
                     android:layout_row="0"
                     android:layout_gravity="center_horizontal"
-                    android:paddingBottom="20px" />
+                    android:paddingBottom="20px"
+                    android:textColor="@color/white"/>
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -209,7 +211,8 @@
                     android:id="@+id/your_score"
                     android:layout_row="1"
                     android:layout_column="0"
-                    android:layout_gravity="center" />
+                    android:layout_gravity="center"
+                    android:textColor="@color/white"/>
 
             </LinearLayout>
 
@@ -245,7 +248,8 @@
                     android:text="@string/opponent_score"
                     android:id="@+id/opponent_score_label"
                     android:layout_gravity="center_horizontal"
-                    android:paddingBottom="20px" />
+                    android:paddingBottom="20px"
+                    android:textColor="@color/white"/>
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -255,7 +259,8 @@
                     android:id="@+id/opponent_score"
                     android:layout_row="1"
                     android:layout_column="2"
-                    android:layout_gravity="center" />
+                    android:layout_gravity="center"
+                    android:textColor="@color/white"/>
             </LinearLayout>
         </LinearLayout>
 
