@@ -119,8 +119,8 @@ public class ViewManager extends EventHandler<GameState> {
                 vf.showNext();
                 TextView leftScore = (TextView) activity.findViewById(R.id.your_score);
                 TextView rightScore = (TextView) activity.findViewById(R.id.opponent_score);
-                leftScore.setText(state.getPlayer2().getStonesInPot() + " shells");
-                rightScore.setText(state.getPlayer1().getStonesInPot() + " shells");
+                leftScore.setText(state.getPlayer1().getStonesInPot() + " shells");
+                rightScore.setText(state.getPlayer2().getStonesInPot() + " shells");
 
                 FileUtility.playSound(activity, R.raw.applause);
             }
